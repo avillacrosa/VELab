@@ -15,7 +15,7 @@ function T = internalF(x, X, P, n, mat_type, sh_type)
     for e = 1:size(n,1)
         xe = x(n(e,:),:);
         Xe = X(n(e,:),:);
-        % FIXIT HARDCODE
+        
         for j = 1:size(w,2)
             for k = 1:size(w,2)
                 Fd = deformF(xe,Xe,[wx(j),wx(k)]);

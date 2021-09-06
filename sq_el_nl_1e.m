@@ -29,5 +29,4 @@ P = [  100    0.3    1  ];
 n_inc = 10;
 
 x = newton(t, x, n, x0, dx0, P, n_inc, 'venant');
-x
 femplot(X,x,n);

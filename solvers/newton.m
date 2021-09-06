@@ -25,30 +25,26 @@ function x = newton(t, x, n, x0, dx0, P, n_inc, mat_type)
         F  = F + DF; %LOAD! not deformation
         R  = R - DF;
         it = 0;
-%         while(it < 5)
-        while(norm(R)/norm(F) > 0.00001)
+        tol = norm(R)/norm(F);
+%         while(tol > 0.00001)
+        while(it < 1)
             K = stiffK(x, P, n, mat_type);
             K = setboundsK(K, x0, n);
             u = K\(-R);
             u = reshape(u,[ndim,nnodes])';
             x = x + u;
             T = internalF(x, X, P, n, mat_type, 'square');
+            T
             R = T-F;
-            for e = 1:size(x0,1)
-                ninode= x0(e,1);
-                ax    = x0(e,2);
-                value = x0(e,3);
-                
-                R_id = 2*(ninode-1)+ax;
-                
-                if value == 0
-                    R(R_id) = 0;
-                end
-            end
+            norm(R), norm(T)
+            
+            tol = convergence(R, F, x0);
+            disp(["Current tolerance", tol, "It", it])
+            
             it = it + 1;
 %             break
         end
-%         break
+        break
     end
 end
 
