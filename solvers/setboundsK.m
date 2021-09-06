@@ -1,14 +1,14 @@
-function K = setbounds(K, x0, n)
+function K = setboundsK(K, x0, n)
     k = 10^6*max(abs(diag(K)));
-    size(x0)
-    for e = 1:size(n,2)
+    for e = 1:size(x0,1)
+%         disp(x0(e,:))
         n     = x0(e,1);
         dim   = x0(e,2);
         
         value = x0(e,3);
         
         if value == 0
-            K_id = 2*(n-1)+dim
+            K_id = 2*(n-1)+dim;
             
             K(K_id, K_id) = K(K_id, K_id) + k;
         end

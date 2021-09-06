@@ -1,5 +1,4 @@
-function sigma = venant(c, strain)
-    d = size(strain,1);
+function sigma = svenant(c, strain)
     vec_strain = vectorize(strain);
     vec_sigma = c*vec_strain;
     % TODO

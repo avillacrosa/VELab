@@ -1,31 +1,39 @@
-function T = internalF(x,X,P)
+function T = internalF(x, X, P, n, mat_type, sh_type)
+
     ndim   = size(x,2);
     nnodes = size(x,1);
     
     wx = [-1 1]/sqrt(3);
     w  = [1 1];
     
-    c = material(type, P);
+%     w   = [5 8 5]/9;
+%     wx  = [-1 0 1]*sqrt(3/5);
+    
+    c = material(mat_type, P);
           
-    T = zeros(nnodes, ndim);
-    % Integration of T is scuffed 
-    for j = 1:2
-        for k = 1:2
-            Fd = deformF(x,X,[wx(j),wx(k)]);
+    T = zeros(nnodes*ndim, 1);
+    for e = 1:size(n,1)
+        xe = x(n(e,:),:);
+        Xe = X(n(e,:),:);
+        % FIXIT HARDCODE
+        for j = 1:size(w,2)
+            for k = 1:size(w,2)
+                Fd = deformF(xe,Xe,[wx(j),wx(k)]);
 
-            strain   =  (Fd'+Fd)/2-eye(size(Fd));
-            
-            sigma = stress(type, c, strain);
+                strain   =  (Fd'+Fd)/2-eye(size(Fd));
+                sigma = stress(mat_type, c, strain);
 
-            [dNdx, J] = getdNdx(type, x, [wx(j), wx(k)]); 
-
-            for m = 1:nnodes % Nodes
-                for l = 1:ndim % Dims
-                    T(m,:) = T(m,:) + sigma(:,l)'*dNdx(m,l)*J*w(j)*w(k); 
+                [dNdx, J] = getdNdx(sh_type, xe, [wx(j), wx(k)]); 
+                % FIXIT HARDCODE
+                for m = 1:4 
+                    for ll = 1:ndim
+                        for l = 1:ndim 
+                            idx = 2*(n(e,m)-1)+ll;
+                            T(idx) = T(idx) + sigma(ll,l)'*dNdx(m,l)*J*w(j)*w(k);
+                        end
+                    end
                 end
             end
         end
     end
-    T = T';
-    T = T(:);
 end

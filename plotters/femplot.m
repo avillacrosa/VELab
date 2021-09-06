@@ -1,21 +1,15 @@
-function femplot(x,u,n)
-    nnodes = size(x,1);
-    nelem  = size(n,1);
-    size(u)
-    u = reshape(u,[2,nnodes])';
-    xf = x + u;
+function femplot(X,x,n)
     hold on
-    for e = 1:nelem
-        xfe = xf(n(e,:),:);
-        xe  = x(n(e,:),:);
-        
-        xfe  = cat(1, xfe, xfe(1,:));
-        xe = cat(1, xe, xe(1,:));
+    for e = 1:size(n,1)
+        xe = x(n(e,:),:);
+        Xe  = X(n(e,:),:);
+        xe  = cat(1, xe, xe(1,:));
+        Xe = cat(1, Xe, Xe(1,:));
 
-        plot(xe(:,1), xe(:,2),'--*', 'color', 'blue')
-        plot(xfe(:,1), xfe(:,2),'--*', 'color', 'red')
+        plot(Xe(:,1), Xe(:,2),'--*', 'color', 'blue')
+        plot(xe(:,1), xe(:,2),'--*', 'color', 'red')
 
-        allx = cat(1,xfe,xe);
+        allx = cat(1,X,x);
 
         xlim([min(allx(:,1))-0.1 max(allx(:,1))+0.1])
         ylim([min(allx(:,2))-0.1 max(allx(:,2))+0.1])    

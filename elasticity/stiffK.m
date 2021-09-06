@@ -7,6 +7,9 @@ function K = stiffK(x, P, n, type)
     % 2-point 2D Gaussian quadrature
     w  = [1 1];
     wx = [-1 1]/sqrt(3);
+    
+%     w   = [5 8 5]/9;
+%     wx  = [-1 0 1]*sqrt(3/5);
         
     for e = 1:size(n,1)
         D  = material(type, P(e,:));   
@@ -14,8 +17,8 @@ function K = stiffK(x, P, n, type)
         ni = n(e,:);
         xe = x(n(e,:),:);
         
-        for i = 1:2
-            for j = 1:2
+        for i = 1:size(w,2)
+            for j = 1:size(w,2)
                 
                 [dNdx, J] = getdNdx('square', xe, [wx(i), wx(j)]);
                 B = getB(dNdx);
