@@ -26,7 +26,7 @@ n = [1 3 4 2];
 % Material properties, one for element
 P = [  100    0.3    1  ];
 
-n_inc = 10;
+n_inc = 1;
 
 x = newton(t, x, n, x0, dx0, P, n_inc, 'venant');
 femplot(X,x,n);

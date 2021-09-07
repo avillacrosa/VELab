@@ -22,13 +22,38 @@ P = [  100    0.3    1; 100    0.3    1; 100    0.3    1; 100    0.3    1];
 % --- Main ---
 
 % Build stiffness matrix
-K = stiffK(x, P, n, 'venant');  
+K = stiffK(x, X, P, n, 'venant');  
 K = setboundsK(K, x0, n);
 
-te = t';
-te = te(:);
+f = t';
+f = f(:);
 
-u = K\te(:);
-u = reshape(u, [size(x,2), size(x,1)])';
+xv = x';
+xv = xv(:);
 
-femplot(X,x+u,n);
+u_k = zeros(size(xv));
+
+% Euler time integration
+niter = 400;
+every = 1;
+
+str_store = zeros(1,niter/every);
+t_store = zeros(1,niter/every);
+
+eta = 1;
+dt = 0.001;
+wdt   = dt/eta;
+tm = 0;
+
+c = 0;
+
+% Solve U_{k+1} = wdt*f + (1-wdt*K)u_k
+[strains, times] = euler_t(u_k, ...
+                        (eye(size(K))-wdt*K), wdt*f, x0, niter, dt, every);
+                           
+plot(times, strains)
+hold on
+yline(str_inf,'--')
+xline(tau, '--')
+ylim([0, str_inf+0.5])
+hold off

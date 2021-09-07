@@ -1,4 +1,4 @@
-function K = stiffK(x, P, n, type)
+function K = stiffK(x, X, P, n, type)
     
     nnodes = size(x,1);
     ndim   = size(x,2);
@@ -10,15 +10,17 @@ function K = stiffK(x, P, n, type)
     
 %     w   = [5 8 5]/9;
 %     wx  = [-1 0 1]*sqrt(3/5);
-        
+
     for e = 1:size(n,1)
-        D  = material(type, P(e,:));   
               
         ni = n(e,:);
         xe = x(n(e,:),:);
+        Xe = X(n(e,:),:);
         
         for i = 1:size(w,2)
             for j = 1:size(w,2)
+                
+                D  = material(type, xe, Xe, [wx(i), wx(j)], P(e,:)); 
                 
                 [dNdx, J] = getdNdx('square', xe, [wx(i), wx(j)]);
                 B = getB(dNdx);

@@ -3,13 +3,12 @@ function x = newton(t, x, n, x0, dx0, P, n_inc, mat_type)
     ndim   = size(x,2);
     nnodes = size(x,1);
     X = x;
-    
+    nvec = n(:);
     F = zeros(ndim*nnodes,1); %LOAD! not deformation
     R = zeros(ndim*nnodes,1);
     p = zeros(nnodes, ndim);
 
-    dp = t / n_inc;
-%     K  = zeros(nnodes*ndim, nnodes*ndim);    
+    dp = t / n_inc;  
     
     for i = 1:n_inc
         % FIXME Placeholder (wrong)
@@ -26,25 +25,20 @@ function x = newton(t, x, n, x0, dx0, P, n_inc, mat_type)
         R  = R - DF;
         it = 0;
         tol = norm(R)/norm(F);
-%         while(tol > 0.00001)
-        while(it < 1)
-            K = stiffK(x, P, n, mat_type);
+        while(tol > 0.001)
+            K = stiffK(x, X, P, n, mat_type);
             K = setboundsK(K, x0, n);
             u = K\(-R);
             u = reshape(u,[ndim,nnodes])';
             x = x + u;
-            T = internalF(x, X, P, n, mat_type, 'square');
-            T
-            R = T-F;
-            norm(R), norm(T)
             
-            tol = convergence(R, F, x0);
-            disp(["Current tolerance", tol, "It", it])
+            T = internalF(x, X, P, n, mat_type, 'square');
+            R = T-F;
             
             it = it + 1;
-%             break
+            tol = convergence(R, F, x0);
+            disp(["Newton-Raphson tolerance", tol, "It", it])
         end
-        break
     end
 end
 
