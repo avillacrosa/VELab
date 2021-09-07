@@ -4,7 +4,7 @@ function K = stiffK(x, X, P, n, type)
     ndim   = size(x,2);
 
     K = zeros(nnodes*ndim, nnodes*ndim);
-    % 2-point 2D Gaussian quadrature
+
     w  = [1 1];
     wx = [-1 1]/sqrt(3);
     

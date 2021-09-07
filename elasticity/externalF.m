@@ -1,7 +1,7 @@
 function Fa = externalF(type, tx)
     wi  = [1 1];
     wxi = [-1 1]/sqrt(3);
-    % Nodes
+
     Fa = zeros(size(tx));
     
     % TODO : Generalize this...

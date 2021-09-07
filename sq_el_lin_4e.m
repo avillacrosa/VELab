@@ -1,3 +1,6 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Linear elasticity with 4 elements                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc;
 
 addpath('elasticity')
@@ -7,21 +10,15 @@ addpath('shape')
 addpath('plotters')
 addpath('solvers')
 
-% Initial parameters, without connectivity
-x   = [ 0 0;  1 0;  2 0;  0 1; 1 1;  2 1; 0 2 ; 1 2; 2 2]/2;% node position
+x   = [ 0 0;  1 0;  2 0;  0 1; 1 1;  2 1; 0 2 ; 1 2; 2 2]/2;
 X = x;
-t   = [ 0 0;  0 0;  5 0;  0 0; 0 0; 10 0; 0 0 ; 0 0; 5 0];  % superficial load per node
-x0  = [1 1 0 ; 1 2 0 ; 2 2 0 ; 3 2 0 ; 4 1 0 ; 7 1 0 ;]; % Dirichlet bc
+t   = [ 0 0;  0 0;  5 0;  0 0; 0 0; 10 0; 0 0 ; 0 0; 5 0];
+x0  = [1 1 0 ; 1 2 0 ; 2 2 0 ; 3 2 0 ; 4 1 0 ; 7 1 0 ;];
 
-% Connectivity, one row for each element and one value for each node
 n = [1 2 5 4; 2 3 6 5; 4 5 8 7; 5 6 9 8];
 
-% Material properties, one for element
 P = [  100    0.3    1; 100    0.3    1; 100    0.3    1; 100    0.3    1];
 
-% --- Main ---
-
-% Build stiffness matrix
 K = stiffK(x, X, P, n, 'venant');  
 K = setboundsK(K, x0, n);
 

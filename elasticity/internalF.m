@@ -12,13 +12,11 @@ function T = internalF(x, X, P, n, mat_type, sh_type)
           
     T = zeros(nnodes*ndim, 1);
     for e = 1:size(n,1)
-        % The mistake was that P is now one for each element !!!! 
         xe = x(n(e,:),:);
         Xe = X(n(e,:),:);
         for j = 1:size(w,2)
             for k = 1:size(w,2)
                 Fd = deformF(xe,Xe,[wx(j),wx(k)]);
-%                 "Fd stress", Fd, det(Fd), det(Fd)^(1/3)
                 sigma = stress(mat_type, Fd, P(e,:));
                 [dNdx, J] = getdNdx(sh_type, xe, [wx(j), wx(k)]); 
                 % FIXIT HARDCODE

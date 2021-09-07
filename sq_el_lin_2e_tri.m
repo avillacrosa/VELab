@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Linear elasticity with 1 element                                        %
+% Linear elasticity with 2 elements in triangle shape                     %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc;
 
@@ -10,17 +10,21 @@ addpath('shape')
 addpath('plotters')
 addpath('solvers')
 
-x   = [ 0 0;  0 1;  1 0;  1 1];
+x   = [ 0 0;  2 0;  1 1;  0 2; 2 2]/2;
 X = x;
-t   = [ 0 0;  0 0; 10 0; 10 0];
-
-x0   = [ 1 1 0; 1 2 0; 2 1 0; 3 2 0];
+t   = [ 0 0;  10 0; 0 0 ; 0 0; 10 0];
+x0   = [ 1 1 0; 1 2 0; 2 2 0; 4 1 0];
 dx0  = [ 1 1;  1 0;  0 1;  0 0]; 
 
-n = [1 3 4 2];
+% Connectivity, one row for each element and one value for each node
+n = [1 3 5 4; 1 2 5 3];
 
-P = [  100    0.3    1  ];
+% Material properties, one for element
+P = [  100    0.3    1  ; 100    0.3    1 ];
 
+% --- Main ---
+
+% Build stiffness matrix
 K = stiffK(x, X, P, n, 'venant');  
 K = setboundsK(K, x0, n);
 
