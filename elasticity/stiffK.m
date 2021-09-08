@@ -23,6 +23,7 @@ function K = stiffK(x, X, P, n, type)
                 D  = material(type, xe, Xe, [wx(i), wx(j)], P(e,:)); 
                 
                 [dNdx, J] = getdNdx('square', xe, [wx(i), wx(j)]);
+
                 B = getB(dNdx);
 
                 for ki = 1:4

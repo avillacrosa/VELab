@@ -51,7 +51,4 @@ plot(times, strains)
 hold on
 xlabel("t")
 ylabel("strain")
-yline(str_inf,'--')
-xline(tau, '--')
-ylim([0, str_inf+0.5])
 hold off
