@@ -19,8 +19,7 @@ function T = internalF(x, X, P, n, mat_type, sh_type)
                 Fd = deformF(xe,Xe,[wx(j),wx(k)]);
                 sigma = stress(mat_type, Fd, P(e,:));
                 [dNdx, J] = getdNdx(sh_type, xe, [wx(j), wx(k)]); 
-                % FIXIT HARDCODE
-                for m = 1:4 
+                for m = 1:size(xe,1) 
                     for ll = 1:ndim
                         for l = 1:ndim 
                             idx = 2*(n(e,m)-1)+ll;

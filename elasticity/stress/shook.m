@@ -1,4 +1,4 @@
-function sigma = svenant(Fd, P)
+function sigma = shook(Fd, P)
     E  = P(1);
     nu = P(2);
     c  = E/(1-nu^2) ... 

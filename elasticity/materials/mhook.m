@@ -1,4 +1,4 @@
-function D = mvenant(P)
+function D = mhook(P)
     E  = P(1);
     nu = P(2);
     D  = E/(1-nu^2) ... 
