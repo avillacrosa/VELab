@@ -2,24 +2,18 @@
 function x = newton(x, X, t, n, x0, dof, P, mat_type, ...
                     shape_type, load_type, max_tol, n_ints)
 
-    nelem  = size(n,1);
     ndim   = size(x,2);
     nnodes = size(x,1);
-    nvec = n(:);
     
     F = zeros(ndim*nnodes,1); 
     R = zeros(ndim*nnodes,1);
-    p = zeros(size(t));
 
-    dp = t / n_ints;  
-    % dp ok
-%     P, size(P)
-    for i = 1:1
+    % As a superficial load
+    dp = t / n_ints;
+    for i = 1:n_ints
         DF = integrateF(x, dp, n, shape_type);
-        DF, dp
         F  = F + DF; 
         R  = R - DF;
-        F
         it = 1;
         tol = norm(R)/norm(F);
         while(tol > max_tol)
@@ -41,7 +35,7 @@ function x = newton(x, X, t, n, x0, dof, P, mat_type, ...
             
             R = T-F;
             tol = norm(R(dof))/norm(F);
-%             fprintf('INCR=%i ITER=%i tolR=%e tolX=%e\n', i,it,tol,norm(u))
+            fprintf('INCR=%i ITER = %i tolR = %e tolX=%e\n', i,it,tol,norm(u))
             it = it + 1;
         end
     end

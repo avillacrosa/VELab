@@ -1,7 +1,8 @@
 function [N, dN] = fshape(type, z)
-    
-    if lower(type) == "square"
+    if strcmp(type, 'square')
         [N, dN] = square(z);
+    elseif strcmp(type, 'triangle')
+        [N, dN] = triangle(z);
     end
 
 end

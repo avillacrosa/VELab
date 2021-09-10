@@ -1,4 +1,5 @@
 function femplot(X,x,n)
+    figure
     hold on
     for e = 1:size(n,1)
         xe = x(n(e,:),:);

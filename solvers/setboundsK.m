@@ -1,5 +1,4 @@
 function K = setboundsK(K, x0)
-    k = 10^6*max(abs(diag(K)));
     for e = 1:size(x0,1)
         n     = x0(e,1);
         dim   = x0(e,2);

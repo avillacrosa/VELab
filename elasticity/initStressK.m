@@ -15,7 +15,7 @@ function K = initStressK(x, X, P, n, mat_type, shape_type)
         for int_i = 1:size(w,2)
             for int_j = 1:size(w,2)
 
-                Fd = deformF(xe,Xe,[wx(int_i),wx(int_j)]);
+                Fd = deformF(xe,Xe,[wx(int_i),wx(int_j)], shape_type);
                 sigma = stress(mat_type, Fd, P(e,:));
                 [dNdx, J] = getdNdx(shape_type, xe, [wx(int_i), wx(int_j)]);
 

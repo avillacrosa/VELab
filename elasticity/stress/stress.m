@@ -1,7 +1,7 @@
 function sigma = stress(type, Fd, P)
-    if lower(type) == 'hookean'
+    if strcmp(type, 'hookean')
         sigma = shook(Fd, P);
-    elseif lower(type) == 'neohookean'
+    elseif strcmp(type, 'neohookean')
         sigma = sneohook(Fd, P);
     end
 end

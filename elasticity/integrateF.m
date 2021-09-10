@@ -22,19 +22,19 @@ function tint = integrateF(x, t, n, shape_type)
 
                     [N, ~] = fshape(shape_type, [wxi(j), -1]);
                     [~, J] = getdNdx(shape_type, xe, [wxi(j), -1]);
-                    tint(n_id,:) = tint(n_id,:) + te(ne_id, :)*N(a)*wi(j)*J^(1/2);
+                    tint(n_id,:) = tint(n_id,:) + te(ne_id, :)*N(a)*wi(j)*J^(1/ndim);
 
                     [N, ~] = fshape(shape_type, [+1, wxi(j)]);
                     [~, J] = getdNdx(shape_type, xe, [+1, wxi(j)]);
-                    tint(n_id,:) = tint(n_id,:) + te(ne_id, :)*N(a)*wi(j)*J^(1/2);
+                    tint(n_id,:) = tint(n_id,:) + te(ne_id, :)*N(a)*wi(j)*J^(1/ndim);
 
                     [N, ~] = fshape(shape_type, [wxi(j), +1]);
                     [~, J] = getdNdx(shape_type, xe, [wxi(j), +1]);
-                    tint(n_id,:) = tint(n_id,:) + te(ne_id, :)*N(a)*wi(j)*J^(1/2);
+                    tint(n_id,:) = tint(n_id,:) + te(ne_id, :)*N(a)*wi(j)*J^(1/ndim);
 
                     [N, ~] = fshape(shape_type, [-1, wxi(j)]);
                     [~, J] = getdNdx(shape_type, xe, [-1, wxi(j)]);
-                    tint(n_id,:) = tint(n_id,:) + te(ne_id, :)*N(a)*wi(j)*J^(1/2);
+                    tint(n_id,:) = tint(n_id,:) + te(ne_id, :)*N(a)*wi(j)*J^(1/ndim);
                 end
             end
         end
