@@ -1,26 +1,24 @@
-function T = internalF(x, X, P, n, mat_type, sh_type)
+function T = internalF(Topo, Material)
 
-    ndim   = size(x,2);
-    nnodes = size(x,1);
+    ndim   = Topo.dim;
+    nnodes = Topo.totn;
     
-    wx = [-1 1]/sqrt(3);
-    w  = [1 1];
-    
-%     w   = [5 8 5]/9;
-%     wx  = [-1 0 1]*sqrt(3/5);
-    
+    quadx  = Topo.quadx;
+    quadw  = Topo.quadw;
+
+    n = Topo.n;
           
     T = zeros(nnodes*ndim, 1);
-    for e = 1:size(n,1)
-        xe = x(n(e,:),:);
-        Xe = X(n(e,:),:);
+    for e = 1:Topo.tote
+        xe = Topo.x(n(e,:),:);
+        Xe = Topo.X(n(e,:),:);
         for m = 1:size(xe,1) 
-            for j = 1:size(w,2)
-                for k = 1:size(w,2)
-                    Fd = deformF(xe,Xe,[wx(j),wx(k)], sh_type);
-                    sigma = stress(mat_type, Fd, P(e,:));
-                    [dNdx, J] = getdNdx(sh_type, xe, [wx(j), wx(k)]); 
-                    int = sigma*dNdx(m,:)'*J*w(j)*w(k);
+            for j = 1:size(quadw,2)
+                for k = 1:size(quadw,2)
+                    Fd = deformF(xe,Xe,[quadx(j),quadx(k)], Topo.shape);
+                    sigma = stress(Fd, e, Material);
+                    [dNdx, J] = getdNdx(xe, [quadx(j), quadx(k)], Topo.shape); 
+                    int = sigma*dNdx(m,:)'*J*quadw(j)*quadw(k);
                     for ll = 1:ndim
                         idx = 2*(n(e,m)-1)+ll;
                         T(idx) = T(idx) + int(ll);

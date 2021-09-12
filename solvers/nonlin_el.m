@@ -1,5 +1,4 @@
-function u = nonlin_el(x, X, t, n, x0, dof, P, mat_type,...
-                        shape_type, load_type, max_tol, n_ints)
-    u = newton(x, X, t, n, x0, dof, P,mat_type, ...
-               shape_type, load_type, max_tol,  n_ints);
+function Result = nonlin_el(Topo, Material, Numerical)
+    Result = struct();
+    Result = newton(Topo, Material, Numerical);
 end

@@ -1,6 +1,4 @@
-function D = mhook(P)
-    E  = P(1);
-    nu = P(2);
+function D = mhook(E, nu)
     D  = E/(1-nu^2) ... 
           *[  1  nu     0
               nu   1     0

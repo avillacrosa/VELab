@@ -1,28 +1,24 @@
-function x = run(x, n, ts, x0, P, type, mat_type, ...
-                 shape_type, load_type, max_tol, n_incs, n_its, algo_type)
-             
-    ndim   = size(x,2);
-    nnodes = size(x,1);
+function Result = run(Topo, Material, Numerical)
     
-    X    = x;
-    fix  = 2*(x0(:,1)-1)+x0(:,2);
-    dof  = zeros(size(x,2)*size(x,1),1);
+    fix  = 2*(Topo.x0(:,1)-1)+Topo.x0(:,2);
+    dof  = zeros(Topo.dim*Topo.totn,1);
     dof(fix)=1;
     dof = find(dof==0);
-
-    t = zeros(ndim*nnodes,1);
-    for i = 1:size(ts,1)
-        t(2*(ts(:,1)-1) + ts(:,2)) = ts(:,3);
-    end
+    Topo.dof = dof;
     
-    if strcmp(type, 'linear elastic')
-        x = lin_el(x, X, t, n, x0, dof, P, mat_type, shape_type, load_type);
-    elseif strcmp(type, 'nonlinear elastic')
-        x = nonlin_el(x, X, t, n, x0, dof, P, mat_type, ...
-            shape_type, load_type, max_tol, n_its);
-    elseif strcmp(type, 'linear viscoelastic')
-        x = lin_ve(x, X, t, n, x0, dof, P, mat_type, shape_type,...
-                   load_type, algo_type, n_incs);
+    t = zeros(Topo.dim*Topo.totn,1);
+    for i = 1:size(Topo.f,1)
+        t(2*(Topo.f(:,1)-1) + Topo.f(:,2)) = Topo.f(:,3);
     end
+    Topo.f = t;
     
+    if strcmp(Numerical.type, 'newton')
+        Result = nonlin_el(Topo, Material, Numerical);
+        
+    elseif strcmp(Numerical.type, 'euler')
+        Result = lin_ve(Topo, Material, Numerical);
+        
+    else 
+        Result = lin_el(Topo, Material);
+    end
 end

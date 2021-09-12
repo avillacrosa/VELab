@@ -1,13 +1,17 @@
-function x = lin_el(x, X, ts, n, x0, dof, P, mat_type, shape_type, load_type)
-
-    if strcmp(load_type, 'surface')
-        t = integrateF(x, t, n, shape_type)
+function Result = lin_el(Topo, Material)
+    Result = struct();
+    
+    if strcmp(Topo.ftype, 'surface')
+        Topo.f = integrateF(Topo);
     end
-    K = stiffK(x, X, P, n, mat_type, shape_type);  
-    K = setboundsK(K, x0);
-
-
-    u = K\t;
-    u = reshape(u, [size(x,2), size(x,1)])';
-    x = x + u;
+    
+    K = stiffK(Topo, Material);
+    K = setboundsK(K, Topo.x0);
+    
+    u = K\Topo.f;
+    u = reshape(u, [Topo.dim, Topo.totn])';
+    x = Topo.x + u;
+    Result.u = u;
+    Result.x = x;
+    Result.K = K;
 end

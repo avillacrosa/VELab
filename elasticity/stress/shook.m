@@ -1,6 +1,4 @@
-function sigma = shook(Fd, P)
-    E  = P(1);
-    nu = P(2);
+function sigma = shook(Fd, E, nu)
     c  = E/(1-nu^2) ... 
           *[  1  nu     0
               nu   1     0

@@ -1,4 +1,4 @@
-function [dNdx, J] = getdNdx(type, x, z)
+function [dNdx, J] = getdNdx(x, z, type)
     [~, dNdz] = fshape(type, z);
     dxdz = dNdz'*x;
     dNdx = (dxdz\dNdz')';

@@ -8,12 +8,12 @@ addpath('shape')
 addpath('plotters')
 addpath('solvers')
 
-fname = 'topologies/square_1x1.mat';
+% fname = 'topologies/square_1x1.mat';
 % fname = 'topologies/square_2x2.mat';
 % fname = 'topologies/square_2x2tri.mat'; % Weird! Try at home...
 % fname = 'topologies/square_3x3.mat';
 
-load(fname);
+% load(fname);
 
 x   = [ 0 0;  1 0;  1 1;  0 1];
 n   = [1 2 3 4];

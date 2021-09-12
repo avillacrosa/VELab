@@ -1,27 +1,25 @@
-function K = stiffK(x, X, P, n, mat_type, shape_type)
-    
-    nnodes = size(x,1);
-    ndim   = size(x,2);
+function K = stiffK(Topo, Material)
+    nnodes = Topo.totn;
+    ndim   = Topo.dim;
 
     K = zeros(nnodes*ndim, nnodes*ndim);
 
-    w  = [1 1];
-    wx = [-1 1]/sqrt(3);
+    quadw = Topo.quadw;
+    quadx = Topo.quadx;
+    n = Topo.n;
     
-%     w   = [5 8 5]/9;
-%     wx  = [-1 0 1]*sqrt(3/5);
 
-    for e = 1:size(n,1)
+    for e = 1:Topo.tote
               
         ni = n(e,:);
-        xe = x(n(e,:),:);
-        Xe = X(n(e,:),:);
+        xe = Topo.x(n(e,:),:);
+        Xe = Topo.X(n(e,:),:);
         
-        for i = 1:size(w,2)
-            for j = 1:size(w,2)
-                D  = material(mat_type, xe, Xe, [wx(i), wx(j)], P(e,:)); 
+        for i = 1:size(quadw,2)
+            for j = 1:size(quadw,2)
+                D  = material(xe, Xe, e, [quadx(i), quadx(j)], Material); 
                 
-                [dNdx, J] = getdNdx(shape_type, xe, [wx(i), wx(j)]);
+                [dNdx, J] = getdNdx(xe, [quadx(i), quadx(j)], Topo.shape);
 
                 B = getB(dNdx);
 
@@ -33,7 +31,8 @@ function K = stiffK(x, X, P, n, mat_type, shape_type)
                         sl_l = (2*nl-1):2*nl;
                         Bk = squeeze(B(ki,:,:));
                         Bl = squeeze(B(li,:,:));
-                        K(sl_k,sl_l) = K(sl_k,sl_l)+(Bk'*D*Bl)*w(i)*w(j)*J;
+                        K(sl_k,sl_l) = K(sl_k,sl_l)+ ...
+                                       (Bk'*D*Bl)*quadw(i)*quadw(j)*J;
                     end
                 end
             end
