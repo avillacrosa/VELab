@@ -1,6 +1,4 @@
-function sigma = sneohook(Fd, P)
-    lambda = P(1);
-    mu     = P(2);
+function sigma = sneohook(Fd, lambda, mu)
     J      = det(Fd);
     
     b = Fd*Fd';

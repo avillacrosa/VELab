@@ -12,7 +12,6 @@ function Btot = linveB(Topo)
 %         Xe = Topo.X(Topo.n(e,:),:);
         for f = 1:2
             for g = 1:2
-                size(Topo.x)
                 [dNdx, J] = getdNdx(xe,[quadx(f),quadx(g)], Topo.shape);
                 B    = getB(dNdx);
                 for a = 1:4

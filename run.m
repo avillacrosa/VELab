@@ -5,6 +5,7 @@ function Result = run(Topo, Material, Numerical)
     dof(fix)=1;
     dof = find(dof==0);
     Topo.dof = dof;
+    Topo.fixdof = 2*(Topo.x0(:,1)-1)+Topo.x0(:,2);
     
     t = zeros(Topo.dim*Topo.totn,1);
     for i = 1:size(Topo.f,1)
@@ -15,10 +16,11 @@ function Result = run(Topo, Material, Numerical)
     if strcmp(Numerical.type, 'newton')
         Result = nonlin_el(Topo, Material, Numerical);
         
-    elseif strcmp(Numerical.type, 'euler')
+    elseif contains(Numerical.type, 'euler')
         Result = lin_ve(Topo, Material, Numerical);
         
     else 
         Result = lin_el(Topo, Material);
     end
+    fprintf("---- NORMAL PROGRAM END ----\n");
 end

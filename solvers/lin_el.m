@@ -6,8 +6,8 @@ function Result = lin_el(Topo, Material)
     end
     
     K = stiffK(Topo, Material);
+
     K = setboundsK(K, Topo.x0);
-    
     u = K\Topo.f;
     u = reshape(u, [Topo.dim, Topo.totn])';
     x = Topo.x + u;

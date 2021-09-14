@@ -28,7 +28,7 @@ function K = initStressK(Topo, Material)
 %                         k_ab_ij = J*dNdx(ki,:)*sigma*dNdx(li,:)'*eye(ndim);
                         
                         K(sl_k,sl_l) = K(sl_k,sl_l)+...
-                                       J*dNdx(ki,:)*sigma*dNdx(li,:)'*eye(ndim);
+                                       quadw(li)*quadw(ki)*J*dNdx(ki,:)*sigma*dNdx(li,:)'*eye(ndim);
 
                     end
                 end
