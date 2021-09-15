@@ -54,6 +54,6 @@ for i = 1:ninc
     [Topo, Material, Numerical] = init(x, x0, n, t, P, mat_type, load_type, ...
                                     numP, num_type, visco_type, u0);
     Result = run(Topo, Material, Numerical);
-    plot(Result.strs(:,1), '--' ,'color', 'black')
+    plot(Result.strs(:,1), '--' ,'color', 'black', 'LineWidth', 1)
     legend_labs(i) = dts(i);
 end

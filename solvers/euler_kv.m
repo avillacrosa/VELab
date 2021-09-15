@@ -39,8 +39,8 @@ function Result = euler_kv(Topo, Material, Numerical, Result)
         
         if mod(it,save) == 0
             c = c + 1;
-            urs = reshape(uk, [2,4])';
-            urskp1 = reshape(ukp1, [2,4])';
+            urs = reshape(uk, [Topo.dim,Topo.totn])';
+            urskp1 = reshape(ukp1, [Topo.dim,Topo.totn])';
             
             [stress, strain, k] = totStressStr2(urs, urskp1, Topo, Material, dt);
             Result.strs(c,:)  = strain;

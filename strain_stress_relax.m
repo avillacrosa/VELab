@@ -38,8 +38,11 @@ types = ["kelvin-voigt", "maxwell"];
 for j = 1:2
     i = 1;
     visco_type = types(j);
-    
-    [Topo, Material, Numerical] = init(X, x0, n, flt, P, mat_type, load_type, ...
+    modflt = flt;
+    if visco_type == 'maxwell'
+        modflt(:,3) = 0;
+    end
+    [Topo, Material, Numerical] = init(X, x0, n, modflt, P, mat_type, load_type, ...
                                     numP, num_type, visco_type, u0);
     Result = run(Topo, Material, Numerical);
     if strcmp(Material.visco_type, 'kelvin-voigt')

@@ -19,6 +19,7 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
     % Get integrals at equilibrium
     Bvec = linveBmx(Topo); % This is the integral of B.
     Btot = linveB(Topo); % This is the integral of B'*B. 
+            Btot = setboundsK(Btot, Topo.x0);
 
     K = stiffK(Topo, Material);
     K = setboundsK(K, Topo.x0);
@@ -26,16 +27,23 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
     u_0     = Topo.u; % If this is 0 but f is not -> Ct. stress, inf strain
     f_0     = Topo.f; % If this is 0 but u is not -> Ct. strain, stress -> 0
     
+%     u_0 = zeros(size(u_0));
+%         f_0     = zeros(size(f_0));
+    Topo.x = Topo.X + reshape(Topo.u, [2,4])';  
+
+    
     if any(u_0) == 1
+        % Sudden strain
         fprintf("------Sudden strain------ \n")
         u_v_0   = zeros(size(u_0));
         u_e_0   = u_0 - u_v_0;
-        sigma_0 = D*Bvec*u_e_0 % 22
+        sigma_0 = D*Bvec*u_e_0;
     else
+        % Sudden stress
         fprintf("------Sudden stress------ \n")
         u_e_0   = zeros(size(u_0));
         u_v_0   = zeros(size(u_0));
-        sigma_0 = Bvec' \ f_0 % 10
+        sigma_0 = Bvec' \ f_0;
     end
 
     u_k     = u_0;
@@ -51,8 +59,8 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
     t = 0;
     
     for it = 1:Numerical.n_incr
-        Btot = setboundsK(Btot, Topo.x0);
 
+        Btot = setboundsK(Btot, Topo.x0);
         u_v_kp1 = Btot \ (Btot*u_v_k + f_0*dt/eta);
         u_e_kp1 = K \ (dt*fdot + K*u_e_k);
         u_kp1 = u_v_kp1 + u_e_kp1;
@@ -75,5 +83,4 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
     Result.sigma_0  = sigma_0;
     Result.tau = eta/(Material.E(1)/(1-Material.nu(1)^2));
     Result.strain_0 = Bvec*Topo.u;
-    Result.x = Topo.X + reshape(u_k, [Topo.dim,Topo.totn])';
 end   

@@ -6,5 +6,7 @@ function Result = lin_ve(Topo, Material, Numerical)
         Result = euler_mx(Topo, Material, Numerical, Result);
      elseif strcmp(Material.visco_type, 'maxwell2')
         Result = euler_mx2(Topo, Material, Numerical, Result);
+     elseif strcmp(Material.visco_type, 'maxwell3')
+        Result = euler_mx3(Topo, Material, Numerical, Result);
      end
 end
