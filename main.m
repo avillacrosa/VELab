@@ -26,8 +26,11 @@ mat_type = 'hookean';
 % num_type = 'none';
 % num_type = 'newton';
 num_type = 'eulerf';
+
 % visco_type = 'kelvin-voigt';
 visco_type = 'maxwell';
+
+load_type = 'surface';
 
 %      Niter, tol        for newton
 % numP = [10, 1e-10];
@@ -36,10 +39,10 @@ visco_type = 'maxwell';
 numP = [1000, 0.0001, 20];
 
 % For viscoelasticity only...
-% t(:,3) = 0;
 u0 = [0; 0; 0.1999; 0; 0.1999; -0.0599; 0; -0.0599];
-u0 = zeros(size(u0));
 
+t(:,3) = 0;
+% u0 = zeros(size(u0));
 
 % Values for a hookean material
 P = repmat([100 0.3 1], size(n,1),1);
@@ -53,5 +56,6 @@ P = repmat([100 0.3 1], size(n,1),1);
 Result = run(Topo, Material, Numerical);
 
 % plot(Result.sigmas(:,1));
+% plot(Result.us(:,3))
 
 femplot(Topo.X, Result.x, Topo.n)

@@ -26,16 +26,16 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
     u_0     = Topo.u; % If this is 0 but f is not -> Ct. stress, inf strain
     f_0     = Topo.f; % If this is 0 but u is not -> Ct. strain, stress -> 0
     
-    if any(u_0) == 1
+    if any(u_0) == 1 % u_0 != 0, f_0 = 0
         fprintf("------Sudden strain------ \n")
         u_v_0   = zeros(size(u_0));
         u_e_0   = u_0 - u_v_0;
-        sigma_0 = D*Bvec*u_e_0 % 22
-    else
+        sigma_0 = D*Bvec*u_e_0; % 22
+    else % u_0 = 0, f_0 != 0
         fprintf("------Sudden stress------ \n")
         u_e_0   = zeros(size(u_0));
         u_v_0   = zeros(size(u_0));
-        sigma_0 = Bvec' \ f_0 % 10
+        sigma_0 = Bvec' \ f_0; % 10
     end
 
     u_k     = u_0;
@@ -46,6 +46,7 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
     fdot = zeros(size(f_0));
     
     Result.sigmas  = zeros(Numerical.n_incr/save, 3);
+    Result.us  = zeros(Numerical.n_incr/save, Topo.dim*Topo.totn);
     Result.times = zeros(1,Numerical.n_incr/save);
     c = 1;
     t = 0;
@@ -68,6 +69,7 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
                 it, norm(u_k),  sigma_k(1));
 
             Result.sigmas(c,:) = sigma_k;
+            Result.us(c,:) = u_k;
             Result.times(c) = t;
             c = c+1;
         end

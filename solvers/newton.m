@@ -8,13 +8,14 @@ function Result = newton(Topo, Material, Numerical, Result)
         
     % As a superficial load
     Topo.f = Topo.f / Numerical.n_iter;
+    u = zeros(size(Topo.x));
     for i = 1:Numerical.n_iter
         DF = integrateF(Topo);
         F  = F + DF; 
         R  = R - DF;
         it = 1;
         tol = norm(R)/norm(F);
-        while(tol > Numerical.min_tol)
+        while(tol > Numerical.min_tol || norm(u) > Numerical.min_tol )
             K_c = stiffK(Topo, Material); 
             K_s = initStressK(Topo, Material); 
             K = K_c + K_s;
@@ -24,7 +25,6 @@ function Result = newton(Topo, Material, Numerical, Result)
             RBc = zeros(size(R));
             RBc(Topo.dof) = R(Topo.dof);
             u = K\(-RBc);
-            
             u = reshape(u,[ndim,nnodes])';
             Topo.x = Topo.x + u;
             T = internalF(Topo, Material);

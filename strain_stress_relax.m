@@ -34,7 +34,9 @@ P = [100 0.3 1;100 0.3 1;100 0.3 1;100 0.3 1;];
 
 
 
-types = ["kelvin-voigt", "maxwell"];                                
+types = ["kelvin-voigt", "maxwell"];  
+% types = ["kelvin-voigt"];                                
+
 for j = 1:2
     i = 1;
     visco_type = types(j);

@@ -9,6 +9,13 @@ function Result = euler_kv(Topo, Material, Numerical, Result)
     K = stiffK(Topo, Material);
     Btot = linveB(Topo);
     
+    E = Material.E(1);
+    nu = Material.nu(1);
+        D  = E/(1-nu^2) ... 
+      *[  1  nu     0
+          nu   1     0
+          0   0  (1-nu)/2 ];  
+    
     % TODO Save this as arguments...
     save = Numerical.save;
     dt   = Numerical.dt;
@@ -49,10 +56,11 @@ function Result = euler_kv(Topo, Material, Numerical, Result)
         uk = ukp1;
     end
     Result.sigma_0 = stress;
-    
-    Result.tau = eta/(Material.E(1)/1-Material.nu(1)^2)*ones(size(strain));
+    Result.tau = eta/(Material.E(1)/(1-Material.nu(1)^2))*ones(size(strain));
     Result.k = k;
-    Result.str_inf = stress/(Material.E(1)/1-Material.nu(1)^2);
+    Result.str_inf = stress/(Material.E(1)*(1+Material.nu(1))/(1-Material.nu(1)^2));
+    Result.str_inf = D \ stress;
+    Result.str_inf = Result.str_inf(1);
     Result.K = K;
     Result.u = uk;
     Result.x = Topo.x + reshape(ukp1, [Topo.dim,Topo.totn])';
