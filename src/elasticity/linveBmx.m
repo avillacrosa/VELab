@@ -1,17 +1,17 @@
-function Btot = linveBmx(Topo)
-    nnodes = Topo.totn;
-    ndim   = Topo.dim;
+function Btot = linveBmx(Geom, Set)
+    nnodes = Geom.n_nodes;
+    ndim   = Geom.dim;
 
-    quadw  = Topo.quadw;
-    quadx  = Topo.quadx;
+    quadw  = Set.quadw;
+    quadx  = Set.quadx;
     Btot = zeros(3, nnodes*ndim);
 
-    for e = 1:Topo.tote
-        ne = Topo.n(e,:);
-        xe = Topo.x(Topo.n(e,:),:) + Topo.u(Topo.n(e,:),:);
+    for e = 1:Geom.n_elem
+        ne = Geom.n(e,:);
+        xe = Geom.x(Geom.n(e,:),:) + Geom.u(Geom.n(e,:),:);
         for f = 1:2
             for g = 1:2
-                [dNdx, J] = getdNdx(xe,[quadx(f),quadx(g)], Topo.shape);
+                [dNdx, J] = getdNdx(xe,[quadx(f),quadx(g)], Geom.n_nodes_elem);
                 B    = getB(dNdx);
 %                 Btot(:,:) = 
                 for a = 1:4

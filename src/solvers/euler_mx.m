@@ -1,30 +1,31 @@
-function Result = euler_mx(Topo, Material, Numerical, Result)
-    save = Numerical.save;
-    dt   = Numerical.dt;
-    eta  = Material.eta(1);
-    
-    if strcmp(Numerical.euler_type, 'forward')
-        fprintf("Solving for Forward Euler's with dt = %f \n", Numerical.dt);
-    elseif strcmp(Numerical.euler_type, 'backward')
-        fprintf("Solving for Backward Euler's with dt = %f \n", Numerical.dt);
+function Result = euler_mx(Geom, Mat, Set, Result)
+    save = Set.save;
+    dt   = Set.dt;
+    eta  = Mat.visco;
+
+    if strcmpi(Set.euler_type, 'forward')
+        fprintf("Solving for Forward Euler's with dt = %f \n", dt);
+    elseif strcmpi(Set.euler_type, 'backward')
+        fprintf("Solving for Backward Euler's with dt = %f \n", dt);
     end
     
-    E = Material.E(1);
-    nu = Material.nu(1);
+    %TODO FIXIT HARDCODE
+    E = Mat.P(1);
+    nu = Mat.P(2);
     D  = E/(1-nu^2) ... 
       *[  1  nu     0
           nu   1     0
           0   0  (1-nu)/2 ];  
       
     % Get integrals at equilibrium
-    Bvec = linveBmx(Topo); % This is the integral of B.
-    Btot = linveB(Topo); % This is the integral of B'*B. 
+    Bvec = linveBmx(Geom, Set); % Integral of B.
+    Btot = linveB(Geom, Set); % Integral of B'*B. 
 
-    K = stiffK(Topo, Material);
-    K = setboundsK(K, Topo.x0);
+    K = stiffK(Geom, Mat, Set);
+    K = setboundsK(K, Geom.x0);
 
-    u_0     = Topo.u; % If this is 0 but f is not -> Ct. stress, inf strain
-    f_0     = Topo.f; % If this is 0 but u is not -> Ct. strain, stress -> 0
+    u_0     = Geom.u; % If this is 0 but f is not -> Ct. stress, inf strain
+    f_0     = Geom.f; % If this is 0 but u is not -> Ct. strain, stress -> 0
     
     if any(u_0) == 1 % u_0 != 0, f_0 = 0
         fprintf("------Sudden strain------ \n")
@@ -45,14 +46,14 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
     
     fdot = zeros(size(f_0));
     
-    Result.sigmas  = zeros(Numerical.n_incr/save, 3);
-    Result.us  = zeros(Numerical.n_incr/save, Topo.dim*Topo.totn);
-    Result.times = zeros(1,Numerical.n_incr/save);
+    Result.sigmas  = zeros(Set.time_incr/save, 3);
+    Result.us  = zeros(Set.time_incr/save, Geom.dim*Geom.n_nodes);
+    Result.times = zeros(1,Set.time_incr/save);
     c = 1;
     t = 0;
-    
-    for it = 1:Numerical.n_incr
-        Btot = setboundsK(Btot, Topo.x0);
+    size(u_0), size(Btot)
+    for it = 1:Set.time_incr
+        Btot = setboundsK(Btot, Geom.x0);
 
         u_v_kp1 = Btot \ (Btot*u_v_k + f_0*dt/eta);
         u_e_kp1 = K \ (dt*fdot + K*u_e_k);
@@ -75,7 +76,7 @@ function Result = euler_mx(Topo, Material, Numerical, Result)
         end
     end
     Result.sigma_0  = sigma_0;
-    Result.tau = eta/(Material.E(1)/(1-Material.nu(1)^2));
-    Result.strain_0 = Bvec*Topo.u;
-    Result.x = Topo.X + reshape(u_k, [Topo.dim,Topo.totn])';
+    Result.tau = eta/(Mat.P(1)/(1-Mat.P(2)^2));
+    Result.strain_0 = Bvec*Geom.u;
+    Result.x = Geom.X + reshape(u_k, [Geom.dim,Geom.n_nodes])';
 end   

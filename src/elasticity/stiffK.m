@@ -1,25 +1,24 @@
-function K = stiffK(Topo, Material)
-    nnodes = Topo.totn;
-    ndim   = Topo.dim;
+function K = stiffK(Geom, Mat, Set)
+    nnodes = Geom.n_nodes;
+    ndim   = Geom.dim;
 
     K = zeros(nnodes*ndim, nnodes*ndim);
 
-    quadw = Topo.quadw;
-    quadx = Topo.quadx;
-    n = Topo.n;
+    quadw = Set.quadw;
+    quadx = Set.quadx;
+    n = Geom.n;
     
 
-    for e = 1:Topo.tote
+    for e = 1:Geom.n_elem
               
         ni = n(e,:);
-        xe = Topo.x(n(e,:),:);
-        Xe = Topo.X(n(e,:),:);
-        
+        xe = Geom.x(n(e,:),:);
+        Xe = Geom.X(n(e,:),:);
         for i = 1:size(quadw,2)
             for j = 1:size(quadw,2)
-                D  = material(xe, Xe, e, [quadx(i), quadx(j)], Material); 
+                D  = material(xe, Xe, e, [quadx(i), quadx(j)], Mat); 
                 
-                [dNdx, J] = getdNdx(xe, [quadx(i), quadx(j)], Topo.shape);
+                [dNdx, J] = getdNdx(xe, [quadx(i), quadx(j)], Geom.n_nodes_elem);
 
                 B = getB(dNdx);
 

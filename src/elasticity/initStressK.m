@@ -1,23 +1,23 @@
-function K = initStressK(Topo, Material)
+function K = initStressK(Geom, Material, Set)
     
-    nnodes = Topo.totn;
-    ndim   = Topo.dim;
+    nnodes = Geom.n_nodes;
+    ndim   = Geom.dim;
 
     K = zeros(nnodes*ndim, nnodes*ndim);
-    quadw  = Topo.quadw;
-    quadx  = Topo.quadx;
+    quadw  = Set.quadw;
+    quadx  = Set.quadx;
     
-    for e = 1:Topo.tote
+    for e = 1:Geom.n_elem
               
-        ni = Topo.n(e,:);
-        xe = Topo.x(ni,:);
-        Xe = Topo.X(ni,:);
+        ni = Geom.n(e,:);
+        xe = Geom.x(ni,:);
+        Xe = Geom.X(ni,:);
         for int_i = 1:size(quadw,2)
             for int_j = 1:size(quadw,2)
 
-                Fd = deformF(xe,Xe,[quadx(int_i),quadx(int_j)], Topo.shape);
+                Fd = deformF(xe,Xe,[quadx(int_i),quadx(int_j)], Geom.n_nodes_elem);
                 sigma = stress(Fd, e, Material);
-                [dNdx, J] = getdNdx(xe, [quadx(int_i), quadx(int_j)], Topo.shape);
+                [dNdx, J] = getdNdx(xe, [quadx(int_i), quadx(int_j)], Geom.n_nodes_elem);
 
                 for ki = 1:4
                     for li = 1:4
