@@ -25,7 +25,6 @@ function K = initStressK(Geom, Material, Set)
                         nl = ni(li);
                         sl_k = (2*nk-1):2*nk;
                         sl_l = (2*nl-1):2*nl;
-%                         k_ab_ij = J*dNdx(ki,:)*sigma*dNdx(li,:)'*eye(ndim);
                         
                         K(sl_k,sl_l) = K(sl_k,sl_l)+...
                                        J*dNdx(ki,:)*sigma*dNdx(li,:)'*eye(ndim);

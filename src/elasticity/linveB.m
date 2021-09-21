@@ -9,7 +9,6 @@ function Btot = linveB(Geom, Set)
     for e = 1:Geom.n_elem
         ne = Geom.n(e,:);
         xe = Geom.x(Geom.n(e,:),:);
-%         Xe = Topo.X(Topo.n(e,:),:);
         for f = 1:2
             for g = 1:2
                 [dNdx, J] = getdNdx(xe,[quadx(f),quadx(g)], Geom.n_nodes_elem);

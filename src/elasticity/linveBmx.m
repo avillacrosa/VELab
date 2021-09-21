@@ -13,7 +13,6 @@ function Btot = linveBmx(Geom, Set)
             for g = 1:2
                 [dNdx, J] = getdNdx(xe,[quadx(f),quadx(g)], Geom.n_nodes_elem);
                 B    = getB(dNdx);
-%                 Btot(:,:) = 
                 for a = 1:4
                     sl_k = (2*ne(a)-1):2*ne(a);
                     Ba = squeeze(B(a,:,:));
