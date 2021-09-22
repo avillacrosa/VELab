@@ -18,7 +18,6 @@ function  [Mat, Geom, Set] = completeData(Mat, Geom, Set)
         fprintf(['Connectivity not given. \n',...
                 'Assuming elements are square and nodes are ',...
                 'defined left to right and bottom to top \n']);
-        Geom.x, size(Geom.x,2)
         nnodes_x = size(Geom.x, 1)^(1/size(Geom.x,2));
         nnodes_y = nnodes_x;
         nelem_x = nnodes_x-1;
@@ -36,13 +35,14 @@ function  [Mat, Geom, Set] = completeData(Mat, Geom, Set)
         end
         Geom.n = n;
     end
-    Geom.n
+    
     % Additional help variables
     Geom.X                 = Geom.x;
     Geom.n_nodes           = size(Geom.x,1);
     Geom.dim               = size(Geom.x,2);
     Geom.n_elem            = size(Geom.n,1);
     Geom.n_nodes_elem      = size(Geom.n,2);
+    Geom.n_nodes_dim       = Geom.n_nodes^(1/Geom.dim);
     Geom.vect_dim          = (Geom.dim+1)*Geom.dim/2;
     
     % TODO FIXIT hardcode... This should be a parameter
@@ -60,7 +60,7 @@ function  [Mat, Geom, Set] = completeData(Mat, Geom, Set)
     % Translate load input format to load vector
     t = zeros(Geom.dim*Geom.n_nodes,1);
     for i = 1:size(Geom.f,1)
-        t(2*(Geom.f(:,1)-1) + Geom.f(:,2)) = Geom.f(:,3);
+        t(Geom.dim*(Geom.f(:,1)-1) + Geom.f(:,2)) = Geom.f(:,3);
     end
     Geom.f     = t;
     

@@ -3,4 +3,5 @@ function [dNdx, J] = getdNdx(x, z, type)
     dxdz = dNdz'*x;
     dNdx = (dxdz\dNdz')';
     J    = det(dxdz);
+    
 end

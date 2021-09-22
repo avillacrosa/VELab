@@ -31,5 +31,8 @@ function Result = run(geo_file, mat_file, set_file)
         fprintf("-- Solving nonlinear elasticity --\n");
         Result = newton(Geom, Mat, Set, Result);
     end
- 
+    
+    writeVTK(Result.x, Geom, 'out.vtk');
+    writeVTK(Geom.X, Geom, 'in.vtk');
+    fprintf("-- Normal program finish --\n");
 end

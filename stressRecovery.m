@@ -14,30 +14,6 @@ Mat.type = 'hookean';
 quadw = [1 1];
 quadx = [-1 1]/sqrt(3);
 
-% c = 1;
-% 
-% for inti = 1:4
-%     Fd = deformF(x,X,quadps(inti,:), 4);
-%     sigma_interp(inti,:) = [sigma(1,1);sigma(2,2);sigma(1,2)]';
-% end
-% 
-% 
-% M = zeros(4,4);
-% b = zeros(4,3);
-% for intj = 1:4
-%     z = quadps(intj,:);
-%     Ns = square(z);
-%     for a = 1:4
-%         for c = 1:4
-%             M(a,c) = M(a,c) + Ns(a)*Ns(c);
-%         end
-%         b(a,:) = b(a,:) + Ns(a)*sigma_interp(intj,:);
-%     end
-% end
-% sigma_xx = M \ b(:,1)
-% sigma_yy = M \ b(:,2)
-% sigma_xy = M \ b(:,3)
-
 
 sigma_interp = zeros(4,3);
 
