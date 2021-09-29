@@ -1,5 +1,9 @@
+%--------------------------------------------------------------------------
+% Obtain the spatial elasticity tensor from the material elasticity tensor.
+% Used for example in a Venant material
+%--------------------------------------------------------------------------
 function c = eulerTensor(C, Fd, dim)
-    J = det(Fd);
+    JFd = det(Fd);
     c = zeros(size(C));
     for i = 1:dim
         for j = 1:dim
@@ -20,5 +24,6 @@ function c = eulerTensor(C, Fd, dim)
             end
         end
     end
-    c = c/J;
+    
+    c = c/JFd;
 end

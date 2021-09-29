@@ -1,4 +1,9 @@
+%--------------------------------------------------------------------------
+% Direct linear (hookean) elasticity solver
+%--------------------------------------------------------------------------
 function Result = lin_el(Geo, Mat, Set, Result)
+%     K = stiffK(Geo, Mat, Set);
+%     setboundsK2(K,Geo);
     K = stiffK(Geo, Mat, Set);
     K = setboundsK(K, Geo);
     u = K\Geo.f;

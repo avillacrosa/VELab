@@ -9,30 +9,17 @@ function [Geo, Mat, Set] = input_data()
     
     % Nodal positions and connectivity
     [Geo.x, Geo.n] = meshgen(ns, ds);
-    
+    Geo.x = Geo.x;
     % Initial loads
-    % Node, Axis (X=1, Y=2, Z=3), Value
-    Geo.f = [
-        2  1 10
-%         4  1 10 
-%         6  1 10
-%         8  1 10
-        ];
+    % Cartesian plane parallel to desired plane, plane location, boundary
+    % value. Ex: 1 10 0 sets the equilibrium position of all nodes in the 
+    % plane X = 10 to 0
+    Geo.dBC = [1 0 0; 2 0 0; 3 0 0];
     
-    Geo.x0 = [
-        1 1 0
-        1 2 0
-        1 3 0
-        2 2 0
-        2 3 0
-        3 1 0
-        3 3 0
-        4 3 0
-        5 1 0
-        5 2 0
-        6 2 0
-        7 1 0
-        ];
+    % Surface forces. 
+    % Cartesian plane, target plane, traction axis, traction value
+    % All respective to starting coordinates (X)
+    Geo.fBC = [1 1 1 10];
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
@@ -42,6 +29,10 @@ function [Geo, Mat, Set] = input_data()
     
     %% Numerical settings
     % Problem type
+    % TODO this is unnecessary, knowing the type of material we know
+    % if it's nonlinear or not!
     Set.type = 'linear';
+    Set.newton_its = 1;
+    Set.n_quad = 2;
     
 end

@@ -1,3 +1,7 @@
+%--------------------------------------------------------------------------
+% Obtain the constitutive component of the stiffness matrix both in 2D and
+% 3D
+%--------------------------------------------------------------------------
 function K = stiffK(Geo, Mat, Set)
     nnodes = Geo.n_nodes;
     ndim   = Geo.dim;

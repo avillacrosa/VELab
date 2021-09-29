@@ -1,3 +1,8 @@
+%--------------------------------------------------------------------------
+% Generate a regular mesh with ns(1) nodes in x direction, ns(2) nodes in y
+% direction and ns(3) nodes in z direction, separated by ds (array with one
+% for each axis also)
+%--------------------------------------------------------------------------
 function [x, n] = meshgen(ns, ds)
     nx = ns(1);
     ny = ns(2);
@@ -12,11 +17,14 @@ function [x, n] = meshgen(ns, ds)
         dim = 2;
         nz = 1;
         dz = 1;
+        % TODO smart way to do this
+        nelem = (ns(1)-1)*(ns(2)-1);
     else
         dim = 3;
+        % TODO smart way to do this
+        nelem = (ns(1)-1)*(ns(2)-1)*(ns(3)-1);
     end
     
-    nelem = (ns(1)-1)*(ns(2)-1);     
     x = zeros(nx*ny*nz, 3);
     n = zeros(nelem, 2^dim);
     
@@ -35,7 +43,7 @@ function [x, n] = meshgen(ns, ds)
                     cond = nxi ~= nx && nyi ~= ny && nzi ~= nz;
                 end
                 if cond
-                    e_idx = n_idx - nyi + 1 - nzi + 1;
+                    e_idx = n_idx + (1-nyi) + (nx+ny-1)*(1-nzi);
                     cs = [bl, bl + 1, bl + nx + 1, bl + nx];
                     if dim == 3
                         cs = cat(2, cs, cs + nx*ny);

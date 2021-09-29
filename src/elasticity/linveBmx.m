@@ -1,23 +1,20 @@
-function Btot = linveBmx(Geom, Set)
-    nnodes = Geom.n_nodes;
-    ndim   = Geom.dim;
-
-    quadw  = Set.quadw;
-    quadx  = Set.quadx;
-    Btot = zeros(3, nnodes*ndim);
-
-    for e = 1:Geom.n_elem
-        ne = Geom.n(e,:);
-        xe = Geom.x(Geom.n(e,:),:) + Geom.u(Geom.n(e,:),:);
-        for f = 1:2
-            for g = 1:2
-                [dNdx, J] = getdNdx(xe,[quadx(f),quadx(g)], Geom.n_nodes_elem);
-                B    = getB(dNdx);
-                for a = 1:4
-                    sl_k = (2*ne(a)-1):2*ne(a);
-                    Ba = squeeze(B(a,:,:));
-                    Btot(:, sl_k) = Btot(:, sl_k)+Ba*J*quadw(f)*quadw(g);
-                end
+%--------------------------------------------------------------------------
+% General integral of the product B'*B matrix in both 2D and 3D. Used 
+% mainly for viscoelasticity
+%--------------------------------------------------------------------------
+function Btot = linveBmx(Geo, Set)
+    Btot = zeros(Geo.vect_dim, Geo.n_nodes*Geo.dim);
+    for e = 1:Geo.n_elem
+        ne = Geo.n(e,:);
+        xe = Geo.x(Geo.n(e,:),:) + Geo.u(Geo.n(e,:),:);
+        for gp = size(Set.gaussPoints,1)
+            z = Set.gaussPoints(gp,:);
+            [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);
+            B    = getB(dNdx);
+            for a = 1:Geo.n_nodes_elem
+                sl_k = (Geo.dim*(ne(a)-1)+1):Geo.dim*ne(a);
+                Ba = squeeze(B(a,:,:));
+                Btot(:, sl_k) = Btot(:, sl_k)+Ba*J*Set.gaussWeights(gp,:);
             end
         end
     end

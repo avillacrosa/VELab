@@ -1,3 +1,6 @@
+%--------------------------------------------------------------------------
+% Different Gaussian quadrature points and weights 
+%--------------------------------------------------------------------------
 function [quadx, quadw] = gaussQuad(n_points)
     switch n_points
         case 1

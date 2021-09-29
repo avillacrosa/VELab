@@ -1,6 +1,6 @@
 function [sigma, c] = venant(Fd, lambda, mu, dim)
     J    = det(Fd);
-    E    = 0.5*(Fd'*Fd-eye(size(Fd)));
+    E    = 0.5*(Fd'*Fd-eye(size(Fd))); % OK
     
     C    = zeros(dim, dim, dim, dim);
     for i = 1:dim

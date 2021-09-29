@@ -1,30 +1,22 @@
-function T = internalF(Geom, Mat, Set)
-
-    ndim   = Geom.dim;
-    nnodes = Geom.n_nodes;
-    
-    quadx  = Set.quadx;
-    quadw  = Set.quadw;
-
-    n = Geom.n;
+%--------------------------------------------------------------------------
+% Computation of the internal in both 2D and 3D
+%--------------------------------------------------------------------------
+function T = internalF(Geo, Mat, Set)
           
-    T = zeros(nnodes*ndim, 1);
-    for e = 1:Geom.n_elem
-        xe = Geom.x(n(e,:),:);
-        Xe = Geom.X(n(e,:),:);
+    T = zeros(Geo.n_nodes*Geo.dim, 1);
+    for e = 1:Geo.n_elem
+        xe = Geo.x(Geo.n(e,:),:);
+        Xe = Geo.X(Geo.n(e,:),:);
         for m = 1:size(xe,1) 
-            for j = 1:size(quadw,2)
-                for k = 1:size(quadw,2)
-                    Fd = deformF(xe,Xe,[quadx(j),quadx(k)], Geom.n_nodes_elem);
-                    sigma = stress(Fd, e, Mat);
-                    [dNdx, J] = getdNdx(xe, [quadx(j), quadx(k)], Geom.n_nodes_elem); 
-                    int = sigma*dNdx(m,:)'*J*quadw(j)*quadw(k);
-                    for ll = 1:ndim
-                        idx = 2*(n(e,m)-1)+ll;
-                        T(idx) = T(idx) + int(ll);
-                    end
-                end
+            int = zeros(Geo.dim, 1);
+            for gp = 1:size(Set.gaussPoints,1)
+                z = Set.gaussPoints(gp,:);
+                [sigma, ~] = material(xe, Xe, z, Mat);
+                [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem); 
+                int = int + sigma*dNdx(m,:)'*J*Set.gaussWeights(gp,:);
             end
+            glob_idx = (Geo.dim*(Geo.n(e,m)-1)+1):Geo.dim*Geo.n(e,m);
+            T(glob_idx) = T(glob_idx) + int;
         end
     end
 end

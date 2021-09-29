@@ -1,3 +1,7 @@
+%--------------------------------------------------------------------------
+% Obtain the vectorized material tensor (2nd rank) from the spatial 
+% elasticity tensor (4th rank)
+%--------------------------------------------------------------------------
 function D = constD(c)
     dim = size(c,1);
     

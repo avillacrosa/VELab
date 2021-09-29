@@ -1,3 +1,6 @@
+%--------------------------------------------------------------------------
+% DEPRECATED?
+%--------------------------------------------------------------------------
 function [stress, strain_k, c] = totStressStr2(uk, ukp1, Geom, Mat, Set)
     quadx = Set.quadx;
     quadw = Set.quadw;

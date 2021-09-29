@@ -1,4 +1,4 @@
-function [Geo, Mat, Set] = lin_patch_test2x2_2D()
+function [Geo, Mat, Set] = lin_patch_test2x2()
     Geo = struct();
     Mat = struct();
     Set = struct();

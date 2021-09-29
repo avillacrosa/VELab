@@ -1,3 +1,6 @@
+%--------------------------------------------------------------------------
+% DEPRECATED?
+%--------------------------------------------------------------------------
 function [stress, strain] = totStressStr(x, Topo, Material)
     quadx = Topo.quadx;
     quadw = Topo.quadw;

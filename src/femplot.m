@@ -1,3 +1,6 @@
+%--------------------------------------------------------------------------
+% 2D plot of every node and connecting each element individually
+%--------------------------------------------------------------------------
 function femplot(X,x,n)
     figure
     hold on

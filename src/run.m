@@ -1,3 +1,8 @@
+%--------------------------------------------------------------------------
+% Solve for the displacement given an input file data_f, using the
+% appropiate solver for the problem (hookean = linear; neohookean/venant =
+% nonlinear)
+%--------------------------------------------------------------------------
 function Result = run(data_f)
 
     if endsWith(data_f, '.m')
@@ -18,7 +23,7 @@ function Result = run(data_f)
             switch lower(Mat.rheo)
                 case 'kelvin'
                     fprintf(['> Solving linear viscoelasticity',...
-                            ' with Kelvin-Voigt rheology -- \n']);
+                            ' with Kelvin-Voigt rheology \n']);
                     Result = euler_kv(Geo, Mat, Set, Result);
                 otherwise
                     fprintf(['> Solving linear viscoelasticity',...
@@ -36,8 +41,8 @@ function Result = run(data_f)
     if Geo.dim == 2
         femplot(Result.X, Result.x, Result.n)
     elseif Geo.dim == 3
-        writeVTK(Result.x, Geo, 'out.vtk');
-        writeVTK(Geo.X, Geo, 'in.vtk');
+        writeVTK(Geo.X, Geo, Result, Mat, 'in.vtk');
+        writeVTK(Result.x, Geo, Result, Mat, 'out.vtk');
     end
-    fprintf("---- Normal program finish ----\n");
+    fprintf("> Normal program finish\n");
 end
