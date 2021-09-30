@@ -16,7 +16,7 @@ CELLS 1 9
 CELL_TYPES 1 
 12 
 POINT_DATA 8 
-VECTORS displacements float
+VECTORS Displacements float
 0.00 0.00 0.00 
 0.32 0.00 0.00 
 0.00 -0.07 0.00 
@@ -25,7 +25,16 @@ VECTORS displacements float
 0.32 0.00 -0.07 
 0.00 -0.07 -0.07 
 0.32 -0.07 -0.07 
-TENSORS sigma float 
+VECTORS Forces float
+0.00 0.00 0.00 
+0.00 0.00 0.00 
+0.00 0.00 0.00 
+0.00 0.00 0.00 
+0.00 0.00 0.00 
+0.00 0.00 0.00 
+0.00 0.00 0.00 
+0.00 0.00 0.00 
+TENSORS Stress float 
 0.0 0.0 0.0 
  0.0 0.0 0.0 
  0.0 0.0 0.0 
@@ -58,7 +67,7 @@ TENSORS sigma float
  0.0 0.0 0.0 
  0.0 0.0 0.0 
 
-TENSORS strain float 
+TENSORS Strain float 
 0.0 0.0 0.0 
  0.0 0.0 0.0 
  0.0 0.0 0.0 

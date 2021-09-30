@@ -12,7 +12,11 @@ function T = internalF(Geo, Mat, Set)
             for gp = 1:size(Set.gaussPoints,1)
                 z = Set.gaussPoints(gp,:);
                 [sigma, ~] = material(xe, Xe, z, Mat);
-                [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem); 
+                if Mat.type == "hookean"
+                    [dNdx, J] = getdNdx(Xe, z, Geo.n_nodes_elem); 
+                else
+                    [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem); 
+                end
                 int = int + sigma*dNdx(m,:)'*J*Set.gaussWeights(gp,:);
             end
             glob_idx = (Geo.dim*(Geo.n(e,m)-1)+1):Geo.dim*Geo.n(e,m);

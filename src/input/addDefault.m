@@ -12,5 +12,4 @@ function read_struct = addDefault(read_struct, default_struct)
              read_struct.(f_name) = default_struct.(f_name);
         end
     end
-    
 end

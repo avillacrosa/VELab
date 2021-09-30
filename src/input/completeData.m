@@ -43,11 +43,9 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     
     %% Guess and define other useful parameters for computing
     
+
     % Additional help variables
     Geo.X                 = Geo.x;
-    if ~isfield(Geo, 'u')
-        Geo.u = zeros(size(Geo.x));
-    end
     Geo.n_nodes           = size(Geo.x,1);
     Geo.dim               = size(Geo.x,2);
     Geo.n_elem            = size(Geo.n,1);
@@ -56,51 +54,11 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Geo.vect_dim          = (Geo.dim+1)*Geo.dim/2;
     Geo.x0                = nodalBC(Geo.x, Geo.dBC);
     Geo.f                 = nodalBCf(Geo.x, Geo.fBC);
+    [Geo.dof, Geo.fix]    = buildBCs(Geo);
+    [Geo.u, Set.p_type]   = buildUs(Geo);
     
-    % Degrees of freedom for fast access. 
-    if size(Geo.x0,1) ~= 0 
-        Geo.fixdof            = Geo.dim*(Geo.x0(:,1)-1)+Geo.x0(:,2);
-        dof                   = zeros(Geo.dim*Geo.n_nodes,1);
-        dof(Geo.fixdof)       = 1;
-        dof                   = find(dof==0);
-        Geo.dof               = dof;
-    end
-    
-    [Set.quadx, Set.quadw] = gaussQuad(Set.n_quad);
-    Set.gaussPoints  = zeros(Set.n_quad^Geo.dim,Geo.dim);
-    Set.gaussWeights = zeros(Set.n_quad^Geo.dim, 1);
-    for i = 1:Set.n_quad
-        for j = 1:Set.n_quad
-            if Geo.dim == 3
-                for k = 1:Set.n_quad
-                    z = [Set.quadx(i), Set.quadx(j), Set.quadx(k)];
-                    w =  Set.quadw(i)*Set.quadw(j)*Set.quadw(k);
-                    idx = k+Set.n_quad*(j-1)+Set.n_quad*Set.n_quad*(i-1);
-                    Set.gaussPoints(idx,:)  = z;
-                    Set.gaussWeights(idx) = w;
-                end
-            elseif Geo.dim == 2
-                z = [Set.quadx(i), Set.quadx(j)];
-                w =  Set.quadw(i)*Set.quadw(j);
-                idx = j+2*(i-1);
-                Set.gaussPoints(idx,:) = z;
-                Set.gaussWeights(idx) = w;
-            end
-        end
-    end
-    
-    % Translate load input format to load vector
-    t = zeros(Geo.dim*Geo.n_nodes,1);
-    for i = 1:size(Geo.f,1)
-        t(Geo.dim*(Geo.f(:,1)-1) + Geo.f(:,2)) = Geo.f(:,3);
-    end
-    Geo.f     = t;
+    [Set.quadx, Set.quadw]              = gaussQuad(Set.n_quad);
+    [Set.gaussPoints, Set.gaussWeights] = buildQuadPoints(Geo, Set);
 
-    if strcmp(Geo.ftype, 'surface')
-        if Geo.dim == 2
-            Geo.f = integrateF2D(Geo, Set);
-        elseif Geo.dim == 3
-            Geo.f = integrateF3D(Geo, Set);
-        end
-    end
+    Geo.f                 = buildF(Geo, Set);
 end

@@ -21,12 +21,12 @@ function tint = integrateF3D(Geo, Set)
         for j = 1:Set.n_quad
             for k = 1:Set.n_quad
 
-                front = [+1, quadx(k), quadx(j)]; %x
+                front = [+1, quadx(k), quadx(j)]; 
                 back  = [-1, quadx(k), quadx(j)];
                 right = [quadx(k), +1, quadx(j)];
-                left  = [quadx(k), -1, quadx(j)]; %x
+                left  = [quadx(k), -1, quadx(j)];
                 top   = [quadx(k), quadx(j), +1];
-                bot   = [quadx(k), quadx(j), -1]; %x
+                bot   = [quadx(k), quadx(j), -1]; 
 
                 points = [front; back; right; left; top; bot];
 

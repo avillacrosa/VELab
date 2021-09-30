@@ -2,11 +2,11 @@
 % Direct linear (hookean) elasticity solver
 %--------------------------------------------------------------------------
 function Result = lin_el(Geo, Mat, Set, Result)
-%     K = stiffK(Geo, Mat, Set);
-%     setboundsK2(K,Geo);
-    K = stiffK(Geo, Mat, Set);
-    K = setboundsK(K, Geo);
-    u = K\Geo.f;
+    u = Geo.u';
+    u = u(:);
+    K     = stiffK(Geo, Mat, Set);
+    corrR = K(Geo.dof, Geo.fix)*u(Geo.fix);
+    u(Geo.dof)  = K(Geo.dof, Geo.dof)\(Geo.f(Geo.dof)-corrR);
     u = reshape(u, [Geo.dim, Geo.n_nodes])';
     x = Geo.x + u;
     Result.u = u;

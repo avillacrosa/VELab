@@ -14,12 +14,11 @@ function K = stiffK(Geo, Mat, Set)
         Xe = Geo.X(n(e,:),:);
         for gp = 1:size(Set.gaussPoints,1)
             z = Set.gaussPoints(gp,:);
-            
+         
             [~, c] = material(xe, Xe, z, Mat);
             D = constD(c);
-            
-            [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);
 
+            [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);
             B = getB(dNdx);
             
             for ki = 1:Geo.n_nodes_elem
