@@ -39,7 +39,7 @@ function Result = run(data_f)
 %         Result = lin_el(Geo, Mat, Set, Result);
     end
     elseif strcmp(Set.p_type, "inverse")
-        Result = inverseSolution(Geo,Mat,Set);
+        Result = inv_lin(Geo,Mat,Set);
     end
     
     Result.t = reshape(Geo.f, [Geo.dim, Geo.n_nodes])'; % For plotting purposes

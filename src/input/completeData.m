@@ -46,6 +46,8 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
 
     % Additional help variables
     Geo.X                 = Geo.x;
+    Geo.x_v               = vec_nvec(Geo.x);
+    Geo.X_v               = Geo.x_v;
     Geo.n_nodes           = size(Geo.x,1);
     Geo.dim               = size(Geo.x,2);
     Geo.n_elem            = size(Geo.n,1);
@@ -56,6 +58,7 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Geo.f                 = nodalBCf(Geo.x, Geo.fBC);
     [Geo.dof, Geo.fix]    = buildBCs(Geo);
     [Geo.u, Set.p_type]   = buildUs(Geo);
+    Geo.u_v               = vec_nvec(Geo.u);
     
     [Set.quadx, Set.quadw]              = gaussQuad(Set.n_quad);
     [Set.gaussPoints, Set.gaussWeights] = buildQuadPoints(Geo, Set);

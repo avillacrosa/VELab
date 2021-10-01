@@ -12,7 +12,7 @@ function T = internalF(Geo, Mat, Set)
             for gp = 1:size(Set.gaussPoints,1)
                 z = Set.gaussPoints(gp,:);
                 [sigma, ~] = material(xe, Xe, z, Mat);
-                if Mat.type == "hookean"
+                if strcmpi(Mat.type,"hookean")
                     [dNdx, J] = getdNdx(Xe, z, Geo.n_nodes_elem); 
                 else
                     [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem); 

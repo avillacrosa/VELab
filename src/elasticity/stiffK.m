@@ -17,8 +17,11 @@ function K = stiffK(Geo, Mat, Set)
          
             [~, c] = material(xe, Xe, z, Mat);
             D = constD(c);
-
-            [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);
+            if strcmpi(Mat.type,"hookean")
+                [dNdx, J] = getdNdx(Xe, z, Geo.n_nodes_elem);
+            else
+                [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);
+            end
             B = getB(dNdx);
             
             for ki = 1:Geo.n_nodes_elem

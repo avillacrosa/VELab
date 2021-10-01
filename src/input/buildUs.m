@@ -9,7 +9,7 @@ function [u, p_type] = buildUs(Geo)
             value = Geo.x0(bci,3);
             u(n,dim) = value;
         end
-    elseif isstring(Geo.u) && isempty(Geo.fBC)
+    elseif (isstring(Geo.u) || ischar(Geo.u)) && isempty(Geo.fBC)
         fprintf("> u given from file. Assuming an inverse problem \n")
         p_type = 'inverse';
         u = readU(Geo.u);
