@@ -1,4 +1,4 @@
-function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
+function [Geo, Mat, Set] = t_rec_init(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
     ns = [2 2 2];
@@ -17,8 +17,10 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     % Surface forces. 
     % Cartesian plane, target plane, traction axis, traction value
     % All respective to starting coordinates (X)
-%     Geo.fBC = [1 1 1 10];
-    Geo.u = 'utest.txt';
+    Geo.fBC = [randi([1 3],1) 1 randi([1 3],1) rand*10
+               randi([1 3],1) 1 randi([1 3],1) rand*10
+               randi([1 3],1) 1 randi([1 3],1) rand*10
+               randi([1 3],1) 1 randi([1 3],1) rand*10];
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
@@ -28,6 +30,5 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     
     %% Numerical settings
     Set.newton_its = 1;
-    Set.n_quad = 2;
     
 end

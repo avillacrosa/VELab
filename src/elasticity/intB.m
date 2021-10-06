@@ -2,7 +2,7 @@
 % General integral of the B matrix in both 2D and 3D. Used mainly for
 % viscoelasticity
 %--------------------------------------------------------------------------
-function Btot = linveB(Geo, Set)
+function Btot = intB(Geo, Set)
     nnodes = Geo.n_nodes;
     ndim   = Geo.dim;
 

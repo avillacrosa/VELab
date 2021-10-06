@@ -1,12 +1,14 @@
 %--------------------------------------------------------------------------
 % Linear inverse problem...
 %--------------------------------------------------------------------------
-function Result = inv_lin(Geo, Mat, Set)
+function Result = inv_lin(Geo, Mat, Set, Result)
     K = stiffK(Geo,Mat,Set);
-    Result.u = Geo.u;
-    u = Geo.u';
-    u = u(:);
-    t = K*u;
-    Result.t = t;
+    
+    t = K*vec_nvec(Geo.u);
+    
+    Result.tinv = t;
     Result.x = Geo.x + Geo.u;
+    Result.X = Geo.X;
+    Result.n = Geo.n;
+    Result.u = Geo.u;
 end

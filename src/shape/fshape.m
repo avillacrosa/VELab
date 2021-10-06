@@ -8,7 +8,7 @@ function [N, dN] = fshape(type, z)
         [N, dN] = triangle(z);
     elseif type == 8 
         [N, dN] = cube(z);
-    elseif type == 1
+    elseif type == 2
         [N, dN] = edge(z);
     end
 

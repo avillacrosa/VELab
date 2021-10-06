@@ -2,7 +2,7 @@
 % General integral of the product B'*B matrix in both 2D and 3D. Used 
 % mainly for viscoelasticity
 %--------------------------------------------------------------------------
-function Btot = linveBmx(Geo, Set)
+function Btot = intBB(Geo, Set)
     Btot = zeros(Geo.vect_dim, Geo.n_nodes*Geo.dim);
     for e = 1:Geo.n_elem
         ne = Geo.n(e,:);

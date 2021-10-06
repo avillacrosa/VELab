@@ -11,7 +11,7 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Def_Geo.n     = n;
     Def_Geo.dBC   = [];
     Def_Geo.fBC   = [];
-    Def_Geo.ftype = 'surface';
+    Def_Geo.ftype = 'traction';
     
     %% Default material values
     Def_Mat = struct();
@@ -27,15 +27,11 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Def_Set.type         = 'linear';
     Def_Set.newton_its   = 10;
     Def_Set.newton_tol   = 1e-10;
-    Def_Set.time_incr    = 1000;
-    Def_Set.dt           = 0.001;
-    Def_Set.save         = 50;
+    Def_Set.time_incr    = 10000;
+    Def_Set.dt           = 0.00001;
+    Def_Set.save         = 10;
     Def_Set.n_quad       = 2;
     Def_Set.euler_type   = 'forward';
-    
-    % TODO FIXIT smart way for this?!
-%     required = {'x'};
-%     fprintf("Nodal positions not found. Exiting program... \n", f_name);
     
     Geo  = addDefault(Geo, Def_Geo);
     Mat  = addDefault(Mat, Def_Mat);
@@ -43,7 +39,6 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     
     %% Guess and define other useful parameters for computing
     
-
     % Additional help variables
     Geo.X                 = Geo.x;
     Geo.x_v               = vec_nvec(Geo.x);
@@ -54,14 +49,18 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Geo.n_nodes_elem      = size(Geo.n,2);
     Geo.n_nodes_dim       = Geo.n_nodes^(1/Geo.dim);
     Geo.vect_dim          = (Geo.dim+1)*Geo.dim/2;
-    Geo.x0                = nodalBC(Geo.x, Geo.dBC);
-    Geo.f                 = nodalBCf(Geo.x, Geo.fBC);
+    if ~isfield(Geo, 'x0')
+        Geo.x0                = nodalBC(Geo.x, Geo.dBC);
+    end
+    Geo.f                 = nodalBCf(Geo);
     [Geo.dof, Geo.fix]    = buildBCs(Geo);
     [Geo.u, Set.p_type]   = buildUs(Geo);
     Geo.u_v               = vec_nvec(Geo.u);
+    [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);
+    [Set.gaussPoints, Set.gaussWeights]        = buildQuadPoints(Geo, Set);
     
-    [Set.quadx, Set.quadw]              = gaussQuad(Set.n_quad);
-    [Set.gaussPoints, Set.gaussWeights] = buildQuadPoints(Geo, Set);
-
-    Geo.f                 = buildF(Geo, Set);
+    if strcmpi(Geo.ftype, "traction")
+        [Set.cn, Set.cEq, Set.gausscP, Set.gausscW] = buildArea(Geo,Set);
+        Geo.f = integrateTract(Geo, Set);
+    end    
 end

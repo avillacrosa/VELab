@@ -18,37 +18,38 @@ function Result = run(data_f)
     [Geo, Mat, Set] = feval(data_f, Geo, Mat, Set);
     [Geo, Mat, Set] = completeData(Geo, Mat, Set);
 
-    Result.X = Geo.X; % For plotting purposes
-    Result.n = Geo.n; % For plotting purposes
-
+    Result.X   = Geo.X; % For plotting purposes
+    Result.n   = Geo.n; % For plotting purposes
+    Result.dof = Geo.dof;
+    Result.fix = Geo.fix;
     if strcmp(Set.p_type,"forward")
-    if Mat.visco ~= 0
-        switch lower(Mat.rheo)
-            case 'kelvin'
-                fprintf(['> Solving linear viscoelasticity',...
-                        ' with Kelvin-Voigt rheology \n']);
-                Result = euler_kv(Geo, Mat, Set, Result);
-            otherwise
-                fprintf(['> Solving linear viscoelasticity',...
-                        ' with Maxwell rheology \n']);
-                Result = euler_mx(Geo, Mat, Set, Result);
+        if Mat.visco ~= 0
+            switch lower(Mat.rheo)
+                case 'kelvin'
+                    fprintf(['> Solving linear viscoelasticity',...
+                            ' with Kelvin-Voigt rheology \n']);
+                    Result = euler_kv(Geo, Mat, Set, Result);
+                otherwise
+                    fprintf(['> Solving linear viscoelasticity',...
+                            ' with Maxwell rheology \n']);
+                    Result = euler_mx(Geo, Mat, Set, Result);
+            end
+        else
+            fprintf("> Solving nonlinear elasticity \n");
+            Result = newton(Geo, Mat, Set, Result);
         end
-    else
-        fprintf("> Solving nonlinear elasticity \n");
-        Result = newton(Geo, Mat, Set, Result);
-%         Result = lin_el(Geo, Mat, Set, Result);
-    end
     elseif strcmp(Set.p_type, "inverse")
-        Result = inv_lin(Geo,Mat,Set);
+        Result = inv_lin(Geo, Mat, Set, Result);
     end
     
     Result.t = reshape(Geo.f, [Geo.dim, Geo.n_nodes])'; % For plotting purposes
+    Result.K0 = stiffK(Geo, Mat, Set);
 
     if Geo.dim == 2
         femplot(Result.X, Result.x, Result.n)
     elseif Geo.dim == 3
-        writeVTK(Geo.X, Geo, Result, Mat, 'in.vtk');
-        writeVTK(Result.x, Geo, Result, Mat, 'out.vtk');
+        writeVTK(Geo.X, Geo, Result, Mat, sprintf("out/in_%s.vtk", data_f));
+        writeVTK(Result.x, Geo, Result, Mat, sprintf("out/out_%s.vtk", data_f));
     end
     fprintf("> Normal program finish\n");
 end

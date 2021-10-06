@@ -12,12 +12,6 @@ function Result = newton(Geo, Mat, Set, Result)
     % As a superficial load
     Geo.f = Geo.f / Set.newton_its;
     
-    % A % Does not work in the linear case as K only depends on X?
-%     Geo.x_v = Geo.X_v + Geo.u_v;
-%     Geo.x   = ref_nvec(Geo.x_v, Geo.n_nodes, Geo.dim);
-%     u_k = zeros(size(Geo.u_v));
-
-    % B %
     u_k = Geo.u_v;
     
     for i = 1:Set.newton_its
@@ -42,7 +36,6 @@ function Result = newton(Geo, Mat, Set, Result)
             Geo.x   = ref_nvec(Geo.x_v, Geo.n_nodes, Geo.dim);
             
             u_k(Geo.fix) = 0;
-            
             T = internalF(Geo, Mat, Set);
             R = T - F;
             tol = norm(R(Geo.dof))/norm(F);

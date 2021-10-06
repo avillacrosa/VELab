@@ -12,10 +12,13 @@ function [u, p_type] = buildUs(Geo)
     elseif (isstring(Geo.u) || ischar(Geo.u)) && isempty(Geo.fBC)
         fprintf("> u given from file. Assuming an inverse problem \n")
         p_type = 'inverse';
-        u = readU(Geo.u);
+        u = readU(Geo.u, Geo.dim);
     else
         fprintf("> u and t given. Assuming a forward problem with " + ...
                     "initial strain\n")
+        if (isstring(Geo.u) || ischar(Geo.u))
+            u = readU(Geo.u, Geo.dim);
+        end
         p_type = 'forward';
     end
 end
