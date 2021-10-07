@@ -12,6 +12,7 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     % value. Ex: 1 10 0 sets the equilibrium position of all nodes in the 
     % plane X = 10 to 0
     Geo.dBC = [1 0 0; 2 0 0];
+%     Geo.dBC = [2 0 0; 2 0 1];
 %     Geo.dBC = [1 0 0; 2 0 0];
     
     % Surface forces. 
@@ -24,8 +25,8 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     %% Material parameters
     % Possible types = hookean, neohookean, venant
     Mat.type  = 'hookean';
-    Mat.visco = 1;
-    Mat.rheo  = 'kelvin';
+%     Mat.visco = 1;
+%     Mat.rheo  = 'maxwell';
     Mat.P     = [57.6923 38.4615]; %Corresponding to E = 100 and nu = 0.3
     
     %% Numerical settings

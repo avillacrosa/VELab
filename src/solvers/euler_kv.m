@@ -14,7 +14,7 @@ function Result = euler_kv(Geo, Mat, Set, Result)
     D = constD(c);
     
     K = stiffK(Geo, Mat, Set);
-    Btot = intB(Geo, Set);
+    Btot = intBB(Geo, Set);
     
     save = Set.save;
     dt   = Set.dt;

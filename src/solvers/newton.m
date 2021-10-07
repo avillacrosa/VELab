@@ -13,7 +13,7 @@ function Result = newton(Geo, Mat, Set, Result)
     Geo.f = Geo.f / Set.newton_its;
     
     u_k = Geo.u_v;
-    
+    Bvec = intB(Geo, Set);
     for i = 1:Set.newton_its
         % TODO this should be included if we want real superficial tensions
 %         DF = integrateF(Geom, Set);
@@ -31,7 +31,10 @@ function Result = newton(Geo, Mat, Set, Result)
             corrR = K(Geo.dof, Geo.fix)*u_k(Geo.fix);
             Rdof  = R(Geo.dof);
             u_k(Geo.dof) = K(Geo.dof, Geo.dof)\(-Rdof-corrR);
-
+            for a = 1:4
+                sigmas = Bvec(:,(2*a-1):(2*a))' \ (-R((2*a-1):(2*a)));
+                
+            end
             Geo.x_v = Geo.x_v + u_k;
             Geo.x   = ref_nvec(Geo.x_v, Geo.n_nodes, Geo.dim);
             

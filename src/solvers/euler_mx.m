@@ -14,13 +14,12 @@ function Result = euler_mx(Geo, Mat, Set, Result)
     end
     
     % For venant, D depends on deformation which depends on integral ???
-    [~, c] = material(Geo.x, Geo.X, ones(1,Geo.dim), Mat);
+    [~, c] = material(Geo.x(Geo.n(1,:),:), Geo.X(Geo.n(1,:),:), ones(1,Geo.dim), Mat);
     D = constD(c);
     
     % Get integrals at equilibrium
-    Bvec = intB(Geo, Set); % Integral of B.
+    Bvec = intB(Geo, Set);    % Integral of B.
     Btot = intBB(Geo, Set);   % Integral of B'*B. 
-
     
     u_0     = vec_nvec(Geo.u); % If this is 0 but f is not -> Ct. stress, inf strain
     f_0     = Geo.f; % If this is 0 but u is not -> Ct. strain, stress -> 0
@@ -35,7 +34,9 @@ function Result = euler_mx(Geo, Mat, Set, Result)
         fprintf("> Sudden stress  \n")
         u_e_0   = zeros(size(u_0));
         u_v_0   = zeros(size(u_0));
-        sigma_0 = Bvec' \ f_0; 
+        for a = 1:4
+            sigma_0 = Bvec(:,(2*a-1):(2*a))' \ R((2*a-1):(2*a)); 
+        end
     end
 
     u_k     = u_0;

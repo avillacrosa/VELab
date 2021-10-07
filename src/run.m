@@ -18,33 +18,24 @@ function Result = run(data_f)
     [Geo, Mat, Set] = feval(data_f, Geo, Mat, Set);
     [Geo, Mat, Set] = completeData(Geo, Mat, Set);
 
+    Result = solve(Geo, Set, Mat, Result);
+    
     Result.X   = Geo.X; % For plotting purposes
     Result.n   = Geo.n; % For plotting purposes
     Result.dof = Geo.dof;
     Result.fix = Geo.fix;
-    if strcmp(Set.p_type,"forward")
-        if Mat.visco ~= 0
-            switch lower(Mat.rheo)
-                case 'kelvin'
-                    fprintf(['> Solving linear viscoelasticity',...
-                            ' with Kelvin-Voigt rheology \n']);
-                    Result = euler_kv(Geo, Mat, Set, Result);
-                otherwise
-                    fprintf(['> Solving linear viscoelasticity',...
-                            ' with Maxwell rheology \n']);
-                    Result = euler_mx(Geo, Mat, Set, Result);
-            end
-        else
-            fprintf("> Solving nonlinear elasticity \n");
-            Result = newton(Geo, Mat, Set, Result);
-        end
-    elseif strcmp(Set.p_type, "inverse")
-        Result = inv_lin(Geo, Mat, Set, Result);
-    end
-    
-    Result.t = reshape(Geo.f, [Geo.dim, Geo.n_nodes])'; % For plotting purposes
+    Result.t  = ref_nvec(Geo.f, Geo.n_nodes, Geo.dim); % For plotting purposes
     Result.K0 = stiffK(Geo, Mat, Set);
-
+    Result.T  = zeros(size(Geo.f));
+    Result.F  = zeros(size(Geo.f));
+    Result.R  = Result.K0*vec_nvec(Result.u);
+    Result.T(Geo.fix) = Result.R(Geo.fix);
+    Result.F(Geo.dof) = Result.R(Geo.dof);
+    
+    Result.R = ref_nvec(Result.R, Geo.n_nodes, Geo.dim);
+    Result.T = ref_nvec(Result.T, Geo.n_nodes, Geo.dim);
+    Result.F = ref_nvec(Result.F, Geo.n_nodes, Geo.dim);
+    
     if Geo.dim == 2
         femplot(Result.X, Result.x, Result.n)
     elseif Geo.dim == 3

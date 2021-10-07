@@ -28,5 +28,3 @@ data_f = 'input_data';
 
 
 Result = run(data_f);
-
-plot(Result.times, Result.strs(:,1))

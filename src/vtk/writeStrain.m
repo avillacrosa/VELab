@@ -22,8 +22,8 @@ function strain_str = writeStrain(x, Geo)
         Xe = Geo.X(n(e,:),:);
         for a = 1:Geo.n_nodes_elem
             % FIXIT Linear only...
-            Fd = deformF(xe,Xe,nodal_zeta_coords(a,:), Geo.n_nodes_elem);
-            strains(a,:,:) = (Fd'+Fd)/2-eye(size(Fd));
+            Fd = deformF(xe,Xe,nodal_zeta_coords(n(e,a),:), Geo.n_nodes_elem);
+            strains(n(e,a),:,:) = (Fd'+Fd)/2-eye(size(Fd));
         end
     end
     for a = 1:Geo.n_nodes    

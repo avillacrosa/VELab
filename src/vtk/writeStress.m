@@ -19,8 +19,8 @@ function stress_str = writeStress(x, Geo, Mat)
         xe = x(n(e,:),:);
         Xe = Geo.X(n(e,:),:);
         for a = 1:Geo.n_nodes_elem
-            [sigma, ~] = material(xe, Xe, nodal_zeta_coords(a,:), Mat);
-            sigmas(a,:,:)  = sigma;
+            [sigma, ~] = material(xe, Xe, nodal_zeta_coords(n(e,a),:), Mat);
+            sigmas(n(e,a),:,:)  = sigma;
         end
     end
     for a = 1:Geo.n_nodes
