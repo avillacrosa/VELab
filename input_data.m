@@ -18,7 +18,7 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     % Surface forces. 
     % Cartesian plane, target plane, traction axis, traction value
     % All respective to starting coordinates (X)
-    Geo.fBC = [1 1 1 10];
+    Geo.fBC = [1 1 1 1];
 %     Geo.fBC = [1 1 1 -50; 2 1 2 -50];
 %     Geo.u = 'u_test.txt';
     
@@ -27,7 +27,9 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     Mat.type  = 'hookean';
 %     Mat.visco = 1;
 %     Mat.rheo  = 'maxwell';
-    Mat.P     = [57.6923 38.4615]; %Corresponding to E = 100 and nu = 0.3
+%     Mat.P     = [57.6923 38.4615]; %Corresponding to E = 100 and nu = 0.3
+    Mat.P     = [0 38.4615]; %Corresponding to E = 100 and nu = 0.3
+
     
     %% Numerical settings
     Set.newton_its = 1;

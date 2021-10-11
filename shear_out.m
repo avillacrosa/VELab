@@ -31,6 +31,8 @@ function [Geo, Mat, Set] = shear_in(Geo, Mat, Set)
     % Cartesian plane, target plane, traction axis, traction value
     % All respective to starting coordinates (X)
     Geo.u = 'u_z_shear.txt';
+%     Geo.u = 'out/u_shear_out.mat';
+
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant

@@ -34,9 +34,7 @@ function Result = euler_mx(Geo, Mat, Set, Result)
         fprintf("> Sudden stress  \n")
         u_e_0   = zeros(size(u_0));
         u_v_0   = zeros(size(u_0));
-        for a = 1:4
-            sigma_0 = Bvec(:,(2*a-1):(2*a))' \ R((2*a-1):(2*a)); 
-        end
+        
     end
 
     u_k     = u_0;

@@ -1,4 +1,8 @@
-function Result = solve(Geo, Set, Mat, Result)
+function Result = solveVE(Geo, Set, Mat, Result)
+    if isfield(Set, 'debug')
+        Result = debug(Geo, Set, Mat, Result);
+        return
+    end
     if strcmp(Set.p_type,"forward")
         if Mat.visco ~= 0
             switch lower(Mat.rheo)

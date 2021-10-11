@@ -12,13 +12,15 @@ function writeVTK(x, Geo, Result, Mat, fname)
 
     geo_str      = writeGeo(x, Geo);
     u_str        = writeU(Result);
-    t_str        = writeT(Result);
+    f_str        = writeT(Result.F, 'Loads');
+    t_str        = writeT(Result.T, 'Reactions');
     stress_str   = writeStress(x, Geo, Mat);
     strain_str   = writeStrain(x, Geo);
     
     fprintf(fileH, header);
     fprintf(fileH, geo_str);
     fprintf(fileH, u_str);
+    fprintf(fileH, f_str);
     fprintf(fileH, t_str);
     fprintf(fileH, stress_str);
     fprintf(fileH, strain_str);

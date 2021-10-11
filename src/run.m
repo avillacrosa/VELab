@@ -18,23 +18,15 @@ function Result = run(data_f)
     [Geo, Mat, Set] = feval(data_f, Geo, Mat, Set);
     [Geo, Mat, Set] = completeData(Geo, Mat, Set);
 
-    Result = solve(Geo, Set, Mat, Result);
+    Result = solveVE(Geo, Set, Mat, Result);
     
     Result.X   = Geo.X; % For plotting purposes
+    Result.x   = Result.X + Result.u;
     Result.n   = Geo.n; % For plotting purposes
     Result.dof = Geo.dof;
     Result.fix = Geo.fix;
     Result.t  = ref_nvec(Geo.f, Geo.n_nodes, Geo.dim); % For plotting purposes
     Result.K0 = stiffK(Geo, Mat, Set);
-    Result.T  = zeros(size(Geo.f));
-    Result.F  = zeros(size(Geo.f));
-    Result.R  = Result.K0*vec_nvec(Result.u);
-    Result.T(Geo.fix) = Result.R(Geo.fix);
-    Result.F(Geo.dof) = Result.R(Geo.dof);
-    
-    Result.R = ref_nvec(Result.R, Geo.n_nodes, Geo.dim);
-    Result.T = ref_nvec(Result.T, Geo.n_nodes, Geo.dim);
-    Result.F = ref_nvec(Result.F, Geo.n_nodes, Geo.dim);
     
     if Geo.dim == 2
         femplot(Result.X, Result.x, Result.n)
@@ -42,5 +34,8 @@ function Result = run(data_f)
         writeVTK(Geo.X, Geo, Result, Mat, sprintf("out/in_%s.vtk", data_f));
         writeVTK(Result.x, Geo, Result, Mat, sprintf("out/out_%s.vtk", data_f));
     end
+    
+    usave = Result.u;
+    save(sprintf('out/u_%s.mat', data_f), 'usave');
     fprintf("> Normal program finish\n");
 end

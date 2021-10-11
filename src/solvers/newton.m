@@ -2,7 +2,6 @@
 % Newton-Raphson solver for nonlinear elasticity
 %--------------------------------------------------------------------------
 function Result = newton(Geo, Mat, Set, Result)
-
     ndim   = Geo.dim;
     nnodes = Geo.n_nodes;
     
@@ -12,8 +11,9 @@ function Result = newton(Geo, Mat, Set, Result)
     % As a superficial load
     Geo.f = Geo.f / Set.newton_its;
     
-    u_k = Geo.u_v;
-    Bvec = intB(Geo, Set);
+    u_k = vec_nvec(Geo.u);
+    x_v = vec_nvec(Geo.X);
+    
     for i = 1:Set.newton_its
         % TODO this should be included if we want real superficial tensions
 %         DF = integrateF(Geom, Set);
@@ -29,14 +29,10 @@ function Result = newton(Geo, Mat, Set, Result)
             K = K_c + K_s;
 
             corrR = K(Geo.dof, Geo.fix)*u_k(Geo.fix);
-            Rdof  = R(Geo.dof);
-            u_k(Geo.dof) = K(Geo.dof, Geo.dof)\(-Rdof-corrR);
-            for a = 1:4
-                sigmas = Bvec(:,(2*a-1):(2*a))' \ (-R((2*a-1):(2*a)));
-                
-            end
-            Geo.x_v = Geo.x_v + u_k;
-            Geo.x   = ref_nvec(Geo.x_v, Geo.n_nodes, Geo.dim);
+            u_k(Geo.dof) = K(Geo.dof, Geo.dof)\(-R(Geo.dof)-corrR);
+            
+            x_v = x_v + u_k;
+            Geo.x   = ref_nvec(x_v, Geo.n_nodes, Geo.dim);
             
             u_k(Geo.fix) = 0;
             T = internalF(Geo, Mat, Set);
@@ -48,8 +44,9 @@ function Result = newton(Geo, Mat, Set, Result)
         end
         fprintf("> INCR %i CONVERGED IN %i ITERATIONS \n", i, it-1);
     end
-    Result.x = ref_nvec(Geo.x_v, Geo.n_nodes, Geo.dim);
     Result.u = Geo.x - Geo.X;
+    Result.T = T;
+    Result.F = F;
 end
 
 
