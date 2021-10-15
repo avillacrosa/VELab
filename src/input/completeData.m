@@ -25,11 +25,11 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Def_Set = struct();
     
     Def_Set.type         = 'linear';
-    Def_Set.newton_its   = 10;
+    Def_Set.n_steps      = 10;
     Def_Set.newton_tol   = 1e-10;
     Def_Set.time_incr    = 10000;
+    Def_Set.n_saves      = 20;
     Def_Set.dt           = 0.00001;
-    Def_Set.save         = 10;
     Def_Set.n_quad       = 2;
     Def_Set.euler_type   = 'forward';
     
@@ -48,9 +48,9 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Geo.n_nodes_dim       = Geo.n_nodes^(1/Geo.dim);
     Geo.vect_dim          = (Geo.dim+1)*Geo.dim/2;
     if ~isfield(Geo, 'x0')
-        Geo.x0                = nodalBC(Geo.x, Geo.dBC);
+        Geo.x0                = nodalBC(Geo, Geo.dBC, 0);
     end
-    Geo.f                 = nodalBCf(Geo);
+    Geo.f                 = nodalBC(Geo, Geo.fBC, 1);
     [Geo.dof, Geo.fix]    = buildBCs(Geo);
     [Geo.u, Set.p_type]   = buildUs(Geo);
     [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);

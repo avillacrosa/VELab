@@ -2,7 +2,7 @@ function stress_str = writeStress(x, Geo, Mat)
     stress_str = sprintf("TENSORS Stress float \n");
     % Nodal coordinates. FIXIT only for quad2...
     quad2 = [-1 1];
-    nodal_zeta_coords = zeros(8,3);
+    nodal_zeta_coords = zeros(Geo.n_nodes_elem*Geo.n_elem,3);
     for i = 1:2
         for j = 1:2
             for k = 1:2

@@ -9,24 +9,19 @@ function [u, p_type] = buildUs(Geo)
             value = Geo.x0(bci,3);
             u(n,dim) = value;
         end
-    elseif (isstring(Geo.u) || ischar(Geo.u)) && isempty(Geo.fBC)
-        fprintf("> u given from file. Assuming an inverse problem \n")
-        p_type = 'inverse';
-        if endsWith(Geo.u, '.mat')
-            ustruct = load(Geo.u);
-            u       = ustruct.usave;
-        else
-            u = readU(Geo.u, Geo.dim);
-        end
     else
-        fprintf("> u and t given. Assuming a forward problem with " + ...
-                    "initial strain\n")
-        if endsWith(Geo.u, '.mat')
-            ustruct = load(Geo.u);
-            u       = ustruct.usave;
-        else
+        if (isstring(Geo.u) || ischar(Geo.u))
             u = readU(Geo.u, Geo.dim);
+        else
+            u = Geo.u;
         end
-        p_type = 'forward';
+        if isempty(Geo.fBC)
+            fprintf("> u given from file. Assuming an inverse problem \n")
+            p_type = 'inverse';
+        else
+            fprintf("> u and t given. Assuming a forward problem with "+...
+                    "initial strain\n")
+            p_type = 'forward';
+        end
     end
 end

@@ -3,7 +3,7 @@
 % using either forward or backward euler's method
 %--------------------------------------------------------------------------
 function Result = euler_mx(Geo, Mat, Set, Result)
-    save = Set.save;
+    save = fix(Set.time_incr/Set.n_saves);
     dt   = Set.dt;
     eta  = Mat.visco;
 
@@ -34,8 +34,19 @@ function Result = euler_mx(Geo, Mat, Set, Result)
         fprintf("> Sudden stress  \n")
         u_e_0   = zeros(size(u_0));
         u_v_0   = zeros(size(u_0));
-        
+        sigma_0 = zeros(Geo.dim, Geo.dim);
+        fmat  = ref_nvec(Geo.f, Geo.n_nodes, Geo.dim);
+        for an = 1:Geo.n_nodes
+            if any(fmat(an,:))
+                % TODO FIXIT only for squares I think, + not normalized
+%                 xn = Geo.x(an,:)/norm(Geo.x(an,:));
+                xn = Geo.x(an,:);
+                xn(xn~=0) = 1;
+                sigma_0 = sigma_0 + xn\fmat(an,:);
+            end
+        end
     end
+    sigma_0 = vec_mat(sigma_0);
 
     u_k     = u_0;
     u_kp1   = u_k;
@@ -47,7 +58,8 @@ function Result = euler_mx(Geo, Mat, Set, Result)
     sigma_k = sigma_0;
     
     Result.sigmas  = zeros(Set.time_incr/save, Geo.vect_dim);
-    Result.us  = zeros(Set.time_incr/save, Geo.dim*Geo.n_nodes);
+    Result.xt = zeros(Set.n_saves, size(Geo.x,1), size(Geo.x,2));
+    Result.ut = zeros(Set.n_saves, size(Geo.x,1), size(Geo.x,2));
     Result.times = zeros(1,Set.time_incr/save);
     
     K = stiffK(Geo, Mat, Set);
@@ -67,15 +79,17 @@ function Result = euler_mx(Geo, Mat, Set, Result)
         t = t + dt;
 
         if mod(it,save) == 0
+            c = it/save;
             fprintf("it = %4i, |u| = %f, stress_x = %f \n", ...
                 it, norm(u_k),  sigma_k(1));
-            Result.sigmas(it/save,:) = sigma_k;
-            Result.us(it/save,:) = u_k;
-            Result.times(it/save) = t;
+            Result.sigmas(c,:) = sigma_k;
+            Result.ut(c,:,:) = ref_nvec(u_k, Geo.n_nodes, Geo.dim);        
+            Result.xt(c,:,:) = Geo.X + squeeze(Result.ut(c,:,:));
+            Result.times(c) = t;
         end
     end
     Result.sigma_0  = sigma_0;
     Result.tau = eta/(Mat.P(1)/(1-Mat.P(2)^2));
     Result.strain_0 = Bvec*u_0;
-    Result.x = Geo.X + reshape(u_k, [Geo.dim,Geo.n_nodes])';
+    Result.u = ref_nvec(u_k, Geo.n_nodes, Geo.dim);
 end   

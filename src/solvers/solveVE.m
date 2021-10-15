@@ -17,7 +17,7 @@ function Result = solveVE(Geo, Set, Mat, Result)
             end
         else
             fprintf("> Solving nonlinear elasticity \n");
-            Result = newton(Geo, Mat, Set, Result);
+            Result = elast(Geo, Mat, Set, Result);
         end
     elseif strcmp(Set.p_type, "inverse")
         Result = inv_lin(Geo, Mat, Set, Result);
