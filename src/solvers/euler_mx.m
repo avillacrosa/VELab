@@ -45,8 +45,8 @@ function Result = euler_mx(Geo, Mat, Set, Result)
                 sigma_0 = sigma_0 + xn\fmat(an,:);
             end
         end
+        sigma_0 = vec_mat(sigma_0);
     end
-    sigma_0 = vec_mat(sigma_0);
 
     u_k     = u_0;
     u_kp1   = u_k;

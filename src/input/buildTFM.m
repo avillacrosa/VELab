@@ -1,6 +1,6 @@
 function Geo = buildTFM(Geo)
     if (isstring(Geo.u) || ischar(Geo.u))
-        u_read         = readU(Geo.u, 2);
+        u_read         = readUTFM(Geo.u);
     else
         u_read = Geo.u;
     end

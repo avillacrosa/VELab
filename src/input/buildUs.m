@@ -1,4 +1,4 @@
-function [u, p_type] = buildUs(Geo)
+function [u, p_type] = buildUs(Geo, Mat)
     if ~isfield(Geo, 'u')
         fprintf("> u not specified. Assuming a forward problem \n")
         u = zeros(size(Geo.x));
@@ -15,7 +15,11 @@ function [u, p_type] = buildUs(Geo)
         else
             u = Geo.u;
         end
-        if isempty(Geo.fBC)
+        if isempty(Geo.fBC) && Mat.visco ~= 0
+            fprintf("> u given from file. Assuming a forward "+...
+                    "viscoelastic problem \n")
+            p_type = 'forward';
+        elseif isempty(Geo.fBC) 
             fprintf("> u given from file. Assuming an inverse problem \n")
             p_type = 'inverse';
         else

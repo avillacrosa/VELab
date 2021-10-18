@@ -33,6 +33,12 @@ function Result = run(data_f)
     Result.fix = Geo.fix;
     Result.t   = ref_nvec(Geo.f, Geo.n_nodes, Geo.dim); 
     Result.K0  = stiffK(Geo, Mat, Set);
+    if isfield(Result,'T')
+        Result.Tx  = Result.T(:,1);
+        Result.Ty  = Result.T(:,2);
+    end
+    Result.P     = Mat.P;
+    Result.visco = Mat.visco;
     
     writeOut(Geo,Set,Mat,Result,data_f);
     fprintf("> Normal program finish\n");

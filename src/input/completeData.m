@@ -52,7 +52,7 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     end
     Geo.f                 = nodalBC(Geo, Geo.fBC, 1);
     [Geo.dof, Geo.fix]    = buildBCs(Geo);
-    [Geo.u, Set.p_type]   = buildUs(Geo);
+    [Geo.u, Set.p_type]   = buildUs(Geo, Mat);
     [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);
     [Set.gaussPoints, Set.gaussWeights]        = buildQuadPoints(Geo, Set);
     
