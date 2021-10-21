@@ -2,7 +2,7 @@
 % Write a 3D VTK with all elements, and the nodal displacements, stress
 % tensors and strain tensors
 %--------------------------------------------------------------------------
-function writeVTK(x, u, Geo, Result, Mat, fname)
+function writeVTK(x, u, Geo, Result, Mat, Set, fname)
     fileH = fopen(fname, 'w+');
     
     header       = "# vtk DataFile Version 2.0\n";
@@ -24,8 +24,11 @@ function writeVTK(x, u, Geo, Result, Mat, fname)
         t_str        = "";
     end
     
-    stress_str   = writeStress(x, Geo, Mat);
-    strain_str   = writeStrain(x, Geo);
+    %writeStress(x, Geo, Mat);
+    stress_str   = writeStressRec(x, Geo, Mat, Set);
+    
+    %writeStrain(x, Geo, Mat);
+    strain_str   = writeStrainRec(x, Geo, Set);
     
     fprintf(fileH, header);
     fprintf(fileH, geo_str);

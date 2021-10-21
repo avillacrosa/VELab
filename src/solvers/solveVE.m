@@ -20,6 +20,7 @@ function Result = solveVE(Geo, Set, Mat, Result)
             Result = elast(Geo, Mat, Set, Result);
         end
     elseif strcmp(Set.p_type, "inverse")
-        Result = inv_lin(Geo, Mat, Set, Result);
+%         Result = inv_lin(Geo, Mat, Set, Result);
+        Result = inv_elast(Geo, Mat, Set, Result);
     end
 end

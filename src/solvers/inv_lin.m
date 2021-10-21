@@ -2,8 +2,9 @@
 % Linear inverse problem...
 %--------------------------------------------------------------------------
 function Result = inv_lin(Geo, Mat, Set, Result)
-    K = stiffK(Geo,Mat,Set);
-    
+%     K = stiffK(Geo,Mat,Set);
+    K = stiffKSparse(Geo,Mat,Set);
+
     fix = Geo.fix;
     dof = Geo.dof;
     

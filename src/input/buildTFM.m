@@ -12,6 +12,7 @@ function Geo = buildTFM(Geo)
     Geo.ns         = [n_nodes_xy^(1/2), n_nodes_xy^(1/2), Geo.ns(1)];
     
     z = (Geo.ns(3)-1)*Geo.ds(3);
-    
+    Geo.u = Geo.u*1e6;
+    Geo.ds = Geo.ds*1e6;
     Geo.dBC        = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 z 3 z ];
 end

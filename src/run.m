@@ -4,6 +4,7 @@
 % nonlinear)
 %--------------------------------------------------------------------------
 function Result = run(data_f)
+    t_start = tic();
     if endsWith(data_f, '.m')
         data_f = data_f(1:end-2);
     elseif size(data_f,1) == 0
@@ -32,7 +33,6 @@ function Result = run(data_f)
     Result.dof = Geo.dof;
     Result.fix = Geo.fix;
     Result.t   = ref_nvec(Geo.f, Geo.n_nodes, Geo.dim); 
-    Result.K0  = stiffK(Geo, Mat, Set);
     if isfield(Result,'T')
         Result.Tx  = Result.T(:,1);
         Result.Ty  = Result.T(:,2);
@@ -41,5 +41,8 @@ function Result = run(data_f)
     Result.visco = Mat.visco;
     
     writeOut(Geo,Set,Mat,Result,data_f);
-    fprintf("> Normal program finish\n");
+    t_end = duration(seconds(toc(t_start)));
+    t_end.Format = 'hh:mm:ss';
+    fprintf("> Normal program finish :)\n");
+    fprintf("> Total real run time %s \n",t_end);
 end
