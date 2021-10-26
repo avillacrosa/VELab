@@ -22,9 +22,19 @@ function writeOut(Geo,Set,Mat,Result,name)
         writeVTK(Geo.X, zeros(size(Geo.x)), Geo, Result, Mat, Set, ...
                     sprintf("out/in_%s.vtk", name));
     end
-            
-    usave = Result.u;
-    save(sprintf('out/u_%s.mat', name), 'usave');
+    
+    if strcmpi(Set.output, 'normal')
+        usave = Result.u;
+        save(sprintf('out/u_%s.mat', name), 'usave');
+    elseif strcmpi(Set.output, 'tfm')
+        zmax = Result.x(:,3)==max(Result.x(:,3));
+        Result.u(zmax,:);
+        ux = Result.u(zmax, 1);
+        uy = Result.u(zmax, 2);
+        ux = reshape(ux, [Geo.ns(1), Geo.ns(1)])';
+        uy = reshape(uy, [Geo.ns(2), Geo.ns(2)])';
+        save(sprintf('out/u_%s.mat', name), 'ux', 'uy');
+    end
     
     u_str = "";
     for ui = 1:size(Result.u,1)

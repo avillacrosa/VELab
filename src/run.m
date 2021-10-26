@@ -24,7 +24,6 @@ function Result = run(data_f)
     
     [Geo.x, Geo.n]  = meshgen(Geo.ns, Geo.ds);
     [Geo, Mat, Set] = completeData(Geo, Mat, Set);
-
     Result = solveVE(Geo, Set, Mat, Result);
     
     Result.X   = Geo.X; 
@@ -32,7 +31,8 @@ function Result = run(data_f)
     Result.n   = Geo.n; 
     Result.dof = Geo.dof;
     Result.fix = Geo.fix;
-    Result.t   = ref_nvec(Geo.f, Geo.n_nodes, Geo.dim); 
+    Result.t   = nodalToTract(Result.x, Geo, Set)*Result.T; 
+
     if isfield(Result,'T')
         Result.Tx  = Result.T(:,1);
         Result.Ty  = Result.T(:,2);

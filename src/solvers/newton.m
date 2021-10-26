@@ -5,9 +5,7 @@ function Geo = newton(Geo, Mat, Set, incr, R, F, x_v, u)
     tol = norm(R)/norm(F);
     it = 1;
     while(tol > Set.newton_tol || norm(u(Geo.dof)) > Set.newton_tol)
-%         K_c = stiffKSparse(Geo, Mat, Set);
-        K_c = stiffK(Geo, Mat, Set);
-        
+        K_c = stiffK(Geo, Mat, Set);        
         K_s = initStressK(Geo, Mat, Set); 
         
         K = K_c + K_s;

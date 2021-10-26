@@ -7,8 +7,11 @@ function Result = inv_elast(Geo, Mat, Set, Result)
     
     F = zeros(ndim*nnodes,1); 
     R = zeros(ndim*nnodes,1);
-
-    x_v = vec_nvec(Geo.x);
+        
+    % As a superficial load
+    df = Geo.f / Set.n_steps;
+    
+    u = zeros(size(vec_nvec(Geo.u)));
     
     du = Geo.u/ Set.n_steps;
     
@@ -16,10 +19,19 @@ function Result = inv_elast(Geo, Mat, Set, Result)
     Result.ut = zeros(Set.n_steps, size(Geo.x,1), size(Geo.x,2));
     
     for i = 1:Set.n_steps
+        F  = F + df; 
+        R  = R - df;
         Geo.x = Geo.X + du;
-        f = inv_newton(Geo, Mat, Set, i, F, vec_nvec(Geo.x));
         
+        x_v = vec_nvec(Geo.x);
+        
+        Geo = inv_newton(Geo, Mat, Set, i, R, F, x_v, u);
+        Result.xt(i,:,:) = Geo.x;
+        Result.ut(i,:,:) = Geo.x - Geo.X;
     end
+    Result.u = Geo.x - Geo.X;
+    Result.T = ref_nvec(R, Geo.n_nodes, Geo.dim);
+    Result.F = ref_nvec(F, Geo.n_nodes, Geo.dim);
 end
 
 

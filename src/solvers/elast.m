@@ -12,7 +12,6 @@ function Result = elast(Geo, Mat, Set, Result)
     df = Geo.f / Set.n_steps;
     
     u = zeros(size(vec_nvec(Geo.u)));
-    x_v = vec_nvec(Geo.X);
     
     du = Geo.u/ Set.n_steps;
     
@@ -23,7 +22,7 @@ function Result = elast(Geo, Mat, Set, Result)
         F  = F + df; 
         R  = R - df;
         Geo.x = Geo.X + du;
-        
+        x_v = vec_nvec(Geo.x);
         Geo = newton(Geo, Mat, Set, i, R, F, x_v, u);
         Result.xt(i,:,:) = Geo.x;
         Result.ut(i,:,:) = Geo.x - Geo.X;

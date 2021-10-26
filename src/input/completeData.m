@@ -32,6 +32,7 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Def_Set.dt           = 0.00001;
     Def_Set.n_quad       = 2;
     Def_Set.euler_type   = 'forward';
+    Def_Set.output       = 'normal';
     
     Geo  = addDefault(Geo, Def_Geo);
     Mat  = addDefault(Mat, Def_Mat);
@@ -45,7 +46,6 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Geo.dim               = size(Geo.x,2);
     Geo.n_elem            = size(Geo.n,1);
     Geo.n_nodes_elem      = size(Geo.n,2);
-    Geo.n_nodes_dim       = Geo.n_nodes^(1/Geo.dim);
     Geo.vect_dim          = (Geo.dim+1)*Geo.dim/2;
     if ~isfield(Geo, 'x0')
         Geo.x0                = nodalBC(Geo, Geo.dBC, 0);

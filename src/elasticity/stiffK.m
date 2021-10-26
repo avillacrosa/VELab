@@ -41,7 +41,7 @@ function K = stiffK(Geo, Mat, Set)
                     sl_a_e = (ndim*(a-1)+1):ndim*a;
                     sl_b_e = (ndim*(b-1)+1):ndim*b;
                     
-                    Bk = squeeze(B(a,:,:));
+                    Bk = squeeze(B(a,:,:)); % nodal index at the end
                     Bl = squeeze(B(b,:,:));
                     
                     na = ni(a);
