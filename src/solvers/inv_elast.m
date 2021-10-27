@@ -30,8 +30,9 @@ function Result = inv_elast(Geo, Mat, Set, Result)
         Result.ut(i,:,:) = Geo.x - Geo.X;
     end
     Result.u = Geo.x - Geo.X;
-    Result.T = ref_nvec(R, Geo.n_nodes, Geo.dim);
-    Result.F = ref_nvec(F, Geo.n_nodes, Geo.dim);
+    
+    Result.Ff    = zeros(size(Geo.u));
+    Result.Fb    = ref_nvec(R, Geo.n_nodes, Geo.dim);
 end
 
 

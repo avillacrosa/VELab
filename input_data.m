@@ -1,7 +1,7 @@
 function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
-    Geo.ns = [3 3 1];
+    Geo.ns = [3 3 3];
     Geo.ds = [1 1 1]/2;
     
 %     Geo.ns = [16 16 1];
@@ -12,7 +12,7 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     % direction, boundary
     % value. Ex: 1 10 0 sets the equilibrium position of all nodes in the 
     % plane X = 10 to 0
-    Geo.dBC = [1 0 1 0.2; 2 0 2 0.1];
+    Geo.dBC = [1 0 1 0; 2 0 2 0; 3 0 3 0];
 
     % Surface forces. 
     % Cartesian plane, target plane, traction axis, traction value
@@ -23,7 +23,7 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
-    Mat.type  = 'hookean';
+    Mat.type  = 'neohookean';
 %     Mat.visco = 1;
 %     Mat.rheo  = 'maxwell';
     Mat.P     = [57.6923 38.4615]; %Corresponding to E = 100 and nu = 0.3

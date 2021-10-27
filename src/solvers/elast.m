@@ -28,8 +28,10 @@ function Result = elast(Geo, Mat, Set, Result)
         Result.ut(i,:,:) = Geo.x - Geo.X;
     end
     Result.u = Geo.x - Geo.X;
-    Result.T = ref_nvec(R, Geo.n_nodes, Geo.dim);
-    Result.F = ref_nvec(F, Geo.n_nodes, Geo.dim);
+    Result.Ff = ref_nvec(F, Geo.n_nodes, Geo.dim);
+    Result.Fb = zeros(size(Result.Ff));
+    Rv = ref_nvec(R, Geo.n_nodes, Geo.dim);
+    Result.Fb(Geo.dof) = Rv(Geo.dof);
 end
 
 

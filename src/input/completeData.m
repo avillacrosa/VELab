@@ -50,7 +50,12 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     if ~isfield(Geo, 'x0')
         Geo.x0                = nodalBC(Geo, Geo.dBC, 0);
     end
-    Geo.f                 = nodalBC(Geo, Geo.fBC, 1);
+    if strcmpi(Geo.fBC, 'random')
+        fprintf("> Generating random nodals on the top layer\n");
+        Geo.f                 = randTFM(Geo, 5);
+    else
+        Geo.f                 = nodalBC(Geo, Geo.fBC, 1);
+    end
     [Geo.dof, Geo.fix]    = buildBCs(Geo);
     [Geo.u, Set.p_type]   = buildUs(Geo, Mat);
     [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);

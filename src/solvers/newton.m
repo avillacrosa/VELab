@@ -15,7 +15,7 @@ function Geo = newton(Geo, Mat, Set, incr, R, F, x_v, u)
         x_v = x_v + u;
         Geo.x   = ref_nvec(x_v, Geo.n_nodes, Geo.dim);
 
-        T = internalF(Geo, Mat, Set);
+        T = internalF(Geo.x, Geo, Mat, Set);
         R = T - F;
         tol = norm(R(Geo.dof))/norm(F);
         fprintf('INCR=%i ITER = %i tolR = %e tolX = %e\n',...

@@ -1,14 +1,15 @@
-function [Geo, Mat, Set] = tfm_inv(Geo, Mat, Set)
+function [Geo, Mat, Set] = real_tfm_in(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
     Geo.ns = 4;
-    Geo.ds = [1 1 1/3];
-    Geo.u  = 'out/u_tfm_out.mat';
+    Geo.ds = [512 512 1536];
+    Geo.u  = 'real_tfm_u.mat';
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
     Mat.type  = 'hookean';
     Mat.P     = [57.6923 38.4615]; % Corresponding to E = 100 and nu = 0.3
     
-    Set.n_steps = 1;
+    Set.n_steps    = 1;
+    Set.newton_tol = 1e-6;
 end

@@ -3,7 +3,7 @@
 %--------------------------------------------------------------------------
 function Geo = inv_newton(Geo, Mat, Set, incr, R, F, x_v, u)
     it = 1;
-    T = internalF(Geo, Mat, Set);
+    T = internalF(Geo.x, Geo, Mat, Set);
     R = T;
     tol = norm(R);
     while(tol > Set.newton_tol || norm(u(Geo.dof)) > Set.newton_tol)
@@ -17,7 +17,7 @@ function Geo = inv_newton(Geo, Mat, Set, incr, R, F, x_v, u)
         x_v = x_v + u;
         Geo.x   = ref_nvec(x_v, Geo.n_nodes, Geo.dim);
 
-        T = internalF(Geo, Mat, Set);
+        T = internalF(Geo.x, Geo, Mat, Set);
         R = T;
         tol = norm(R(Geo.dof));
         fprintf('INCR=%i ITER = %i tolR = %e tolX = %e\n',...

@@ -18,8 +18,8 @@ function K = stiffK(Geo, Mat, Set)
 
     for e = 1:Geo.n_elem
         Ke     = zeros(Geo.n_nodes_elem*ndim, Geo.n_nodes_elem*ndim);
-        Ke_id1 = zeros(Geo.n_nodes_elem*ndim, Geo.n_nodes_elem*ndim);
-        Ke_id2 = zeros(Geo.n_nodes_elem*ndim, Geo.n_nodes_elem*ndim);
+        Ke_id1 = zeros(Geo.n_nodes_elem*ndim, 1);
+        Ke_id2 = zeros(Geo.n_nodes_elem*ndim, 1);
         
         ni = n(e,:);
         xe = Geo.x(n(e,:),:);

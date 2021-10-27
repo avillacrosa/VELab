@@ -1,11 +1,11 @@
 %--------------------------------------------------------------------------
 % Computation of the internal in both 2D and 3D
 %--------------------------------------------------------------------------
-function T = internalF(Geo, Mat, Set)
+function T = internalF(x, Geo, Mat, Set)
           
     T = zeros(Geo.n_nodes*Geo.dim, 1);
     for e = 1:Geo.n_elem
-        xe = Geo.x(Geo.n(e,:),:);
+        xe = x(Geo.n(e,:),:);
         Xe = Geo.X(Geo.n(e,:),:);
         for m = 1:size(xe,1) 
             int = zeros(Geo.dim, 1);

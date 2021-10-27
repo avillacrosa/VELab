@@ -3,29 +3,62 @@
 % and 3D
 %--------------------------------------------------------------------------
 function K = initStressK(Geo, Mat, Set)
+    nnodes = Geo.n_nodes;
+    ndim   = Geo.dim;
 
-    K = zeros(Geo.n_nodes*Geo.dim);
+    % TODO try catch here
+%     K = zeros(nnodes*ndim, nnodes*ndim);
     
+    n = Geo.n;
+    ll = Geo.n_nodes_elem*Geo.dim;
+    K_id1 = zeros(ll^2*Geo.n_elem,1);
+    K_id2 = zeros(ll^2*Geo.n_elem,1);
+    K_val = zeros(ll^2*Geo.n_elem,1);
+    k = 1;
+
     for e = 1:Geo.n_elem
-        ni = Geo.n(e,:);
-        xe = Geo.x(ni,:);
-        Xe = Geo.X(ni,:);
+        Ke     = zeros(Geo.n_nodes_elem*ndim, Geo.n_nodes_elem*ndim);
+        Ke_id1 = zeros(Geo.n_nodes_elem*ndim, Geo.n_nodes_elem*ndim);
+        Ke_id2 = zeros(Geo.n_nodes_elem*ndim, Geo.n_nodes_elem*ndim);
+        
+        ni = n(e,:);
+        xe = Geo.x(n(e,:),:);
+        Xe = Geo.X(n(e,:),:);
         for gp = 1:size(Set.gaussPoints,1)
             z = Set.gaussPoints(gp,:);
             [sigma, ~] = material(xe, Xe, z, Mat);
             [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);
-            for ki = 1:Geo.n_nodes_elem
-                for li = 1:Geo.n_nodes_elem
-                    nk = ni(ki);
-                    nl = ni(li);
-                    sl_k = (Geo.dim*(nk-1)+1):Geo.dim*nk;
-                    sl_l = (Geo.dim*(nl-1)+1):Geo.dim*nl;
-                    K(sl_k,sl_l) = K(sl_k,sl_l)+J*dNdx(ki,:)*sigma*...
-                                            dNdx(li,:)'*eye(Geo.dim)...
+            for a = 1:Geo.n_nodes_elem
+                for b = 1:Geo.n_nodes_elem
+                    sl_a_e = (ndim*(a-1)+1):ndim*a;
+                    sl_b_e = (ndim*(b-1)+1):ndim*b;
+                    
+                    na = ni(a);
+                    nb = ni(b);
+                    sl_a = (ndim*(na-1)+1):ndim*na;
+                    sl_b = (ndim*(nb-1)+1):ndim*nb;
+                    % TODO repeats here
+                    Ke_id1(sl_a_e) = sl_a;
+                    Ke_id2(sl_b_e) = sl_b;
+                    Ke(sl_a_e, sl_b_e) = Ke(sl_a_e, sl_b_e)+ ...
+                           J*dNdx(a,:)*sigma*dNdx(b,:)'*eye(Geo.dim)...
                                             *Set.gaussWeights(gp,:);
 
                 end
             end
         end
-    end    
+        for aa = 1:size(Ke,1)
+            for bb = 1:size(Ke,2)
+                K_id1(k) = Ke_id1(aa);
+                K_id2(k) = Ke_id2(bb);
+                K_val(k) = Ke(aa,bb);
+                k = k+1;
+            end
+        end
+    end   
+    nz = K_id1>0;
+    K_id1 = K_id1(nz);
+    K_id2 = K_id2(nz);
+    K_val = K_val(nz);
+    K = sparse(K_id1, K_id2, K_val);
 end
