@@ -6,12 +6,14 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     %% Default geometry values
     Def_Geo = struct();
     
-    [x, n]        = meshgen([2,2,2],[1,1,1]);
-    Def_Geo.x     = x;
-    Def_Geo.n     = n;
-    Def_Geo.dBC   = [];
-    Def_Geo.fBC   = [];
-    Def_Geo.ftype = 'traction';
+    % TODO This is bad. Program should die here if no x/n are given
+    [x, n, na]       = meshgen([2,2,1],[1,1,1]);
+    Def_Geo.x        = x;
+    Def_Geo.n        = n;
+    Def_Geo.na       = na;
+    Def_Geo.dBC      = [];
+    Def_Geo.fBC      = [];
+    Def_Geo.traction = true;
     
     %% Default material values
     Def_Mat = struct();
@@ -32,7 +34,8 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Def_Set.dt           = 0.00001;
     Def_Set.n_quad       = 2;
     Def_Set.euler_type   = 'forward';
-    Def_Set.output       = 'normal';
+    Def_Set.sparse       = false;
+    Def_Set.TFM          = false;
     
     Geo  = addDefault(Geo, Def_Geo);
     Mat  = addDefault(Mat, Def_Mat);
@@ -50,19 +53,17 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     if ~isfield(Geo, 'x0')
         Geo.x0                = nodalBC(Geo, Geo.dBC, 0);
     end
-    if strcmpi(Geo.fBC, 'random')
-        fprintf("> Generating random nodals on the top layer\n");
-        Geo.f                 = randTFM(Geo, 5);
-    else
-        Geo.f                 = nodalBC(Geo, Geo.fBC, 1);
-    end
+    
     [Geo.dof, Geo.fix]    = buildBCs(Geo);
     [Geo.u, Set.p_type]   = buildUs(Geo, Mat);
     [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);
     [Set.gaussPoints, Set.gaussWeights]        = buildQuadPoints(Geo, Set);
-    
-    if strcmpi(Geo.ftype, "traction")
-        [Set.cn, Set.cEq, Set.gausscP, Set.gausscW] = buildArea(Geo,Set);
-        Geo.f = integrateTract(Geo, Set);
-    end    
+    if maxSize(Geo) > 4
+        fprintf("> Large mesh. Sparse will be used \n");
+        Set.sparse = true;
+    end
+    [Set.cn, Set.cEq, Set.gausscP, Set.gausscW] = buildArea(Geo,Set);
+    M = nodalToTract(Geo.X, Geo, Set)
+    M = areaMass(Geo.X, Geo, Set)
+    [Geo.t, Geo.F] = buildNeumann(Geo, Set);
 end

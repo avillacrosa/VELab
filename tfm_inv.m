@@ -7,7 +7,7 @@ function [Geo, Mat, Set] = tfm_inv(Geo, Mat, Set)
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
-    Mat.type  = 'hookean';
+    Mat.type  = 'neohookean';
     Mat.P     = [57.6923 38.4615]; % Corresponding to E = 100 and nu = 0.3
     
     Set.n_steps = 1;

@@ -2,36 +2,27 @@
 % Newton-Raphson solver for nonlinear elasticity
 %--------------------------------------------------------------------------
 function Result = elast(Geo, Mat, Set, Result)
-    ndim   = Geo.dim;
-    nnodes = Geo.n_nodes;
     
-    F = zeros(ndim*nnodes,1); 
-    R = zeros(ndim*nnodes,1);
+    F = zeros(Geo.dim*Geo.n_nodes,1); 
+    R = zeros(Geo.dim*Geo.n_nodes,1);
         
     % As a superficial load
-    df = Geo.f / Set.n_steps;
+    df = Geo.F / Set.n_steps;
+    du = Geo.u / Set.n_steps;
     
-    u = zeros(size(vec_nvec(Geo.u)));
+    Result.xn = zeros(Set.n_steps, Geo.n_nodes, Geo.dim);
+    Result.un = zeros(Set.n_steps, Geo.n_nodes, Geo.dim);
     
-    du = Geo.u/ Set.n_steps;
-    
-    Result.xt = zeros(Set.n_steps, size(Geo.x,1), size(Geo.x,2));
-    Result.ut = zeros(Set.n_steps, size(Geo.x,1), size(Geo.x,2));
-    
-    for i = 1:Set.n_steps
-        F  = F + df; 
-        R  = R - df;
-        Geo.x = Geo.X + du;
-        x_v = vec_nvec(Geo.x);
-        Geo = newton(Geo, Mat, Set, i, R, F, x_v, u);
-        Result.xt(i,:,:) = Geo.x;
-        Result.ut(i,:,:) = Geo.x - Geo.X;
+    for i = 1:Set.n_steps        
+        Result.x = Geo.X + du;
+%         F  = F + df; 
+%         R  = R - df;
+        Result = newton(Geo, Mat, Set, Result, i, R, F);
+        Result.xn(i,:,:) = Result.x;
+        Result.un(i,:,:) = Result.x - Geo.X;
     end
-    Result.u = Geo.x - Geo.X;
-    Result.Ff = ref_nvec(F, Geo.n_nodes, Geo.dim);
-    Result.Fb = zeros(size(Result.Ff));
-    Rv = ref_nvec(R, Geo.n_nodes, Geo.dim);
-    Result.Fb(Geo.dof) = Rv(Geo.dof);
+    
+    Result.u = Result.x - Geo.X;
 end
 
 

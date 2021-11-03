@@ -3,7 +3,7 @@
 % direction and ns(3) nodes in z direction, separated by ds (array with one
 % for each axis also)
 %--------------------------------------------------------------------------
-function [x, n] = meshgen(ns, ds)
+function [x, n, na] = meshgen(ns, ds)
     nx = ns(1);
     ny = ns(2);
     nz = ns(3);
@@ -25,8 +25,11 @@ function [x, n] = meshgen(ns, ds)
         nelem = (ns(1)-1)*(ns(2)-1)*(ns(3)-1);
     end
     
-    x = zeros(nx*ny*nz, 3);
-    n = zeros(nelem, 2^dim);
+    x  = zeros(nx*ny*nz, 3);
+    n  = zeros(nelem, 2^dim);
+    
+    % TODO Only for cubes/squares?
+    na = zeros(2*dim*nelem, 2^(dim-1));
     
     for nzi = 1:nz
         for nyi = 1:ny
@@ -44,11 +47,17 @@ function [x, n] = meshgen(ns, ds)
                 end
                 if cond
                     e_idx = n_idx + (1-nyi) + (nx+ny-1)*(1-nzi);
-                    cs = [bl, bl + 1, bl + nx + 1, bl + nx];
+                    cs  = [bl, bl + 1, bl + nx + 1, bl + nx];
+                    csa = [ bl, bl + 1
+                            bl + 1, bl + nx + 1
+                            bl + nx + 1, bl + nx
+                            bl + nx, bl];
                     if dim == 3
+                        % TODO smart 3d?
                         cs = cat(2, cs, cs + nx*ny);
                     end
                     n(e_idx, :) = cs;
+                    na(e_idx:(e_idx+2*dim-1), :) = csa;
                 end
             end
         end

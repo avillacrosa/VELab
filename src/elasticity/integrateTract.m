@@ -1,5 +1,5 @@
-function T = integrateTract(Geo, Set)
-    T = zeros(size(Geo.f));
+function T = integrateTract(t, Geo, Set)
+    T = zeros(size(t));
     n = Geo.n;
     for e = 1:Geo.n_elem
         A = Geo.dim*(n(e,:)-1)+1;
@@ -10,7 +10,7 @@ function T = integrateTract(Geo, Set)
             C = Geo.dim*(n(e,:)-1)+3;
             ide = reshape([A;B;C], size(A,1), []);
         end
-        Te = Geo.f(ide);
+        Te = t(ide);
         xe = Geo.x(n(e,:),:);
         for gpa = 1:size(Set.gausscP,1)
             for face_i = 1:size(Set.cEq)

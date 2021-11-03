@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% General integral of the B matrix in both 2D and 3D. Used mainly for
-% viscoelasticity
+% General integral of the product B'*B matrix in both 2D and 3D. Used 
+% mainly for viscoelasticity
 %--------------------------------------------------------------------------
 function Btot = intBB(Geo, Set)
     nnodes = Geo.n_nodes;
