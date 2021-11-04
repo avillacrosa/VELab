@@ -14,6 +14,7 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Def_Geo.dBC      = [];
     Def_Geo.fBC      = [];
     Def_Geo.traction = true;
+    Def_Geo.randMag  = 10;
     
     %% Default material values
     Def_Mat = struct();
@@ -36,6 +37,7 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Def_Set.euler_type   = 'forward';
     Def_Set.sparse       = false;
     Def_Set.TFM          = false;
+    Def_Set.output       = 'normal'; %TODO bad
     
     Geo  = addDefault(Geo, Def_Geo);
     Mat  = addDefault(Mat, Def_Mat);
@@ -53,7 +55,6 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     if ~isfield(Geo, 'x0')
         Geo.x0                = nodalBC(Geo, Geo.dBC, 0);
     end
-    
     [Geo.dof, Geo.fix]    = buildBCs(Geo);
     [Geo.u, Set.p_type]   = buildUs(Geo, Mat);
     [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);
@@ -63,7 +64,5 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
         Set.sparse = true;
     end
     [Set.cn, Set.cEq, Set.gausscP, Set.gausscW] = buildArea(Geo,Set);
-    M = nodalToTract(Geo.X, Geo, Set)
-    M = areaMass(Geo.X, Geo, Set)
     [Geo.t, Geo.F] = buildNeumann(Geo, Set);
 end

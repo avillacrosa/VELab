@@ -3,7 +3,7 @@ function [Geo, Mat, Set] = tfm_inv(Geo, Mat, Set)
     % Number of nodes in each direction
     Geo.ns = 4;
     Geo.ds = [1 1 1/3];
-    Geo.u  = 'out/u_tfm_out.mat';
+    Geo.u  = 'output/u_tfm_out.mat';
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant

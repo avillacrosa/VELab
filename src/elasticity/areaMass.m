@@ -1,29 +1,31 @@
-function M = areaMass(x, Geo, Set)
+function Mf = areaMass(x, Geo, Set)
     M = zeros(Geo.n_nodes);
-    gpas = zeros(4,2,2);
-    gpas(1,1,:) = [-1 -1];
-    gpas(1,2,:) = [+1 -1];
-    gpas(2,1,:) = [+1 -1];
-    gpas(2,2,:) = [+1 +1];
-    gpas(3,1,:) = [+1 +1];
-    gpas(3,2,:) = [-1 +1];
-    gpas(4,1,:) = [-1 +1];
-    gpas(4,2,:) = [-1 -1];
-    
+    quadw = [-1 1]/sqrt(3);
+%     quadw = [-1 1];
     % TODO iterator as a variable?
     for ea = 1:size(Geo.na,1)
         nea = Geo.na(ea,:);
-        xe = x(nea,:);
-        % TODO remove hardcode
+        xe  = x(nea(2:end),nea(1));
         for gpa = 1:2
-            z = squeeze(gpas(ea,gpa,:));
-            [~, J] = getdNdx(xe(1,:), z, 2);
+            z = quadw(gpa);
+            [N, ~] = fshape(2, z);
+            [~, J] = getdNdx(xe, z, 2);
             for a = 1:2
                 for b = 1:2
-                    M(nea(a), nea(b)) = M(nea(a), nea(b)) + ... 
-                                        Set.gausscW(gpa)*J;
+                    neaa = nea(a+1);
+                    neab = nea(b+1);
+                    M(neaa, neab) = M(neaa, neab) + ... 
+                                        N(a,:)*N(b,:)*Set.gausscW(gpa)*J;
+
+%                     M(neaa, neab) = M(neaa, neab) + Set.gausscW(gpa)*J;
                 end
             end
         end
     end
+    % Lumping
+%     Mf = zeros(size(M));
+%     for d_i = 1:size(M,1)
+%         Mf(d_i, d_i) = sum(M(d_i,:));
+%     end
+    Mf = M;
 end

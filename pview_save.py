@@ -1,7 +1,7 @@
-fname               = "/home/doctorantlacan/VELab/out/out_t01_tfm_inv.vtk"
+fname               = "/home/avillacrosa/VELab/output/out_tfm_inv.vtk"
 session_name        = "inv_lin"
-observables = ['Displacements', 'Reactions', 'Stress', 'Tractions']
-obs_names   = ['u','r','sts','t'];
+observables = ['Displacements', 'Reactions']
+obs_names   = ['u','R'];
 
 reader                = OpenDataFile(fname)
 disp                  = Show(reader)
@@ -21,5 +21,5 @@ for p in range(len(pos_dir)):
 		disp.ColorArrayName   = obs
 		ColorBy(disp, ('POINTS', obs))
 		disp.RescaleTransferFunctionToDataRange(True)
-		fout                  = "/home/doctorantlacan/VELab/out/"+ obs_names[i] +"_"+ session_name +"_"+pos_name[p]+".png"
+		fout                  = "/home/avillacrosa/Pictures"+ obs_names[i] +"_"+ session_name +"_"+pos_name[p]+".png"
 		SaveScreenshot(fout, view)

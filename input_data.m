@@ -1,8 +1,8 @@
 function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
-    Geo.ns = [2 2 1];
-    Geo.ds = [1 1 1];
+    Geo.ns = [3 3 1];
+    Geo.ds = [1 1 1]/2;
     
 %     Geo.ns = [16 16 1];
 %     Geo.ds = [1 1 1]/15;

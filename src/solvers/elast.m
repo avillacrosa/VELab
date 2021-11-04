@@ -15,8 +15,8 @@ function Result = elast(Geo, Mat, Set, Result)
     
     for i = 1:Set.n_steps        
         Result.x = Geo.X + du;
-%         F  = F + df; 
-%         R  = R - df;
+        F  = F + df; 
+        R  = R - df;
         Result = newton(Geo, Mat, Set, Result, i, R, F);
         Result.xn(i,:,:) = Result.x;
         Result.un(i,:,:) = Result.x - Geo.X;

@@ -29,8 +29,8 @@ function [x, n, na] = meshgen(ns, ds)
     n  = zeros(nelem, 2^dim);
     
     % TODO Only for cubes/squares?
-    na = zeros(2*dim*nelem, 2^(dim-1));
-    
+    na = zeros(2*dim*nelem-nelem, 2^(dim-1)+1);
+    ccc = 1;
     for nzi = 1:nz
         for nyi = 1:ny
             for nxi = 1:nx
@@ -48,16 +48,27 @@ function [x, n, na] = meshgen(ns, ds)
                 if cond
                     e_idx = n_idx + (1-nyi) + (nx+ny-1)*(1-nzi);
                     cs  = [bl, bl + 1, bl + nx + 1, bl + nx];
-                    csa = [ bl, bl + 1
-                            bl + 1, bl + nx + 1
-                            bl + nx + 1, bl + nx
-                            bl + nx, bl];
+%                     csa = [ 1 bl, bl + 1
+%                             2 bl + 1, bl + nx + 1
+%                             1 bl + nx + 1, bl + nx
+%                             2 bl + nx, bl];
+                    csa = [ 1, bl, bl + 1
+                            2, bl + 1, bl + nx + 1
+                            1, bl + nx, bl + nx + 1
+                            2, bl, bl + nx];
                     if dim == 3
                         % TODO smart 3d?
                         cs = cat(2, cs, cs + nx*ny);
                     end
                     n(e_idx, :) = cs;
-                    na(e_idx:(e_idx+2*dim-1), :) = csa;
+%                     asl = nelem*(e_idx-1)+1;
+%                     asl:asl+4
+%                     for csaa = 1:4
+%                         if ~ismember(csa(csaa,:), na, "rows")
+%                             na(ccc, :) = csa(csaa,:);
+%                             ccc = ccc + 1;
+%                         end
+%                     end
                 end
             end
         end

@@ -1,4 +1,4 @@
-function [Geo, Mat, Set] = tfm_out(Geo, Mat, Set)
+function [Geo, Mat, Set] = rand_tfm_lin(Geo, Mat, Set)
     %% Geometry parameters
     nn = 25;
     Geo.ns = [nn nn 4];
@@ -8,7 +8,7 @@ function [Geo, Mat, Set] = tfm_out(Geo, Mat, Set)
     Geo.fBC = 'random';
     
     %% Material parameters
-    Mat.type  = 'neohookean';
+    Mat.type  = 'hookean';
     Mat.P     = [57.6923 38.4615]; %Corresponding to E = 100 and nu = 0.3
 
     

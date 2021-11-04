@@ -1,4 +1,4 @@
-function [Geo, Mat, Set] = tfm_out(Geo, Mat, Set)
+function [Geo, Mat, Set] = rand_tfm_nl(Geo, Mat, Set)
     %% Geometry parameters
     nn = 25;
     Geo.ns = [nn nn 4];

@@ -3,7 +3,7 @@
 % appropiate solver for the problem (hookean = linear; neohookean/venant =
 % nonlinear)
 %--------------------------------------------------------------------------
-function Result = runVE(data_f)
+function Result = runVE(data_f, mag)
     t_start = tic();
     
     if endsWith(data_f, '.m')
@@ -20,7 +20,7 @@ function Result = runVE(data_f)
         fprintf("> Assuming a TFM-type input \n");
         Geo = buildTFM(Geo);
     end
-    
+    Geo.randMag = mag;
     [Geo.x, Geo.n, Geo.na]  = meshgen(Geo.ns, Geo.ds);
     [Geo, Mat, Set] = completeData(Geo, Mat, Set);
     

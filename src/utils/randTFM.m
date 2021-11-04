@@ -1,5 +1,6 @@
 %TODO FIXIT is this really necessary?
 function t = randTFM(Geo, max_t)
+    rng(1)
     pad = 2;
     t = zeros(Geo.ns(1), Geo.ns(2), Geo.ns(3), 3);
     trand = rand(Geo.ns(1)-2*pad, Geo.ns(2)-2*pad, 2)*max_t;
