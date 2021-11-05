@@ -1,26 +1,20 @@
 function writeOut(Geo,Set,Mat,Result,name)
     if Geo.dim == 2
-        femplot(Result.X, Result.x, Result.n)
+        femplot(Result.X, Result.x(:,:,end), Result.n)
     elseif Geo.dim == 3
-        if isfield(Result, 'xt')
-            if Mat.rheo ~= 0
-                t = Set.n_saves;
-            else
-                t = Set.n_steps;
-            end
-            
-            for i = 1:t
-                writeVTK(squeeze(Result.xt(i,:,:)), ...
-                    squeeze(Result.ut(i,:,:)), Geo, Result, Mat, Set, ...
-                    sprintf("output/out_t%02i_%s.vtk", i, name));
-            end
+        if Mat.rheo ~= 0
+            t = Set.n_saves;
         else
-            
-            writeVTK(Result.x, Result.u, Geo, Result, Mat, Set, ...
-                sprintf("output/out_%s.vtk", name));
+            t = Set.n_steps;
         end
-        writeVTK(Geo.X, zeros(size(Geo.x)), Geo, Result, Mat, Set, ...
+        for i = 1:t
+            fname = sprintf("output/out_t%02i_%s.vtk", i, name);
+            x = Result.x(:,:,i);
+            u = Result.u(:,:,i);
+            writeVTK(x, u, Geo, Result, Mat, Set, fname);
+        end
+        writeVTK(Geo.X, zeros(size(Geo.X)), Geo, Result, Mat, Set, ...
                     sprintf("output/in_%s.vtk", name));
     end
-    writeU(Geo, Set, Result, name);
+    writeU(Result.x, Result.u, Geo, Set, name);
 end

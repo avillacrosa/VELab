@@ -11,11 +11,12 @@ function Result = euler_kv(Geo, Mat, Set, Result)
     end
     
     % TODO FIXIT assuming constant stress
-    [~, c] = material(Geo.x(Geo.n(1,:),:), Geo.X(Geo.n(1,:),:),...
+    [~, c] = material(Geo.X(Geo.n(1,:),:), Geo.X(Geo.n(1,:),:),...
         ones(1,Geo.dim), Mat);
     D = constD(c);
     
-    K = stiffK(Geo, Mat, Set);
+    % Because of linear elasticity...
+    K = constK(Geo.X,Geo, Mat, Set);
     Btot = intBB(Geo, Set);
     
     save = fix(Set.time_incr/Set.n_saves);
@@ -24,35 +25,37 @@ function Result = euler_kv(Geo, Mat, Set, Result)
     
     Result.strs  = zeros(Set.time_incr/save, Geo.vect_dim);
     Result.times = zeros(1,Set.time_incr/save);
-    Result.xt = zeros(Set.n_saves, size(Geo.x,1), size(Geo.x,2));
-    Result.ut = zeros(Set.n_saves, size(Geo.x,1), size(Geo.x,2));
+    Result.x = zeros(size(Geo.X,1), size(Geo.X,2), Set.n_saves);
+    Result.u = zeros(size(Geo.X,1), size(Geo.X,2), Set.n_saves);
     
     t = 0;
 
     uk   = vec_nvec(Geo.u);
     ukp1 = uk;
-    
+    fff = zeros(size(Geo.F));
+
     dof = Geo.dof;
     for it = 1:Set.time_incr
         if strcmpi(Set.euler_type, 'forward')
             stepMatrix = Btot(dof,dof)-(dt/eta)*K(dof,dof);
             ukp1(dof) = Btot(dof,dof)\...
-                        (stepMatrix*uk(dof)+Geo.f(dof)*(dt/eta));
+                        (stepMatrix*uk(dof)+Geo.F(dof)*(dt/eta));
+            fff(dof) = (stepMatrix*uk(dof) - Btot(dof, dof)*ukp1(dof))*eta/dt;
         elseif strcmpi(Set.euler_type, 'backward')
             stepMatrix = K+eta*Btot/dt;
             Btotbc = setboundsK(Btot, Geo);
-            ukp1 = stepMatrix\(Geo.f+Btotbc*uk*eta/dt);
+            ukp1 = stepMatrix\(Geo.F+Btotbc*uk*eta/dt);
         end
-        
+
         t = t + dt;      
         
         if mod(it,save) == 0
             c = it/save;
-            def_k   = Geo.x + ref_nvec(uk, Geo.n_nodes, Geo.dim);
+            def_k   = Geo.X + ref_nvec(uk, Geo.n_nodes, Geo.dim);
             strain_k   = lin_strain(def_k(Geo.n(1,:),:), ...
                     Geo.X(Geo.n(1,:),:), ones(1,Geo.dim),Geo.n_nodes_elem);
                                     
-            def_kp1 = Geo.x + ref_nvec(ukp1, Geo.n_nodes, Geo.dim);
+            def_kp1 = Geo.X + ref_nvec(ukp1, Geo.n_nodes, Geo.dim);
             strain_kp1 = lin_strain(def_kp1(Geo.n(1,:),:), ...
                     Geo.X(Geo.n(1,:),:), ones(1,Geo.dim),Geo.n_nodes_elem);                        
 
@@ -63,8 +66,8 @@ function Result = euler_kv(Geo, Mat, Set, Result)
                             it, norm(uk),  v_stress(1));        
             Result.strs(c,:)  = vec_mat(strain_k);
             Result.times(c) = t;
-            Result.ut(c,:,:) = ref_nvec(uk, Geo.n_nodes, Geo.dim);        
-            Result.xt(c,:,:) = Geo.X + squeeze(Result.ut(c,:,:));
+            Result.u(:,:,c) = ref_nvec(uk, Geo.n_nodes, Geo.dim);        
+            Result.x(:,:,c) = Geo.X + Result.u(:,:,c);
         end 
         uk(dof) = ukp1(dof);
 
@@ -72,9 +75,9 @@ function Result = euler_kv(Geo, Mat, Set, Result)
     Result.sigma_0 = ref_mat(v_stress);
     
     Result.tau = eta/(Mat.P(1)/(1-Mat.P(2)^2))*ones(size(strain_k));
-    Result.tau_num = viscTau(Result.times, Result.strs, (1-exp(-1)));
+%     Result.tau_num = viscTau(Result.times, Result.strs, (1-exp(-1)));
     
     Result.str_inf = ref_mat(v_stress)/(Mat.P(1)*(1+Mat.P(2))/(1-Mat.P(2)^2));
 
-    Result.u = ref_nvec(uk, Geo.n_nodes, Geo.dim);
+%     Result.u = ref_nvec(uk, Geo.n_nodes, Geo.dim);
 end

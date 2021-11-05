@@ -14,15 +14,15 @@ function Result = euler_mx(Geo, Mat, Set, Result)
     end
     
     % For venant, D depends on deformation which depends on integral ???
-    [~, c] = material(Geo.x(Geo.n(1,:),:), Geo.X(Geo.n(1,:),:), ones(1,Geo.dim), Mat);
+    [~, c] = material(Geo.X(Geo.n(1,:),:), Geo.X(Geo.n(1,:),:), ones(1,Geo.dim), Mat);
     D = constD(c);
     
     % Get integrals at equilibrium
     Bvec = intB(Geo, Set);    % Integral of B.
     Btot = intBB(Geo, Set);   % Integral of B'*B. 
     
-    u_0     = vec_nvec(Geo.u); % If this is 0 but f is not -> Ct. stress, inf strain
-    f_0     = Geo.f; % If this is 0 but u is not -> Ct. strain, stress -> 0
+    u_0     = vec_nvec(Geo.u(:,:,end)); % If this is 0 but f is not -> Ct. stress, inf strain
+    f_0     = Geo.F; % If this is 0 but u is not -> Ct. strain, stress -> 0
     fdot = zeros(size(f_0));
 
     if any(u_0) == 1 % u_0 != 0, f_0 = 0
@@ -35,12 +35,12 @@ function Result = euler_mx(Geo, Mat, Set, Result)
         u_e_0   = zeros(size(u_0));
         u_v_0   = zeros(size(u_0));
         sigma_0 = zeros(Geo.dim, Geo.dim);
-        fmat  = ref_nvec(Geo.f, Geo.n_nodes, Geo.dim);
+        fmat  = ref_nvec(Geo.F, Geo.n_nodes, Geo.dim);
         for an = 1:Geo.n_nodes
             if any(fmat(an,:))
                 % TODO FIXIT only for squares I think, + not normalized
 %                 xn = Geo.x(an,:)/norm(Geo.x(an,:));
-                xn = Geo.x(an,:);
+                xn = Geo.X(an,:);
                 xn(xn~=0) = 1;
                 sigma_0 = sigma_0 + xn\fmat(an,:);
             end
@@ -58,11 +58,11 @@ function Result = euler_mx(Geo, Mat, Set, Result)
     sigma_k = sigma_0;
     
     Result.sigmas  = zeros(Set.time_incr/save, Geo.vect_dim);
-    Result.xt = zeros(Set.n_saves, size(Geo.x,1), size(Geo.x,2));
-    Result.ut = zeros(Set.n_saves, size(Geo.x,1), size(Geo.x,2));
+    Result.xt = zeros(Set.n_saves, size(Geo.X,1), size(Geo.X,2));
+    Result.ut = zeros(Set.n_saves, size(Geo.X,1), size(Geo.X,2));
     Result.times = zeros(1,Set.time_incr/save);
     
-    K = stiffK(Geo, Mat, Set);
+    K = constK(Geo.X, Geo, Mat, Set);
     dof = Geo.dof;
     t = 0;
     for it = 1:Set.time_incr
@@ -88,6 +88,7 @@ function Result = euler_mx(Geo, Mat, Set, Result)
             Result.times(c) = t;
         end
     end
+%     Result.x = Geo.X;
     Result.sigma_0  = sigma_0;
     Result.tau = eta/(Mat.P(1)/(1-Mat.P(2)^2));
     Result.strain_0 = Bvec*u_0;

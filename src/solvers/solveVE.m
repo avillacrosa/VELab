@@ -8,6 +8,10 @@ function Result = solveVE(Geo, Set, Mat, Result)
         fprintf(['> Solving linear viscoelasticity',...
                 ' with Kelvin-Voigt rheology \n']);
         Result = euler_kv(Geo, Mat, Set, Result);
+    elseif Mat.visco ~= 0 && strcmpi(Mat.rheo, 'invkelvin')
+        fprintf(['> Solving linear viscoelasticity',...
+                ' with Kelvin-Voigt rheology \n']);
+        Result = inv_kv(Geo, Mat, Set, Result);
     elseif Mat.visco ~= 0 && strcmpi(Mat.rheo, 'maxwell')
         fprintf(['> Solving linear viscoelasticity',...
                 ' with Maxwell rheology \n']);

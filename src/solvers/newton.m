@@ -2,8 +2,7 @@
 % Newton-Raphson solver for nonlinear elasticity
 %--------------------------------------------------------------------------
 function Result = newton(Geo, Mat, Set, Result, incr, R, F)
-    uf  = vec_nvec(zeros(size(Geo.x)));
-    R = R + internalF(Result.x, Geo, Mat, Set);
+    uf  = vec_nvec(zeros(size(Geo.X)));
     tol = norm(R);
     it = 1;
     while(tol > Set.newton_tol || norm(uf(Geo.dof)) > Set.newton_tol)

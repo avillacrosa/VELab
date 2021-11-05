@@ -6,17 +6,16 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     %% Default geometry values
     Def_Geo = struct();
     
-    % TODO This is bad. Program should die here if no x/n are given
-    [x, n, na]       = meshgen([2,2,1],[1,1,1]);
-    Def_Geo.x        = x;
-    Def_Geo.n        = n;
-    Def_Geo.na       = na;
+    if ~isfield(Geo, 'X') || ~isfield(Geo, 'n') 
+        fprintf("Initial coordinates not found. Quitting \n")
+        return
+    end
+
     Def_Geo.dBC      = [];
     Def_Geo.fBC      = [];
     Def_Geo.traction = true;
     Def_Geo.randMag  = 10;
     
-    %% Default material values
     Def_Mat = struct();
     
     Def_Mat.type   = 'hookean';
@@ -24,10 +23,10 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Def_Mat.visco  = 0;
     Def_Mat.rheo   = '';
     
-    %% Default numerical settings values
     Def_Set = struct();
     
-    Def_Set.type         = 'linear';
+    % char arrays must be bools (or flags)
+    Def_Set.type         = 'linear'; %TODO bad
     Def_Set.n_steps      = 10;
     Def_Set.newton_tol   = 1e-10;
     Def_Set.time_incr    = 10000;
@@ -42,27 +41,6 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Geo  = addDefault(Geo, Def_Geo);
     Mat  = addDefault(Mat, Def_Mat);
     Set  = addDefault(Set, Def_Set);
-    
-    %% Guess and define other useful parameters for computing
-    
-    % Additional help variables
-    Geo.X                 = Geo.x;
-    Geo.n_nodes           = size(Geo.x,1);
-    Geo.dim               = size(Geo.x,2);
-    Geo.n_elem            = size(Geo.n,1);
-    Geo.n_nodes_elem      = size(Geo.n,2);
-    Geo.vect_dim          = (Geo.dim+1)*Geo.dim/2;
-    if ~isfield(Geo, 'x0')
-        Geo.x0                = nodalBC(Geo, Geo.dBC, 0);
-    end
-    [Geo.dof, Geo.fix]    = buildBCs(Geo);
-    [Geo.u, Set.p_type]   = buildUs(Geo, Mat);
-    [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);
-    [Set.gaussPoints, Set.gaussWeights]        = buildQuadPoints(Geo, Set);
-    if maxSize(Geo) > 4
-        fprintf("> Large mesh. Sparse will be used \n");
-        Set.sparse = true;
-    end
-    [Set.cn, Set.cEq, Set.gausscP, Set.gausscW] = buildArea(Geo,Set);
-    [Geo.t, Geo.F] = buildNeumann(Geo, Set);
+
+    [Geo, Set] = buildHelp(Geo, Mat, Set);
 end

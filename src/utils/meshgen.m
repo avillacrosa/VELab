@@ -11,7 +11,6 @@ function [x, n, na] = meshgen(ns, ds)
     dx = ds(1);
     dy = ds(2);
     dz = ds(3);
-    
     if nz <= 1 
         fprintf("> Size of z <= 1, assuming a 2D problem \n");
         dim = 2;

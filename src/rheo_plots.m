@@ -5,6 +5,8 @@
 % hold on
 % plot(Result.times, theoStress, '--','LineWidth',2);
 % legend('Solution','Theoretical')
+% xlabel("t")
+% ylabel("strain")
 
 % KV plot
 % k = 2*Result.P(2);
@@ -14,3 +16,5 @@
 % hold on
 % plot(Result.times, theoStr, '--','LineWidth',2);
 % legend('Solution','Theoretical')
+% xlabel("t")
+% ylabel("stress")

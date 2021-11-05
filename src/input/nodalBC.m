@@ -1,12 +1,12 @@
 %--------------------------------------------------------------------------
-% Compute nodal displacement Dirichlet conditions given user input format
+% Compute nodal displacement Neumann conditions given user input format
 %--------------------------------------------------------------------------
 function bc = nodalBC(Geo, bcs, lin)
-    x      = Geo.x;
-    dim    = size(x,2);
+    X      = Geo.X;
+    dim    = size(X,2);
     
     n_bcs  = zeros(0,3);
-    n_surf = boundary(x);
+    n_surf = boundary(X);
     n_surf = cat(1,unique(n_surf(:)),1);
     for plane_idx = 1:size(bcs, 1)
         axis    = bcs(plane_idx,1);
@@ -15,7 +15,7 @@ function bc = nodalBC(Geo, bcs, lin)
         t_value = bcs(plane_idx,4);
         for n_s_i = 1:(size(n_surf,1)-1) % Last element is 1st
             n_s = n_surf(n_s_i);
-            if x(n_s,axis) == coord
+            if X(n_s,axis) == coord
                 n_bcs(end+1,:) = [n_s, t_axis, t_value];
             end
         end

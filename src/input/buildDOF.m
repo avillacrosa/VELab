@@ -1,4 +1,4 @@
-function [dof, fix] = buildBCs(Geo)
+function [dof, fix] = buildDOF(Geo)
    % Degrees of freedom for fast access. 
     if size(Geo.x0,1) ~= 0 
         fix          = Geo.dim*(Geo.x0(:,1)-1)+Geo.x0(:,2);

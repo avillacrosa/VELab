@@ -11,7 +11,7 @@ function T = integrateTract(t, Geo, Set)
             ide = reshape([A;B;C], size(A,1), []);
         end
         Te = t(ide);
-        xe = Geo.x(n(e,:),:);
+        xe = Geo.X(n(e,:),:);
         for gpa = 1:size(Set.gausscP,1)
             for face_i = 1:size(Set.cEq)
                 contEq    = Set.cEq(face_i,:);

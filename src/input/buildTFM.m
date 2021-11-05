@@ -6,9 +6,8 @@ function Geo = buildTFM(Geo)
     end
     
     n_nodes_xy     = size(u_read,1);
-    Geo.u          = zeros(n_nodes_xy*Geo.ns(1), 3);
-
-    Geo.u((end-n_nodes_xy+1):end,[1,2]) = u_read;
+    Geo.u          = zeros(n_nodes_xy*Geo.ns(1), 3, size(u_read,3));
+    Geo.u((end-n_nodes_xy+1):end,[1,2],:) = u_read;
     Geo.ns         = [n_nodes_xy^(1/2), n_nodes_xy^(1/2), Geo.ns(1)];
     
     z = (Geo.ns(3)-1)*Geo.ds(3);
