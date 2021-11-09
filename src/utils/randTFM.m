@@ -1,5 +1,5 @@
 function t = randTFM(Geo, max_t)
-    pad = 2;
+    pad = 0;
 %     if (Geo.ns(1)-pad) <= pad || (Geo.ns(2)-pad) <= pad
 %         pad = 0;
 %     end

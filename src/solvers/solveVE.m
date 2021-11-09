@@ -16,6 +16,10 @@ function Result = solveVE(Geo, Set, Mat, Result)
         fprintf(['> Solving linear viscoelasticity',...
                 ' with Maxwell rheology \n']);
         Result = euler_mx(Geo, Mat, Set, Result);
+    elseif Mat.visco ~= 0 && strcmpi(Mat.rheo, 'invmaxwell')
+        fprintf(['> Solving linear viscoelasticity',...
+                ' with Maxwell rheology \n']);
+        Result = inv_mx(Geo, Mat, Set, Result);
     else
         fprintf("> Solving nonlinear elasticity \n");
         Result = elast(Geo, Mat, Set, Result);

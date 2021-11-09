@@ -5,10 +5,9 @@ function writeU(x, u, Geo, Set, name)
         ux = zeros(Geo.ns(1), Geo.ns(1), size(u,3));
         uy = zeros(Geo.ns(2), Geo.ns(2), size(u,3));
         % Yeah...
+        zmax = Geo.X(:,3)==max(Geo.X(:,3));
         for ti = 1:size(u,3)
-            xt = x(:,:,ti);
             ut = u(:,:,ti);
-            zmax = xt(:,3)==max(xt(:,3));
             uxt = ut(zmax, 1);
             uyt = ut(zmax, 2);
             uxt = reshape(uxt, [Geo.ns(1), Geo.ns(1)])';

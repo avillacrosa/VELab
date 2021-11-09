@@ -32,15 +32,22 @@ function Result = euler_kv(Geo, Mat, Set, Result)
 
     uk   = vec_nvec(Geo.u);
     ukp1 = uk;
-    fff = zeros(size(Geo.F));
+    ukpp1 = uk;
 
+    tfm = ext_z(0, Geo);
+    tfm_dof = ext_z_dof(0, Geo);
     dof = Geo.dof;
     for it = 1:Set.time_incr
         if strcmpi(Set.euler_type, 'forward')
             stepMatrix = Btot(dof,dof)-(dt/eta)*K(dof,dof);
             ukp1(dof) = Btot(dof,dof)\...
                         (stepMatrix*uk(dof)+Geo.F(dof)*(dt/eta));
-            fff(dof) = (stepMatrix*uk(dof) - Btot(dof, dof)*ukp1(dof))*eta/dt;
+
+%             stepMatrix = Btot(tfm,tfm)-(dt/eta)*K(tfm,tfm);
+%             ukpp1(tfm) = Btot(tfm,tfm)\...
+%                         (stepMatrix*uk(tfm)+Geo.F(tfm)*(dt/eta));
+
+%             fff(dof) = (stepMatrix*uk(dof) - Btot(dof, dof)*ukp1(dof))*eta/dt;
         elseif strcmpi(Set.euler_type, 'backward')
             stepMatrix = K+eta*Btot/dt;
             Btotbc = setboundsK(Btot, Geo);
