@@ -2,7 +2,7 @@
 % Solve a maxwell linear viscoelastic system (hookean elasticity)
 % using either forward or backward euler's method
 %--------------------------------------------------------------------------
-function Result = euler_mx(Geo, Mat, Set, Result)
+function Result = inv_mx(Geo, Mat, Set, Result)
     save = fix(Set.time_incr/Set.n_saves);
     dt   = Set.dt;
     eta  = Mat.visco;
@@ -46,10 +46,12 @@ function Result = euler_mx(Geo, Mat, Set, Result)
         % K, Btot and Bvec are global
         % TODO FIXIT This is bad but since is 0 we get away with it
         u_e(dof)    = K(dof,dof)\fdot(dof); 
-        u_kp1(dof) = Btot(dof,dof)\(Btot(dof,dof)*u_e(dof)/eta+f_0(dof)*dt/eta)...
-                        +u_k(dof);
+        u_kp1(dof) = Btot(dof,dof)\(Btot(dof,dof)*u_e(dof)/eta+...
+                        B(dof,fix)*u+f_0(dof)*dt/eta)+u_k(dof);
         sigma_kp1 = (eye(size(D)) - dt*D/eta)*sigma_k+ D*Bvec*(u_kp1-u_k);
 
+        u_k     = u_kp1;
+        sigma_k = sigma_kp1;
         t = t + dt;
 
         if mod(it,save) == 0
@@ -61,8 +63,6 @@ function Result = euler_mx(Geo, Mat, Set, Result)
             Result.x(:,:,c) = Geo.X + squeeze(Result.u(:,:,c));
             Result.times(c) = t;
         end
-        u_k     = u_kp1;
-        sigma_k = sigma_kp1;
     end
 %     Result.sigma_0  = sigma_k;
     Result.tau = eta/(Mat.P(1)/(1-Mat.P(2)^2));

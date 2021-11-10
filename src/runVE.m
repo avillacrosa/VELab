@@ -29,9 +29,11 @@ function Result = runVE(data_f)
     Result = saveInfo(Geo, Mat, Set, Result);
     
     writeOut(Geo,Set,Mat,Result,data_f);
-    
+
+%     surfplot(Result.X(:,1,end), Result.X(:,2,end), Result.u(:,:,end), Geo)
+
     t_end = duration(seconds(toc(t_start)));
     t_end.Format = 'hh:mm:ss';
     fprintf("> Total real run time %s \n",t_end);
-    fprintf("> Normal program finish :)\n");
+    fprintf("> Normal program finish :)\n\n");
 end

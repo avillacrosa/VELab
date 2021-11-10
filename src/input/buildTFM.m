@@ -12,5 +12,5 @@ function Geo = buildTFM(Geo)
     
     z = (Geo.ns(3)-1)*Geo.ds(3);
     Geo.dBC        = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 
-                       3 z 1 z; 3 z 2 z; 3 z 3 z];
+                       3 z 1 0; 3 z 2 0; 3 z 3 0];
 end
