@@ -27,8 +27,9 @@ function [x, n, na] = meshgen(ns, ds)
     x  = zeros(nx*ny*nz, 3);
     n  = zeros(nelem, 2^dim);
     
-    % TODO Only for cubes/squares?
-    na = zeros(2*dim*nelem-nelem, 2^(dim-1)+1);
+    % TODO Only for cubes/squares? 
+    % TODO FIXIT Overshooting number of contours...
+    na = zeros(2*dim*nelem, 2^(dim-1)+1);
     ccc = 1;
     for nzi = 1:nz
         for nyi = 1:ny
@@ -47,32 +48,28 @@ function [x, n, na] = meshgen(ns, ds)
                 if cond
                     e_idx = n_idx + (1-nyi) + (nx+ny-1)*(1-nzi);
                     cs  = [bl, bl + 1, bl + nx + 1, bl + nx];
-%                     csa = [ 1 bl, bl + 1
-%                             2 bl + 1, bl + nx + 1
-%                             1 bl + nx + 1, bl + nx
-%                             2 bl + nx, bl];
-                    csa = [ 1, bl, bl + 1
-                            2, bl + 1, bl + nx + 1
-                            1, bl + nx, bl + nx + 1
-                            2, bl, bl + nx];
+                    csa = [ 2, bl, bl + 1
+                            1, bl + 1, bl + nx + 1
+                            2, bl + nx, bl + nx + 1
+                            1, bl, bl + nx];
                     if dim == 3
-                        % TODO smart 3d?
                         cs = cat(2, cs, cs + nx*ny);
+                        csa = [ 2, bl, bl+1, bl+nx*ny+1, bl+nx*ny
+                                1, bl+1, bl+nx+1, bl+nx+1+nx*ny, bl+1+nx*ny
+                                2, bl+nx, bl+nx+1, bl+nx+1+nx*ny, bl+nx+nx*ny
+                                1, bl, bl+nx, bl+nx+nx*ny, bl+nx*ny
+                                3, bl, bl+1, bl+nx+1, bl+nx
+                                3, bl+nx*ny, bl+1+nx*ny, bl+nx+1+nx*ny, bl+nx+nx*ny];
                     end
+                    
                     n(e_idx, :) = cs;
-%                     asl = nelem*(e_idx-1)+1;
-%                     asl:asl+4
-%                     for csaa = 1:4
-%                         if ~ismember(csa(csaa,:), na, "rows")
-%                             na(ccc, :) = csa(csaa,:);
-%                             ccc = ccc + 1;
-%                         end
-%                     end
+                    na(ccc:(ccc+2*dim-1), :) = csa;
+                    ccc = ccc + 2*dim;
                 end
             end
         end
     end    
-    
+    na = unique(na, 'rows');
     if dim == 2
         x = x(:,1:2);
     end

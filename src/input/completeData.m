@@ -41,6 +41,4 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     Geo  = addDefault(Geo, Def_Geo);
     Mat  = addDefault(Mat, Def_Mat);
     Set  = addDefault(Set, Def_Set);
-
-    [Geo, Set] = buildHelp(Geo, Mat, Set);
 end

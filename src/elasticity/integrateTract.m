@@ -12,7 +12,7 @@ function T = integrateTract(t, Geo, Set)
         end
         Te = t(ide);
         xe = Geo.X(n(e,:),:);
-        for gpa = 1:size(Set.gausscP,1)
+        for gpa = 1:size(Set.gaussPointsC,1)
             for face_i = 1:size(Set.cEq)
                 contEq    = Set.cEq(face_i,:);
                 cont_n  = Set.cn(face_i,:);
@@ -33,7 +33,7 @@ function T = integrateTract(t, Geo, Set)
                         n_id  = Geo.dim*(n(e,a)-1)+d;
                         ne_id = Geo.dim*(a-1)+d;
                         T(n_id,:) = T(n_id,:) + Te(ne_id, :)*...
-                            N(a)*Set.gausscW(gpa)*J;
+                            N(a)*Set.gaussWeightsC(gpa)*J;
                     end
                 end
             end

@@ -3,7 +3,6 @@ function Result = solveVE(Geo, Set, Mat, Result)
         Result = debug(Geo, Set, Mat, Result);
         return
     end
-%     if strcmp(Set.p_type,"forward")
     if Mat.visco ~= 0 && strcmpi(Mat.rheo, 'kelvin')
         fprintf(['> Solving linear viscoelasticity',...
                 ' with Kelvin-Voigt rheology \n']);
@@ -20,9 +19,4 @@ function Result = solveVE(Geo, Set, Mat, Result)
         fprintf("> Solving nonlinear elasticity \n");
         Result = elast(Geo, Mat, Set, Result);
     end
-%     elseif strcmp(Set.p_type, "inverse")
-%         Result = inv_lin(Geo, Mat, Set, Result);
-        % TODO Unify this with elast as they do pretty much the same...
-%         Result = inv_elast(Geo, Mat, Set, Result);
-%     end
 end

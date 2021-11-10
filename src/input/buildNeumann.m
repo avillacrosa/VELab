@@ -8,6 +8,7 @@ function [t, F] = buildNeumann(Geo, Set)
     elseif Geo.traction
         t = nodalBC(Geo, Geo.fBC, 1);
         F = integrateTract(t, Geo, Set);
+        F2 = integrateTractv2(Geo.X, t, Geo, Set);
 %         F = massMa*ref_nvec(t, Geo.n_nodes, Geo.dim);
 %         F = vec_nvec(F);
     else

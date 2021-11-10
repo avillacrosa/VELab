@@ -22,7 +22,8 @@ function Result = runVE(data_f)
     end
     
     [Geo.X, Geo.n, Geo.na]  = meshgen(Geo.ns, Geo.ds);
-    [Geo, Mat, Set] = completeData(Geo, Mat, Set);
+    [Geo, Mat, Set]         = completeData(Geo, Mat, Set);
+    [Geo, Set]              = buildHelp(Geo, Mat, Set);
     
     Result = solveVE(Geo, Set, Mat, Result);
     Result = saveInfo(Geo, Mat, Set, Result);
