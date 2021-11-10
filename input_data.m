@@ -31,7 +31,7 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     
     %% Numerical settings
     Set.n_steps = 1;
-    Set.time_incr = 2000;
+    Set.time_incr = 10000;
     
     
 end

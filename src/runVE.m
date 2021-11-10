@@ -18,12 +18,18 @@ function Result = runVE(data_f)
     
     if size(Geo.ns,2) == 1
         fprintf("> Assuming a TFM-type input \n");
-        Geo = buildTFM(Geo);
+        if isfield(Geo, 'ufile')
+            utfm = load(Geo.ufile);
+            Geo.ns         = [size(utfm.ux,1), size(utfm.uy,2), Geo.ns(1)];
+        else
+            fprintf("> TFM-like grid but ufile not given. Returning... \n")
+            return
+        end
     end
     
     [Geo.X, Geo.n, Geo.na]  = meshgen(Geo.ns, Geo.ds);
     [Geo, Mat, Set]         = completeData(Geo, Mat, Set);
-    [Geo, Set]              = buildHelp(Geo, Mat, Set);
+    [Geo, Set]              = buildHelp(Geo, Set);
     
     Result = solveVE(Geo, Set, Mat, Result);
     Result = saveInfo(Geo, Mat, Set, Result);

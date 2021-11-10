@@ -1,7 +1,7 @@
 function [Geo, Mat, Set] = kelvin_tresD(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
-    Geo.ns = [  2   2   3];
+    Geo.ns = [  3   3   3];
     Geo.ds = [  1   1   1/2];
 
     % Initial loads
@@ -24,9 +24,8 @@ function [Geo, Mat, Set] = kelvin_tresD(Geo, Mat, Set)
     Mat.P     = [57.6923 38.4615]; %Corresponding to E = 100 and nu = 0.3
     
     Set.n_steps = 1;
-    Set.time_incr = 5;
-    Set.n_saves   = 5;
+    Set.time_incr = 10;
+    Set.n_saves   = 10;
     
-    Set.TFM  = true;
     Set.output = 'tfm';
 end

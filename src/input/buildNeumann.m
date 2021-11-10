@@ -6,7 +6,7 @@ function [t, F] = buildNeumann(Geo, Set)
         t = randTFM(Geo, 15);
         F = integrateTract(t, Geo, Set);
     elseif Geo.traction
-        t = nodalBC(Geo, Geo.fBC, 1);
+        t = fBCtoF(Geo);
         F = integrateTract(t, Geo, Set);
         F2 = integrateTractv2(Geo.X, t, Geo, Set);
 %         F = massMa*ref_nvec(t, Geo.n_nodes, Geo.dim);
