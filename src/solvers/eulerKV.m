@@ -2,7 +2,7 @@
 % Solve a kelvin-voigt linear viscoelastic system (hookean elasticity)
 % using either forward or backward euler's method
 %--------------------------------------------------------------------------
-function [u_kp1, stress_kp1]  = euler_kv(u_k, u_kp1,...
+function [u_kp1, stress_kp1]  = eulerKV(u_k, u_kp1,...
                                             stress_k, K, BB, Geo, Set, Mat)
     eta = Mat.visco;
     dt  = Set.dt;

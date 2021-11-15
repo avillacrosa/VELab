@@ -24,8 +24,8 @@ function [Geo, Mat, Set] = kelvin_tresD(Geo, Mat, Set)
     Mat.P     = [57.6923 38.4615]; %Corresponding to E = 100 and nu = 0.3
     
     Set.n_steps = 1;
-    Set.time_incr = 10;
-    Set.n_saves   = 10;
+    Set.time_incr   = 10;
+    Set.save_freq   = 1;
     
     Set.output = 'tfm';
 end

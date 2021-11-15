@@ -1,17 +1,17 @@
 function Result = visco(Geo, Mat, Set, Result)
-    Result.x       = zeros(size(Geo.X,1), size(Geo.X,2), Set.n_saves);
-    Result.u       = zeros(size(Geo.X,1), size(Geo.X,2), Set.n_saves);
-    Result.stress  = zeros(Geo.vect_dim, Set.n_saves);
-    Result.times   = zeros(1, Set.n_saves);
+    n_saves = fix(Set.time_incr/Set.save_freq);
+    
+    Result.x       = zeros(size(Geo.X,1), size(Geo.X,2), n_saves);
+    Result.u       = zeros(size(Geo.X,1), size(Geo.X,2), n_saves);
+    Result.stress  = zeros(Geo.n_nodes, Geo.vect_dim, n_saves);
+    Result.times   = zeros(1, n_saves);
            
-    K = constK(Geo.X, Geo, Mat, Set);
+    K  = constK(Geo.X, Geo, Mat, Set);
     BB = intBB(Geo, Set);
     
     u_k      = zeros(size(vec_nvec(Geo.X))); 
     u_kp1    = zeros(size(vec_nvec(Geo.X)));
-    stress_k = zeros(Geo.vect_dim,1);
-
-    save     = fix(Set.time_incr/Set.n_saves);
+    stress_k = initStress(Geo.X + Geo.u, Geo, Mat, Set);
     
     t = 0; rc = 0;
     
@@ -28,23 +28,25 @@ function Result = visco(Geo, Mat, Set, Result)
         end
         
         if strcmpi(Mat.rheo, 'kelvin')
-            [u_kp1, stress_kp1] = euler_kv(u_k, u_kp1, stress_k, K, BB, ...
+            [u_kp1, stress_kp1] = eulerKV(u_k, u_kp1, stress_k, K, BB, ...
                                             Geo, Set, Mat);
         elseif strcmpi(Mat.rheo, 'maxwell')
-            [u_kp1, stress_kp1] = euler_mx(u_k, u_kp1, stress_k, K, BB, ...
+            [u_kp1, stress_kp1] = eulerMX(u_k, u_kp1, stress_k, K, BB, ...
                                             Geo, Set, Mat);
         end
         
-        if mod(it,save) == 0
-            c = it/save;
+        % Save values
+        if mod(it, Set.save_freq) == 0
+            c = it/Set.save_freq;
             Result.times(c)      = t;
             Result.u(:,:,c)      = ref_nvec(u_k, Geo.n_nodes, Geo.dim);        
             Result.x(:,:,c)      = Geo.X + Result.u(:,:,c);
-            Result.stress(:,c)   = stress_kp1; % TODO !
+            Result.stress(:,:,c)   = stress_kp1; % TODO !
             fprintf("it = %4i, |u| = %f, stress_x = %f \n", ...
                     it, norm(u_k),  stress_k(1));  
         end
         
+        % Update variables
         t = t + Set.dt;
         u_k(Geo.dof) = u_kp1(Geo.dof);
         stress_k     = stress_kp1;

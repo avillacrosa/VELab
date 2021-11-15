@@ -3,10 +3,10 @@ function writeU(Result, Geo, Set, name)
     if strcmpi(Set.output, 'normal')
         if isfield(Result,'times')
             t = Result.times;
-            save(sprintf('output/u_%s.mat', name), 'u', 't');
         else
-            save(sprintf('output/u_%s.mat', name), 'u');    
+            t = 0;
         end
+        save(sprintf('output/u_%s.mat', name), 'u', 't');    
     elseif strcmpi(Set.output, 'tfm')
         ux = zeros(Geo.ns(1), Geo.ns(1), size(u,3));
         uy = zeros(Geo.ns(2), Geo.ns(2), size(u,3));
@@ -24,10 +24,10 @@ function writeU(Result, Geo, Set, name)
         
         if isfield(Result,'times')
             t = Result.times;
-            save(sprintf('output/u_%s.mat', name), 'ux', 'uy', 't');
         else
-            save(sprintf('output/u_%s.mat', name), 'ux', 'uy');    
+            t = 0;
         end
+        save(sprintf('output/u_%s.mat', name), 'ux', 'uy', 't');
     end
 %     u_str = "";
 %     for ui = 1:size(u,1)

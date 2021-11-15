@@ -23,9 +23,9 @@ function [Geo, Mat, Set] = maxwell_tresD(Geo, Mat, Set)
     Mat.rheo  = 'maxwell';
     Mat.P     = [57.6923 38.4615]; %Corresponding to E = 100 and nu = 0.3
     
-    Set.n_steps = 1;
+    Set.n_steps   = 1;
     Set.time_incr = 5;
-    Set.n_saves   = 5;
+    Set.save_freq = 1;
     
     Set.TFM  = true;
     Set.output = 'tfm';

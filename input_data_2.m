@@ -1,8 +1,8 @@
-function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
+function [Geo, Mat, Set] = input_data_2(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
-    Geo.ns = [5 5 1];
-    Geo.ds = [1/4 1/4 1];
+    Geo.ns = [4 4 1];
+    Geo.ds = [1/3 1/3 1];
     
 %     Geo.ns = [16 16 1];
 %     Geo.ds = [1 1 1]/15;
@@ -18,8 +18,8 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     % Surface forces. 
     % Cartesian plane, target plane, traction axis, traction value
     % All respective to starting coordinates (X)
-    Geo.fBC = [1 1 1 20];
-%     Geo.ufile = 'output/u_input_data';
+%     Geo.fBC = [1 1 1 10];
+    Geo.ufile = 'output/u_input_data';
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
@@ -28,7 +28,6 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
 
     %% Numerical settings
     Set.n_steps = 1;
-%     Set.time_incr = 10000;
-%     Set.debug   = true;
+    Set.time_incr = 10000;
     
 end

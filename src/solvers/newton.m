@@ -26,7 +26,6 @@ function Result = newton(Geo, Mat, Set, Result, incr, R, F)
                  incr,it,tol,norm(uf(Geo.dof)));
         it = it + 1;
     end
-    R(Geo.dof)
     fprintf("> INCR %i CONVERGED IN %i ITERATIONS \n", incr, it-1);
 end
 

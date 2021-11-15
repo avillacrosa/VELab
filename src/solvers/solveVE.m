@@ -5,8 +5,7 @@ function Result = solveVE(Geo, Set, Mat, Result)
     end
     
     if Mat.visco ~= 0
-        fprintf(['> Solving linear viscoelasticity',...
-                ' with Kelvin-Voigt rheology \n']);
+        fprintf('> Solving linear viscoelasticity \n');
         Result = visco(Geo, Mat, Set, Result);
     else
         fprintf("> Solving nonlinear elasticity \n");

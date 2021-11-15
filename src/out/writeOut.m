@@ -3,7 +3,7 @@ function writeOut(Geo,Set,Mat,Result,name)
         femplot(Result.X, Result.x(:,:,end), Result.n)
     elseif Geo.dim == 3
         if Mat.rheo ~= 0
-            t = Set.n_saves;
+            t = fix(Set.time_incr/Set.save_freq);
         else
             t = Set.n_steps;
         end

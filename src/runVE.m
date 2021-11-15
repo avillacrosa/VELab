@@ -31,6 +31,7 @@ function Result = runVE(data_f)
     [Geo, Mat, Set]         = completeData(Geo, Mat, Set);
     [Geo, Set]              = buildHelp(Geo, Set);
     
+%     sigma_test = initStress(Geo.X, Geo, Mat, Set);
     Result = solveVE(Geo, Set, Mat, Result);
     Result = saveInfo(Geo, Mat, Set, Result);
     

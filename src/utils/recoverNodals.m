@@ -1,4 +1,4 @@
-function nodals = recoverNodals(gauss, Geo, Set)
+function [nodals, nodals_vec] = recoverNodals(gauss, Geo, Set)
     nodals = zeros(Geo.n_nodes_elem, Geo.dim, Geo.dim);
     M      = zeros(Geo.n_nodes_elem, Geo.n_nodes_elem);
     bmat = zeros(Geo.n_nodes_elem,Geo.vect_dim);
