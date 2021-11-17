@@ -8,6 +8,7 @@ function Result = elast(Geo, Mat, Set, Result)
     df = Geo.F / Set.n_steps;
     du = Geo.u / Set.n_steps;
     
+    % TODO update this...
     Result.xn = zeros(Set.n_steps, Geo.n_nodes, Geo.dim);
     Result.un = zeros(Set.n_steps, Geo.n_nodes, Geo.dim);
     Result.x = Geo.X;
@@ -21,12 +22,19 @@ function Result = elast(Geo, Mat, Set, Result)
         Result.un(i,:,:) = Result.x - Geo.X;
     end
 
-    % Generalization of u result. Second axis is time (1 for elasticity)
-    Result.u = zeros(size(Result.x,1), size(Result.x,2), 1);
-    Result.u(:,:,1) = Result.x - Geo.X;
+    Result.u = Result.x - Geo.X;
+    
+    T = internalF(Result.x, Geo, Mat, Set);
+    if strcmpi(Mat.type, 'hookean')
+        M = areaMassNL(Geo.X, Geo, Set);
+    else
+        M = areaMassNL(Geo.X, Geo, Set);
+%         M = areaMassNL(Geo.X, Geo, Set);
+    end
     
     % TODO Bad
-    xs = Result.x;
-    Result.x = zeros(size(Result.x,1), size(Result.x,2), 1);
-    Result.x(:,:,1) = xs;
+    Result.F = zeros(size(T));
+    Result.F(Geo.fix) = T(Geo.fix);
+    Result.F = ref_nvec(Result.F, Geo.n_nodes, Geo.dim);
+    Result.t = M \ Result.F;
 end

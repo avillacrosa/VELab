@@ -1,36 +1,44 @@
-function [u, dof, fix] = buildDirichlet(Geo)
+function [u, dof, fix] = buildDirichlet(Geo, Set)
     % Read as TFM: Generate u's, ns, and extra dBCs...
     fixdof = zeros(Geo.n_nodes*Geo.dim,1);
     u = zeros(Geo.n_nodes, Geo.dim, length(Geo.times));
-    if isfield(Geo, 'ufile')
-        udata = load(Geo.ufile);
-        if isfield(udata, 'ux') && isfield(udata, 'uy')
+    
+    % Geo.u might be 'random' or an actual file name 'fname'
+    % Geo.uBC is always an array
+    % TODO pretty sure some of these if's might be grouped by setting uBC
+    % to 0 if not given.
+    % A file given AND additional plane boundaries (TFM)
+    % Assume that these two types of boundaries have NO intersection
+    if isfield(Geo, 'u')
+        if strcmpi(Geo.u, 'random')
+            % Geo.u equals to random
+            u = randTFM(Geo, max(Geo.ds)/4);
+        elseif Set.TFM
+            % Geo.u presumably equals to the name of a file containing tfm's u
+            udata = load(Geo.u);
             % TFM input
             ts = size(udata.ux,3);
-            
-            ztop = (Geo.ns(3)-1)*Geo.ds(3);
-            dBC = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 ztop 3 0];
-            [vals, hits] = dBCtoU(Geo, dBC);
-            % !---- TODO THIS MIGHT BE TOO MUCH OF A STRETCH ----!
-            u(hits) = vals(hits);
-            % !---- TODO THIS MIGHT BE TOO MUCH OF A STRETCH ----!
             for ti = 1:ts
                 uxt = vec_nvec(udata.ux(:,:,ti));
                 uyt = vec_nvec(udata.uy(:,:,ti));
                 u((end-Geo.ns(1)*Geo.ns(2)+1):end,[1,2], ti) = [uxt, uyt];
             end
-            fixdof(ext_z(0, Geo)) = 1;
-            fixdof(vec_nvec(hits)) = 1;
         else
-            u = udata.u;
+            % Geo.u presumably equals to the name of a file containing 
+            % displacements for every node
+            u = load(Geo.u);
+            u = u.u;
         end
-    elseif isfield(Geo, 'u')
-        u = Geo.u;
-    elseif isfield(Geo, 'dBC')
-        [vals, hits] = dBCtoU(Geo, Geo.dBC);
-        u(hits)      = vals(hits);
-        fixdof(vec_nvec(hits)) = 1;
     end
+    % TODO FIXIT: CAN WE ASSUME THIS?
+    fixdof(vec_nvec(u(:,:,end))~=0) = 1;
+    [vals, hits] = BCtoNodal(Geo, Geo.uBC);
+    % !---- TODO THIS MIGHT BE TOO MUCH OF A STRETCH ----!
+    u(hits) = vals(hits);
+    % !---- TODO THIS MIGHT BE TOO MUCH OF A STRETCH ----!
+    fixdof(vec_nvec(hits(:,:,end))) = 1;
     dof = find(fixdof==0);
     fix = find(fixdof==1);
 end
+
+

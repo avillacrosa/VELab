@@ -17,4 +17,5 @@ function writeOut(Geo,Set,Mat,Result,name)
                     sprintf("output/in_%s.vtk", name));
     end
     writeU(Result, Geo, Set, name);
+    writeTract(Result, Geo, Set, name);
 end

@@ -29,16 +29,4 @@ function writeU(Result, Geo, Set, name)
         end
         save(sprintf('output/u_%s.mat', name), 'ux', 'uy', 't');
     end
-%     u_str = "";
-%     for ui = 1:size(u,1)
-%         ut = u(ui,:);
-%         if Geo.dim == 2
-%             u_str = u_str + sprintf("%.3f %.3f \n", ut(1), ut(2));
-%         elseif Geo.dim == 3
-%             u_str = u_str + sprintf("%.3f %.3f %.3f \n", ut(1), ut(2), ut(3));
-%         end
-%         
-%     end
-%     fileH = fopen(sprintf('output/u_%s.txt', name), 'w+');
-%     fprintf(fileH, u_str);
 end

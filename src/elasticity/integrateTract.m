@@ -4,11 +4,11 @@ function F = integrateTract(x, t, Geo, Set)
         nea = Geo.na(ea,2:end);
         xe  = x(nea,:);
         % "ITERATE" OVER THE "FIELD"
-        for plane_idx = 1:size(Geo.fBC,1)
-            axis    = Geo.fBC(plane_idx,1);
-            coord   = Geo.fBC(plane_idx,2);
-            t_axis  = Geo.fBC(plane_idx,3);
-            t_value = Geo.fBC(plane_idx,4);
+        for plane_idx = 1:size(Geo.tBC,1)
+            axis    = Geo.tBC(plane_idx,1);
+            coord   = Geo.tBC(plane_idx,2);
+            t_axis  = Geo.tBC(plane_idx,3);
+            t_value = Geo.tBC(plane_idx,4);
             for a = 1:Geo.n_nodes_elem_c
                 if xe(:, axis) == coord
                     for gpa = 1:size(Set.gaussPointsC,1)

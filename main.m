@@ -1,26 +1,26 @@
 clc; close all;
-
 addpath(genpath('src'))
 
 % data_f = input('> Data file path (default: ./input_data): ', 's');
-% data_f = 'rand_tfm_nl';
 
-Result = runVE('input_data');
-% Result = runVE('input_data');
+% Result_i = runVE('tfm');
+% Result_i.F
+% Result_i.t
+% Result_f = runVE('tfm_check');
 
-% Result = runVE('maxwell_tresD');
-% Result = runVE('input_data');
-% Result_1 = runVE('input_data');
-% Result_2 = runVE('input_data_2');
-% Result_f.u(:,:,2)
 
-% Result_i = runVE('kelvin_tresD');
+% Result_i = runVE('tfm_nl');
+% % Result_i.u
+% % Result_i.F
+% % Result_i.t
+% Result_f = runVE('tfm_nl_check');
+% Result_f.u - Result_i.u
 
-% Result_i = runVE('kelvin_tresD_inv');
+% Result_pre = runVE('tfm_ve_pre');
+% Result_ini = runVE('tfm_ve');
+% Result_fin = runVE('tfm_ve_check');
 
-% Result_f = runVE('maxwell_tresD');
-% Result_f.u(:,:,2)
-% Result_i = runVE('maxwell_tresD_inv');
 
-% Result_f = runVE('tfm_out');
-% Result_i = runVE('tfm_inv');
+Result_pre = runVE('tfm_ve_pre_mx');
+Result_ini = runVE('tfm_ve_mx');
+Result_fin = runVE('tfm_ve_check_mx');

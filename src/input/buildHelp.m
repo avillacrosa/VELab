@@ -13,9 +13,9 @@ function [Geo, Set] = buildHelp(Geo, Set)
     [Set.cn, Set.cEq, Set.gausscP, Set.gausscW]= buildAreaDep(Geo,Set);
 
     Geo.times                 = buildTime(Geo);
-    [Geo.u, Geo.dof, Geo.fix] = buildDirichlet(Geo);
+    [Geo.u, Geo.dof, Geo.fix] = buildDirichlet(Geo, Set);
     [Geo.t, Geo.F]            = buildNeumann(Geo, Set);
-
+    
     if maxSize(Geo) > 4
         fprintf("> Large mesh. Sparse will be used \n");
         Set.sparse = true;

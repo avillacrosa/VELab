@@ -13,12 +13,14 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     % value. Ex: 1 10 0 sets the equilibrium position of all nodes in the 
     % plane X = 10 to 0
 %     Geo.dBC = [1 0 1 0; 2 0 2 0; 3 0 3 0];
-    Geo.dBC = [1 0 1 0; 2 0 2 0];
+    Geo.u   = '...';
+    Geo.uBC = [1 0 1 0; 2 0 2 0];
 
     % Surface forces. 
     % Cartesian plane, target plane, traction axis, traction value
     % All respective to starting coordinates (X)
-    Geo.fBC = [1 1 1 20];
+    Geo.t   = '...';
+    Geo.tBC = [1 1 1 20];
 %     Geo.ufile = 'output/u_input_data';
     
     %% Material parameters

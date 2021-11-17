@@ -3,11 +3,11 @@
 %--------------------------------------------------------------------------
 function t = buildTractField(Geo)
     t  = zeros(Geo.n_nodes,Geo.dim,Geo.dim);
-    for plane_idx = 1:size(Geo.fBC, 1)
-        axis    = Geo.fBC(plane_idx,1);
-        coord   = Geo.fBC(plane_idx,2);
-        t_axis  = Geo.fBC(plane_idx,3);
-        t_value = Geo.fBC(plane_idx,4);
+    for plane_idx = 1:size(Geo.tBC, 1)
+        axis    = Geo.tBC(plane_idx,1);
+        coord   = Geo.tBC(plane_idx,2);
+        t_axis  = Geo.tBC(plane_idx,3);
+        t_value = Geo.tBC(plane_idx,4);
         for e = 1:Geo.n_elem
             ne = Geo.n(e, :);
             Xe = Geo.X(ne, :);

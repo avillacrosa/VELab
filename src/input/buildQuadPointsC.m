@@ -6,12 +6,6 @@ function [quadA, quadW] = buildQuadPointsC(Geo, Set)
             quadA(i) = Set.quadx(i);
             quadW(i) = Set.quadw(i);
         end
-        
-        % Axis and plane
-        %       bot   top   right  left
-%         eqA = [ 2 -1; 2  1; 1  1; 1  -1];
-%         nA  = [ 1  2; 4  3; 2  3; 1   4];
-        
     elseif Geo.dim == 3
         for i = 1:Set.n_quad
             for j = 1:Set.n_quad
@@ -19,10 +13,5 @@ function [quadA, quadW] = buildQuadPointsC(Geo, Set)
                 quadW(j+Set.n_quad*(i-1)) = Set.quadw(i)*Set.quadw(j);
             end
         end
-        
-        % Axis and plane
-        %      front   back  right   left    top     bot
-%         eqA = [1   1; 1  -1; 2   1; 2   -1; 3   1; 3   -1];
-%         nA  = [2 3 7 6; 1 4 8 5; 4 3 7 8; 1 2 6 5; 5 6 7 8; 1 2 3 4];
     end
 end

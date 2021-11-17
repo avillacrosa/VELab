@@ -11,8 +11,8 @@ function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
         return
     end
 
-    Def_Geo.dBC      = [];
-    Def_Geo.fBC      = [];
+    Def_Geo.uBC      = [];
+    Def_Geo.tBC      = [];
     Def_Geo.traction = true;
     Def_Geo.randMag  = 10;
     

@@ -18,26 +18,18 @@ function Result = runVE(data_f)
     
     if size(Geo.ns,2) == 1
         fprintf("> Assuming a TFM-type input \n");
-        if isfield(Geo, 'ufile')
-            utfm = load(Geo.ufile);
-            Geo.ns         = [size(utfm.ux,1), size(utfm.uy,2), Geo.ns(1)];
-        else
-            fprintf("> TFM-like grid but ufile not given. Returning... \n")
-            return
-        end
+        [Geo.ns, Geo.uBC] = buildTFM(Geo);
+        Set.TFM           = true;
     end
     
     [Geo.X, Geo.n, Geo.na]  = meshgen(Geo.ns, Geo.ds);
     [Geo, Mat, Set]         = completeData(Geo, Mat, Set);
     [Geo, Set]              = buildHelp(Geo, Set);
     
-%     sigma_test = initStress(Geo.X, Geo, Mat, Set);
     Result = solveVE(Geo, Set, Mat, Result);
     Result = saveInfo(Geo, Mat, Set, Result);
     
-    writeOut(Geo,Set,Mat,Result,data_f);
-
-%     surfplot(Result.X(:,1,end), Result.X(:,2,end), Result.u(:,:,end), Geo)
+    writeOut(Geo, Set, Mat, Result, data_f);
 
     t_end = duration(seconds(toc(t_start)));
     t_end.Format = 'hh:mm:ss';
