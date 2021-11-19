@@ -1,11 +1,11 @@
 function [Geo, Mat, Set] = tfm_ve_mx(Geo, Mat, Set)
-    nn = 2;
+    nn = 10;
     dn = nn-1;
     Geo.ns = [nn nn 3];
     Geo.ds = [1/dn 1/dn 1/8];
     
     Geo.uBC = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 (Geo.ns(3)-1)*Geo.ds(3) 3 0];
-    Geo.u   = 'output/u_tfm_ve_pre.mat';
+    Geo.u   = 'output/u_tfm_ve_pre_mx.mat';
     
     Mat.type  = 'hookean';
     Mat.visco = 1;

@@ -5,7 +5,7 @@ function Result = elast(Geo, Mat, Set, Result)
     F = zeros(Geo.dim*Geo.n_nodes,1); 
         
     % As a superficial load
-    df = Geo.F / Set.n_steps;
+    df = vec_nvec(Geo.F) / Set.n_steps;
     du = Geo.u / Set.n_steps;
     
     % TODO update this...

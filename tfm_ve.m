@@ -1,5 +1,5 @@
 function [Geo, Mat, Set] = tfm_ve(Geo, Mat, Set)
-    nn = 2;
+    nn = 10;
     dn = nn-1;
     Geo.ns = [nn nn 3];
     Geo.ds = [1/dn 1/dn 1/8];
