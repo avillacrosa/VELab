@@ -33,7 +33,7 @@ function stress = initStress(x, Geo, Mat, Set)
                         stress_ne(axis, t_axis) = t_value;
                     end
                 end
-                stress(ne(a),:,:) = vec_mat(stress_ne);
+                stress(ne(a),:,:) = vec_mat(stress_ne, 1);
             end
         end
     end

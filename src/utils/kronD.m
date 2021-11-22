@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% Kronecker Delta
+% Kronecker Delta. For some reason, faster than Matlab's version...
 %--------------------------------------------------------------------------
 function v = kronD(i,j)
     if i==j

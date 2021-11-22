@@ -17,10 +17,17 @@ function [u, dof, fix] = buildDirichlet(Geo, Set)
             % Geo.u presumably equals to the name of a file containing tfm's u
             udata = load(Geo.u);
             % TFM input
-            ts = size(udata.ux,3);
+            if isfield(udata, 'ux')
+                ts = size(udata.ux,3);
+                ux = udata.ux; uy = udata.uy;
+            elseif size(udata, 2) >= 5
+                ts = 1;
+                ux = reshape(udata(:,3),[Geo.ns(1), Geo.ns(2)]);
+                uy = reshape(udata(:,4),[Geo.ns(1), Geo.ns(2)]);
+            end
             for ti = 1:ts
-                uxt = vec_nvec(udata.ux(:,:,ti));
-                uyt = vec_nvec(udata.uy(:,:,ti));
+                uxt = vec_nvec(ux(:,:,ti));
+                uyt = vec_nvec(uy(:,:,ti));
                 u((end-Geo.ns(1)*Geo.ns(2)+1):end,[1,2], ti) = [uxt, uyt];
             end
         else

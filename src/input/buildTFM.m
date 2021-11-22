@@ -1,10 +1,15 @@
 function [ns, uBC] = buildTFM(Geo)
     ustruct = load(Geo.u);
-    nx = size(ustruct.ux,1);
-    ny = size(ustruct.ux,2);
+    if isfield(ustruct, 'ux')
+        nx = size(ustruct.ux,1);
+        ny = size(ustruct.ux,2);
+    elseif  size(ustruct,2) >= 5
+        nx = numel(unique(ustruct(:,1)));
+        ny = numel(unique(ustruct(:,2)));
+    end
     
     ns         = [nx, ny, Geo.ns(1)];
     
-    z = (Geo.ns(3)-1)*Geo.ds(3);
+    z = (ns(3)-1)*Geo.ds(3);
     uBC        = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 z 3 0];
 end
