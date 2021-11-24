@@ -2,7 +2,7 @@ function geoStr = writeGeo(x, Geo)
     pointsStr   = sprintf("POINTS %i float \n", Geo.n_nodes);
     for pi = 1:Geo.n_nodes
         p = x(pi,:);
-        pstr = sprintf('%.2f %.2f %.2f \n',p(1), p(2), p(3));
+        pstr = sprintf('%.9f %.9f %.9f \n',p(1), p(2), p(3));
         pointsStr = pointsStr + pstr;
     end
     

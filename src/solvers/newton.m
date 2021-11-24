@@ -5,7 +5,9 @@ function Result = newton(Geo, Mat, Set, Result, incr, R, F)
     uf  = vec_nvec(zeros(size(Geo.X)));
     tol = norm(R);
     it = 1;
-    while(tol > Set.newton_tol || norm(uf(Geo.dof)) > Set.newton_tol)
+%     while(tol > Set.newton_tol || norm(uf(Geo.dof)) > Set.newton_tol)
+    while(it < 3)
+
         if strcmpi(Mat.type, 'hookean')
             K_c = constK(Geo.X, Geo, Mat, Set);        
             K_s = stressK(Geo.X, Geo, Mat, Set); 

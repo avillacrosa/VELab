@@ -26,11 +26,20 @@ function Result = runVE(data_f)
     [Geo, Mat, Set]         = completeData(Geo, Mat, Set);
     [Geo, Mat, Set]              = buildHelp(Geo, Mat, Set);
     
+    Geo.X = Geo.X * 10^-6;
     Result = solveVE(Geo, Set, Mat, Result);
     Result = saveInfo(Geo, Mat, Set, Result);
     
-    writeOut(Geo, Set, Mat, Result, data_f);
+%     Kt = constK(Geo.X, Geo, Mat, Set);
+%     dof = Geo.dof; fix = Geo.fix;
+%     Fd = zeros(size(vec_nvec(Result.t)));
+%     Fd(fix) = Kt(fix,fix)*Result.u(fix)+Kt(fix,dof)*Result.u(dof);
+%     Fd = ref_nvec(Fd, Geo.n_nodes, Geo.dim);
+%     [~, top_idx] = ext_z(0, Geo);
+%     Fd_top = Fd(top_idx,:);
 
+    writeOut(Geo, Set, Mat, Result, data_f);
+    
     t_end = duration(seconds(toc(t_start)));
     t_end.Format = 'hh:mm:ss';
     fprintf("> Total real run time %s \n",t_end);

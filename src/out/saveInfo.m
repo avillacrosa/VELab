@@ -12,7 +12,8 @@ function Result = saveInfo(Geo, Mat, Set, Result)
 %         Result.t    = ref_nvec(Geo.t, Geo.n_nodes, Geo.dim);
 %     end
     Result.T    = ref_nvec(internalF(Result.x(:,:,end), Geo, Mat, Set),...
-                            Geo.n_nodes, Geo.dim);     
-    Result.P     = Mat.P;
+                            Geo.n_nodes, Geo.dim);    
+    [~, top_idx] = ext_z(0, Geo);
+    Result.t_top = Result.t(top_idx,:);
     Result.visco = Mat.visco;
 end
