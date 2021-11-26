@@ -12,7 +12,7 @@ function [u, dof, fix] = buildDirichlet(Geo, Set)
     if isfield(Geo, 'u')
         if strcmpi(Geo.u, 'random')
             % Geo.u equals to random
-            u = randTFM(Geo, max(Geo.ds)/4);
+            u = randTFM(Geo, max(Geo.ds)/32);
         elseif Set.TFM
             % Geo.u presumably equals to the name of a file containing tfm's u
             udata = load(Geo.u);
@@ -42,7 +42,6 @@ function [u, dof, fix] = buildDirichlet(Geo, Set)
     [vals, hits] = BCtoNodal(Geo, Geo.uBC);
     % !---- TODO THIS MIGHT BE TOO MUCH OF A STRETCH ----!
     u(hits) = vals(hits);
-    u = u*10^-6;
     % !---- TODO THIS MIGHT BE TOO MUCH OF A STRETCH ----!
     fixdof(vec_nvec(hits(:,:,end))) = 1;
     dof = find(fixdof==0);

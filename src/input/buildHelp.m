@@ -13,10 +13,22 @@ function [Geo, Mat,  Set] = buildHelp(Geo, Mat, Set)
     [Set.gaussPointsC, Set.gaussWeightsC]      = buildQuadPointsC(Geo,Set);
     [Set.cn, Set.cEq, Set.gausscP, Set.gausscW]= buildAreaDep(Geo,Set);
 
+    if Set.TFM
+        ustruct = load(Geo.u);
+        if size(ustruct,2) >= 5
+            Geo.X(:, 1) = Geo.X(:,1) + min(ustruct(:,1), [], 'all');
+            Geo.X(:, 2) = Geo.X(:,2) + min(ustruct(:,2), [], 'all');
+        end
+    end
+
     Geo.times                 = buildTime(Geo);
     [Geo.u, Geo.dof, Geo.fix] = buildDirichlet(Geo, Set);
+    Geo.X = Geo.X*Geo.x_units; Geo.u = Geo.u*Geo.x_units;
     [Geo.t, Geo.F]            = buildNeumann(Geo, Set);
+    % It might be possible that the grid is already in the TFM input file
+    % Try to read it from there if possible
     
+
     if isfield(Mat, 'nu') && isfield(Mat, 'E')
         Mat.lambda  = Mat.E*Mat.nu/((1+Mat.nu)*(1-2*Mat.nu));
         Mat.mu      = Mat.E/(2*(1+Mat.nu));

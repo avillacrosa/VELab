@@ -27,10 +27,7 @@ function [x, n, na] = meshgen(ns, ds)
     x  = zeros(nx*ny*nz, 3);
     n  = zeros(nelem, 2^dim);
     
-    % TODO Only for cubes/squares? 
-    % TODO FIXIT Overshooting number of contours...
-    na = zeros(2*dim*nelem, 2^(dim-1)+1);
-    ccc = 1;
+    na = zeros(2*dim, 2^(dim-1)+1, nelem);
     for nzi = 1:nz
         for nyi = 1:ny
             for nxi = 1:nx
@@ -48,6 +45,7 @@ function [x, n, na] = meshgen(ns, ds)
                 if cond
                     e_idx = n_idx + (1-nyi) + (nx+ny-1)*(1-nzi);
                     cs  = [bl, bl + 1, bl + nx + 1, bl + nx];
+                    
                     csa = [ 2, bl, bl + 1
                             1, bl + 1, bl + nx + 1
                             2, bl + nx, bl + nx + 1
@@ -63,13 +61,11 @@ function [x, n, na] = meshgen(ns, ds)
                     end
                     
                     n(e_idx, :) = cs;
-                    na(ccc:(ccc+2*dim-1), :) = csa;
-                    ccc = ccc + 2*dim;
+                    na(:, :, e_idx) = csa;
                 end
             end
         end
     end    
-    na = unique(na, 'rows');
     if dim == 2
         x = x(:,1:2);
     end

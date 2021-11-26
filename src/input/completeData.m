@@ -4,41 +4,39 @@
 %--------------------------------------------------------------------------
 function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
     %% Default geometry values
-    Def_Geo = struct();
     
     if ~isfield(Geo, 'X') || ~isfield(Geo, 'n') 
         fprintf("Initial coordinates not found. Quitting \n")
         return
     end
 
-    Def_Geo.uBC      = [];
-    Def_Geo.tBC      = [];
-    Def_Geo.traction = true;
-    Def_Geo.randMag  = 10;
+    DefGeo = struct();
+    DefGeo.uBC      = [];
+    DefGeo.tBC      = [];
+    DefGeo.traction = true;
+    DefGeo.randMag  = 10;
+    DefGeo.x_units  = 1;
     
-    Def_Mat = struct();
+    DefMat = struct();
+    DefMat.type   = 'hookean';
+    DefMat.P      = [1 0];
+    DefMat.visco  = 0;
+    DefMat.rheo   = '';
     
-    Def_Mat.type   = 'hookean';
-    Def_Mat.P      = [1 0];
-    Def_Mat.visco  = 0;
-    Def_Mat.rheo   = '';
+    DefSet = struct();
+    DefSet.type         = 'linear'; %TODO bad
+    DefSet.n_steps      = 10;
+    DefSet.newton_tol   = 1e-10;
+    DefSet.time_incr    = 10000;
+    DefSet.save_freq    = 1000;
+    DefSet.dt           = 0.00001;
+    DefSet.n_quad       = 2;
+    DefSet.euler_type   = 'forward';
+    DefSet.sparse       = false;
+    DefSet.TFM          = false;
+    DefSet.output       = 'normal'; %TODO bad
     
-    Def_Set = struct();
-    
-    % char arrays must be bools (or flags)
-    Def_Set.type         = 'linear'; %TODO bad
-    Def_Set.n_steps      = 10;
-    Def_Set.newton_tol   = 1e-10;
-    Def_Set.time_incr    = 10000;
-    Def_Set.save_freq    = 1000;
-    Def_Set.dt           = 0.00001;
-    Def_Set.n_quad       = 2;
-    Def_Set.euler_type   = 'forward';
-    Def_Set.sparse       = false;
-    Def_Set.TFM          = false;
-    Def_Set.output       = 'normal'; %TODO bad
-    
-    Geo  = addDefault(Geo, Def_Geo);
-    Mat  = addDefault(Mat, Def_Mat);
-    Set  = addDefault(Set, Def_Set);
+    Geo  = addDefault(Geo, DefGeo);
+    Mat  = addDefault(Mat, DefMat);
+    Set  = addDefault(Set, DefSet);
 end
