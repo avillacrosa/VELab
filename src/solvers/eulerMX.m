@@ -6,11 +6,6 @@ function [u_kp1, stress_kp1, F_k] = eulerMX(u_k, u_kp1, stress_k, F_k, ...
                                                     K, BB, Geo, Set, Mat)
     dt   = Set.dt;
     eta  = Mat.visco;
-    % For venant, D depends on deformation which depends on integral ???
-    % TODO THIS IS BAD!
-    [~, c] = material(Geo.X(Geo.n(1,:),:), Geo.X(Geo.n(1,:),:), ones(1,Geo.dim), Mat);
-    D = constD(c);
-    Bvec = intB(Geo, Set); 
 
     % Get integrals at equilibrium
     dof = Geo.dof;

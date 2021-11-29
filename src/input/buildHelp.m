@@ -24,6 +24,7 @@ function [Geo, Mat,  Set] = buildHelp(Geo, Mat, Set)
     Geo.times                 = buildTime(Geo);
     [Geo.u, Geo.dof, Geo.fix] = buildDirichlet(Geo, Set);
     Geo.X = Geo.X*Geo.x_units; Geo.u = Geo.u*Geo.x_units;
+    Geo.ds = Geo.ds*Geo.x_units;
     [Geo.t, Geo.F]            = buildNeumann(Geo, Set);
     % It might be possible that the grid is already in the TFM input file
     % Try to read it from there if possible
