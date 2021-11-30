@@ -24,8 +24,8 @@ function [t, F] = buildNeumann(Geo, Set)
     % !!!!!!!!!!!!! TODO FIXIT !!!!!!!!!!!! traction is assumed constant!
     t = t(:,:,1);
 %     M = areaMassNL(Geo.X, Geo, Set);
-    M = areaMassLI(Geo.X, Geo, Set);
-    F = M*t;
+%     M = areaMassLISP(Geo.X, Geo, Set);
+    F = t;
     % !---- TODO THIS MIGHT BE TOO MUCH OF A STRETCH ----!
 end
 

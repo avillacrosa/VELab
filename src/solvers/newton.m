@@ -3,10 +3,9 @@
 %--------------------------------------------------------------------------
 function Result = newton(Geo, Mat, Set, Result, incr, R, F)
     uf  = vec_nvec(zeros(size(Geo.X)));
-    tol = norm(R);
+    tol = norm(R(Geo.dof)); % TODO, UNNORMALIZED...
     it = 1;
-%     while(tol > Set.newton_tol || norm(uf(Geo.dof)) > Set.newton_tol)
-    while(it < 3)
+    while(tol > Set.newton_tol)
 
         if strcmpi(Mat.type, 'hookean')
             K_c = constK(Geo.X, Geo, Mat, Set);        
@@ -22,8 +21,8 @@ function Result = newton(Geo, Mat, Set, Result, incr, R, F)
         Result.x   = Result.x + ref_nvec(uf, Geo.n_nodes, Geo.dim);
 
         T = internalF(Result.x, Geo, Mat, Set);
+        tol = norm((T(Geo.dof)-F(Geo.dof))-R(Geo.dof))/norm(R(Geo.dof));
         R = T - F;
-        tol = norm(R(Geo.dof));
         fprintf('INCR = %i, ITER = %i, tolR = %e, tolX = %e\n',...
                  incr,it,tol,norm(uf(Geo.dof)));
         it = it + 1;
