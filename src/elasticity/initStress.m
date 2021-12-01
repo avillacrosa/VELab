@@ -36,5 +36,9 @@ function stress = initStress(x, Geo, Mat, Set)
                 stress(ne(a),:,:) = vec_mat(stress_ne, 1);
             end
         end
+    elseif any(Geo.t) && ~ischar(Geo.t)
+        % TODO We should to do sigma*n = t. However, how do we define the
+        % field t ? Is interpolation a good idea?
+        return
     end
 end

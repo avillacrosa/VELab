@@ -1,4 +1,4 @@
-function [sigma, c] = material(x, X, z, Mat)
+function sigma = material(x, X, z, Mat)
     Fd = deformF(x, X, z, size(x,1));
     dim = size(Fd, 1);
     if strcmpi(Mat.type, 'hookean')

@@ -6,13 +6,18 @@ function K = constK(x, Geo, Mat, Set)
         K_id2 = zeros(ll^2*Geo.n_elem,1);
         K = zeros(ll^2*Geo.n_elem,1);
         c = 1;
-        for e = 1:Geo.n_elem
-            ne = Geo.n(e,:);
-            xe = x(ne,:);
-            Xe = Geo.X(ne,:);
-            if ~strcmpi(Mat.type, 'hookean') || e == 1
-                Ke = constKe(xe, Xe, Geo, Mat, Set);
-            end
+    else
+        K = zeros(Geo.n_nodes*Geo.dim);
+    end
+    
+    for e = 1:Geo.n_elem
+        ne = Geo.n(e,:);
+        xe = x(ne,:);
+        Xe = Geo.X(ne,:);
+        if ~strcmpi(Mat.type, 'hookean') || e == 1
+            Ke = constKe(xe, Xe, Geo, Mat, Set);
+        end
+        if Set.sparse
             for aa = 1:size(Ke,1)
                 for bb = 1:size(Ke,2)
                     K_id1(c) = Kg1(aa,e);
@@ -21,18 +26,12 @@ function K = constK(x, Geo, Mat, Set)
                     c = c+1;
                 end
             end
-        end
-        K = sparse(K_id1, K_id2, K);
-    else
-        K = zeros(Geo.n_nodes*Geo.dim);
-        for e = 1:Geo.n_elem
-            ne = Geo.n(e,:);
-            xe = x(ne,:);
-            Xe = Geo.X(ne,:);
-            if ~strcmpi(Mat.type, 'hookean') || e == 1
-                Ke = constKe(xe, Xe, Geo, Mat, Set);
-            end
+        else
             K(Kg1(:,e), Kg2(:,e)) = K(Kg1(:,e), Kg2(:,e)) + Ke;
         end
+    end
+
+    if Set.sparse
+        K = sparse(K_id1, K_id2, K);
     end
 end

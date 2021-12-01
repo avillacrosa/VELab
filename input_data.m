@@ -1,10 +1,10 @@
 function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
-    nn = 5;
+    nn = 4;
     dn = 1/(nn-1);
-    Geo.ns = [nn nn 1];
-    Geo.ds = [1 1 1];
+    Geo.ns = [nn nn nn];
+    Geo.ds = [dn dn dn/3];
     
 %     Geo.ns = [16 16 1];
 %     Geo.ds = [1 1 1]/15;
@@ -14,13 +14,15 @@ function [Geo, Mat, Set] = input_data(Geo, Mat, Set)
     % direction, boundary
     % value. Ex: 1 10 0 sets the equilibrium position of all nodes in the 
     % plane X = 10 to 0
-%     Geo.dBC = [1 0 1 0; 2 0 2 0; 3 0 3 0];
-    Geo.uBC = [1 0 1 0; 2 0 2 0];
+%     Geo.uBC = [1 0 1 0; 2 0 2 0; 3 0 3 0];
+    Geo.uBC = [1 0 1 0; 2 0 2 0; 3 0 3 0];
 
     % Surface forces. 
     % Cartesian plane, target plane, traction axis, traction value
     % All respective to starting coordinates (X)
-    Geo.tBC   = [1 4 1 10];
+    Geo.t   = 'random';
+%     Geo.tBC   = [1 1 1 10];
+
 %     Geo.ufile = 'output/u_input_data';
     
     %% Material parameters

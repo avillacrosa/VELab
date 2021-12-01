@@ -10,6 +10,7 @@ function M = areaMassLISP(x, Geo, Set)
         Me_id2  = zeros(Geo.n_nodes_elem,1);
         for cont = 1:size(Geo.na, 1)
             nea = Geo.na(cont,2:end,e);
+            nea_ref = Geo.na_ref(cont,2:end,1);
             ax  = Geo.na(cont,1,e);
             xe  = x(nea,setxor(1:Geo.dim, ax));
             for gpa = 1:size(Set.gaussPointsC,1)
@@ -18,10 +19,10 @@ function M = areaMassLISP(x, Geo, Set)
                 [~, J] = getdNdx(xe, z, Geo.n_nodes_elem_c);
                 for a = 1:Geo.n_nodes_elem_c
                     for b = 1:Geo.n_nodes_elem_c
-                        Me(a, b) = Me(a, b) + ...
+                        Me(nea_ref(a), nea_ref(b)) = Me(nea_ref(a), nea_ref(b)) + ...
                                         N(a)*N(b)*Set.gaussWeightsC(gpa)*J;
-                        Me_id1(a) = nea(a);
-                        Me_id2(b) = nea(b);
+                        Me_id1(nea_ref(a)) = nea(a);
+                        Me_id2(nea_ref(b)) = nea(b);
                     end
                 end
             end

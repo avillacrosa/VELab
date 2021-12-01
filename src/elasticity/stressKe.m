@@ -1,12 +1,13 @@
-function [Ke, Kg1, Kg2] = stressKe(xe, Xe, Geo, Mat, Set)
-    Ke  = zeros(Geo.n_nodes_elem*Geo.dim, Geo.n_nodes_elem*Geo.dim);
-    Kg1 = zeros(Geo.n_nodes_elem*Geo.dim, 1);
-    Kg2 = zeros(Geo.n_nodes_elem*Geo.dim, 1);
+function [Ke, sigmas] = stressKe(xe, Xe, Geo, Mat, Set)
+    Ke     = zeros(Geo.n_nodes_elem*Geo.dim, Geo.n_nodes_elem*Geo.dim);
+    sigmas = zeros(Geo.dim, Geo.dim, Geo.n_nodes_elem);
     for gp = 1:size(Set.gaussPoints,1)
         z = Set.gaussPoints(gp,:);
 
-        sigma = material(xe, Xe, z, Mat);
+        sigma  = material(xe, Xe, z, Mat);
         [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);
+
+        sigmas(:,:,gp) = sigma;
 
         for a = 1:Geo.n_nodes_elem
             for b = 1:Geo.n_nodes_elem

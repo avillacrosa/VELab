@@ -22,6 +22,10 @@ function Result = elast(Geo, Mat, Set, Result)
         Result.un(i,:,:) = Result.x - Geo.X;
     end
 
+    if strcmpi(Mat.type, 'hookean')
+        [~, Result.sigmas] = stressK(Result.x, Geo, Mat, Set); 
+    end
+
     Result.u = Result.x - Geo.X;
     
     T = internalF(Result.x, Geo, Mat, Set);
@@ -31,11 +35,10 @@ function Result = elast(Geo, Mat, Set, Result)
 %         M = areaMassLI(Geo.X, Geo, Set);
 % %         M = areaMassNL(Geo.X, Geo, Set);
 %     end
-    
+    M = areaMassLI(Geo.X, Geo, Set);
     % TODO Bad
     Result.F = zeros(size(T));
     Result.F(Geo.fix) = T(Geo.fix);
     Result.F = ref_nvec(Result.F, Geo.n_nodes, Geo.dim);
-%     Result.t = M \ Result.F;
-    Result.t = Result.F;
+    Result.t = M \ Result.F;
 end

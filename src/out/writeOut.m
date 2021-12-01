@@ -16,9 +16,11 @@ function writeOut(Geo,Set,Mat,Result,name)
         writeVTK(Geo.X, zeros(size(Geo.X)), Geo, Result, Mat, ...
                     Set, sprintf("output/in_%s.vtk", name));
     end
-    writeU(Result, Geo, Set, name);
-    ufile = '/home/avillacrosa/VELab/data/AGATA_TEST/Displacements/GelDisp_Cy5_beads_1.dat';
-    tfile = '/home/avillacrosa/VELab/data/AGATA_TEST/Tractions/Traction_filteredCy5_beads_1.dat';
-    writeVTKdata(Geo, Result, Mat, Set, ufile, tfile)
-    writeTract(Result, Geo, Set, name);
+    for ti = 1:size(Result.u, 3)
+        writeVecTop(Result.u(:,:,ti), Geo, ...
+                    sprintf("output/u_tfm_t%02i_%s.txt", ti, name))
+        writeVecTop(Result.t(:,:,ti), Geo, ...
+                    sprintf("output/t_tfm_t%02i_%s.txt", ti, name))
+    end
+    save(sprintf('output/result_%s.mat', name), 'Result');
 end

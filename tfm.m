@@ -3,7 +3,7 @@ function [Geo, Mat, Set] = tfm(Geo, Mat, Set)
     %     settings.H = 1.0775e-04; %height of the hydrogel in meter from
     %     PIM's explist
 
-    Geo.ns = 6;
+    Geo.ns = 3;
     Geo.ds = [16 16 gel_height/(Geo.ns-1)];
     Geo.x_units = 1e-6;
     Geo.u   = 'data/AGATA_TEST/Displacements/GelDisp_Cy5_beads_1.dat';

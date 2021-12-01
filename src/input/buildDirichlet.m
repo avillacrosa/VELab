@@ -22,12 +22,17 @@ function [u, dof, fix] = buildDirichlet(Geo, Set)
                 ux = udata.ux; uy = udata.uy;
             elseif size(udata, 2) >= 5
                 ts = 1;
-                ux = reshape(udata(:,3),[Geo.ns(1), Geo.ns(2)]);
-                uy = reshape(udata(:,4),[Geo.ns(1), Geo.ns(2)]);
+                ux = vec_to_grid(udata(:,3), Geo);
+                % TODO FIXME at the moment, data from agata, increases
+                % first in y than x. In this code the opposite is assumed,
+                % so a transposition is necessary
+                ux = ux'; 
+                uy = vec_to_grid(udata(:,4), Geo);
+                uy = uy';
             end
             for ti = 1:ts
-                uxt = vec_nvec(ux(:,:,ti));
-                uyt = vec_nvec(uy(:,:,ti));
+                uxt = grid_to_vec(ux(:,:,ti));
+                uyt = grid_to_vec(uy(:,:,ti));
                 u((end-Geo.ns(1)*Geo.ns(2)+1):end,[1,2], ti) = [uxt, uyt];
             end
         else

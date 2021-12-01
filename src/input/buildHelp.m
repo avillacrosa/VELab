@@ -8,6 +8,12 @@ function [Geo, Mat,  Set] = buildHelp(Geo, Mat, Set)
     Geo.vect_dim          = (Geo.dim+1)*Geo.dim/2;
     [Geo.Kg1, Geo.Kg2]    = assembleK(Geo);
 
+    ns_ref = Geo.ns;
+    ns_ref(1:Geo.dim) = 2;
+    ds_ref = Geo.ds;
+    ds_ref(1:Geo.dim) = 1;
+    [~, Geo.n_ref, Geo.na_ref] = meshgen(ns_ref, ds_ref);
+
     [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);
     [Set.gaussPoints, Set.gaussWeights]        = buildQuadPoints(Geo, Set);
     [Set.gaussPointsC, Set.gaussWeightsC]      = buildQuadPointsC(Geo,Set);

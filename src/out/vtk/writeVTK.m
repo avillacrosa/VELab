@@ -9,16 +9,14 @@ function writeVTK(x, u, Geo, Result, Mat, Set, fname)
     header       = header + "Cube example\n";
     header       = header + "ASCII\n";
     header       = header + "DATASET UNSTRUCTURED_GRID\n";
-    geo_str      = writeGeo(x, Geo);
     
+    geo_str      = writeGeo(x, Geo);
     u_str        = writeVec(u, 'Displacements');
     F_str        = writeVec(Result.F, 'Loads');
     T_str        = writeVec(Result.T, 'Reactions');
     t_str        = writeVec(Result.t, 'Tractions');
     
-    stress_str   = writeStressRec(x, Geo, Mat, Set);
-    
-    strain_str   = writeStrainRec(x, Geo, Set);
+    stress_str   = writeStressRec(Geo, Set, Result);
     
     fprintf(fileH, header);
     fprintf(fileH, geo_str);
@@ -27,7 +25,6 @@ function writeVTK(x, u, Geo, Result, Mat, Set, fname)
     fprintf(fileH, T_str);
     fprintf(fileH, t_str);
     fprintf(fileH, stress_str);
-    fprintf(fileH, strain_str);
 
     fclose(fileH);
 end
