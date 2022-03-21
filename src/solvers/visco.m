@@ -5,7 +5,7 @@ function Result = visco(Geo, Mat, Set, Result)
     M  = areaMassLI(Geo.X, Geo, Set);
 
     u_t             = zeros(Geo.n_nodes*Geo.dim, Mat.p);
-    stress_t        = zeros(Geo.n_nodes, Geo.vect_dim, Mat.q); 
+    stress_t        = ones(Geo.n_nodes, Geo.vect_dim, Mat.q); 
 
     F             = Geo.F;
 
@@ -14,7 +14,7 @@ function Result = visco(Geo, Mat, Set, Result)
     t = 0;
     for k = 1:(Set.time_incr-1)
         if size(Geo.u,3) == 1
-            u_k_presc         = vec_nvec(Geo.u(:,:,1));
+            u_k_presc           = vec_nvec(Geo.u(:,:,1));
             u_t(Geo.fix,1)      = u_k_presc(Geo.fix);
             u_t(Geo.fix,2)      = u_k_presc(Geo.fix);
         end
@@ -26,7 +26,7 @@ function Result = visco(Geo, Mat, Set, Result)
         elseif strcmpi(Mat.rheo, 'fmaxwell')
             u_t(:,1) = eulerFMX(u_t, F, K, BB, Geo, Set, Mat);
         end
-%         linStr2 = fullLinStr2(u_t(:,Mat.p), Geo);
+
         stress_t(:,:,Mat.q) = calcStressVE(u_t, stress_t, Geo, Mat, Set); % This increases computational time by 3...
 
         % Save values
@@ -37,12 +37,12 @@ function Result = visco(Geo, Mat, Set, Result)
             
             writeOut(c,Geo,Set,Result);
             fprintf("it = %4i, |u| = %f, |stress| = %e \n", ...
-                    k, norm(u_t(:,1)),  norm(Result.stress(:,:,c+1)));  
+                    k, norm(u_t(:,1)),  norm(stress_t(:,:,Mat.q)));  
         end
         t = t + Set.dt;
         u_t(:,1)=u_t(:,2);
 %         k
-%         stress_t(:,:,1)=stress_t(:,:,2);
+        stress_t(:,:,1)=stress_t(:,:,2);
     end
     Result = saveOutData(t, c+1, u_t, stress_t, F, M, Geo, Mat, Set, Result);
     writeOut(c+1,Geo,Set,Result);

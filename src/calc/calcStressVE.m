@@ -1,27 +1,22 @@
 function stress_t = calcStressVE(u_t, stress_t, Geo, Mat, Set)
-   cornerPoints = [
-  -1.000000000000000  -1.000000000000000  -1.000000000000000
-  -1.000000000000000  -1.000000000000000   1.000000000000000
-  -1.000000000000000   1.000000000000000  -1.000000000000000
-  -1.000000000000000   1.000000000000000   1.000000000000000
-   1.000000000000000  -1.000000000000000  -1.000000000000000
-   1.000000000000000  -1.000000000000000   1.000000000000000
-   1.000000000000000   1.000000000000000  -1.000000000000000
-   1.000000000000000   1.000000000000000   1.000000000000000];
-    lin_str = fullLinStr1(u_t(:,Mat.p), Geo);
-    lin_str2 = fullLinStr1(u_t(:,1), Geo);
-%     if strcmpi(Mat.rheo, 'kelvin')
     D = [   1     Mat.nu  Mat.nu       0          0         0
              Mat.nu      1    Mat.nu       0          0         0
              Mat.nu   Mat.nu     1         0          0         0
                 0        0       0    (1-Mat.nu)/2    0         0
                 0        0       0         0    (1-Mat.nu)/2    0
                 0        0       0         0          0    (1-Mat.nu)/2]*Mat.E/(1-Mat.nu^2);
-
-
-    stress_t = D*lin_str'+Mat.visco*(lin_str2'-lin_str')/Set.dt;
-    stress_t = stress_t';
-%     elseif strcmpi(Mat.rheo, 'maxwell')
+    
+    lin_str_t = zeros(Geo.n_nodes, Geo.vect_dim, size(u_t,2));
+    for t = 1:size(u_t,2)
+        lin_str_t(:,:,t)  = fullLinStr1(u_t(:,t), Geo);
+    end
+    if strcmpi(Mat.rheo, 'kelvin')
+        stress_t = D*lin_str'+Mat.visco*(lin_str_t(:,:,2)'-lin_str_t(:,:,1)')/Set.dt;
+        stress_t = stress_t';
+    elseif strcmpi(Mat.rheo, 'maxwell')
+        stress_t = D*(lin_str_t(:,:,2)'-lin_str_t(:,:,1)') + (eye(size(D))-D*Set.dt/Mat.visco)*stress_t(:,:,1)';
+        stress_t = stress_t';
+    end
 %         D = [   1     Mat.nu  Mat.nu       0          0         0
 %              Mat.nu      1    Mat.nu       0          0         0
 %              Mat.nu   Mat.nu     1         0          0         0
