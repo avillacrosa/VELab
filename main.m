@@ -1,10 +1,12 @@
-clc; close all;
+clc; close all; clear;
 addpath(genpath('src'))
 
-% profile on
+profile on
 % data_f = input('> Data file path (default: ./input_data): ', 's');
-% Result = runVE('tfm');
-% Result = runVE('bssnsqtest');
-Result = runVE('input_data');
+% Result = runVE('input_data');
 
-% profile viewer
+Result = runVE('kv_creep');
+% Result = runVE('mx_relax');
+% Result = runVE('fract_maxwell');
+
+profile viewer

@@ -23,18 +23,11 @@ function Result = elast(Geo, Mat, Set, Result)
     end
 
     if strcmpi(Mat.type, 'hookean')
-        [~, Result.sigmas] = stressK(Result.x, Geo, Mat, Set); 
+        [~, Result.stress] = stressK(Result.x, Geo, Mat, Set); 
     end
 
     Result.u = Result.x - Geo.X;
-    
     T = internalF(Result.x, Geo, Mat, Set);
-%     if strcmpi(Mat.type, 'hookean')
-%         M = areaMassLI(Geo.X, Geo, Set);
-%     else
-%         M = areaMassLI(Geo.X, Geo, Set);
-% %         M = areaMassNL(Geo.X, Geo, Set);
-%     end
     M = areaMassLI(Geo.X, Geo, Set);
     % TODO Bad
     Result.F = zeros(size(T));

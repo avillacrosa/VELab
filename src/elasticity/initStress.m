@@ -1,24 +1,10 @@
-function stress = initStress(x, Geo, Mat, Set)
-    stress = zeros(Geo.n_nodes, Geo.vect_dim);
+function stress = initStress(x, x_kp1, Geo, Mat, Set)
     % INITIAL STRAIN CASE
-    if any(Geo.u)
-        for e = 1:Geo.n_elem
-            ne = Geo.n(e,:);
-            xe = x(ne,:);
-            Xe = Geo.X(ne,:);
-            stress_ne = zeros(Geo.n_nodes_elem, Geo.dim, Geo.dim);
-            for a = 1:Geo.n_nodes_elem
-                for gp = 1:size(Set.gaussPoints,1)
-                    z = Set.gaussPoints(gp,:);
-                    [sigma, ~] = material(xe, Xe, z, Mat);
-                    stress_ne(gp,:, :) = sigma;
-                end
-            end
-            [~, stress_ne] = recoverNodals(stress_ne, Geo, Set);
-            stress(ne,:) = stress_ne;
-        end
+    if any(Geo.u, 'all')
+        stress = calcStress(x, x_kp1, Geo, Mat, Set);
     % INITIAL STRESS CASE (FROM TRACTIONS)
     elseif any(Geo.tBC) && ~ischar(Geo.tBC)
+        stress = zeros(Geo.n_nodes, Geo.vect_dim);
         for e = 1:Geo.n_elem
             ne = Geo.n(e,:);
             Xe = Geo.X(ne,:);
@@ -36,7 +22,9 @@ function stress = initStress(x, Geo, Mat, Set)
                 stress(ne(a),:,:) = vec_mat(stress_ne, 1);
             end
         end
-    elseif any(Geo.t) && ~ischar(Geo.t)
+    elseif any(Geo.t, 'all') && ~ischar(Geo.t)
+        stress = zeros(Geo.n_nodes, Geo.vect_dim);
+
         % TODO We should to do sigma*n = t. However, how do we define the
         % field t ? Is interpolation a good idea?
         return

@@ -27,7 +27,6 @@ function [Geo, Mat,  Set] = buildHelp(Geo, Mat, Set)
     % It might be possible that the grid is already in the TFM input file
     % Try to read it from there if possible
     
-
     if isfield(Mat, 'nu') && isfield(Mat, 'E')
         Mat.lambda  = Mat.E*Mat.nu/((1+Mat.nu)*(1-2*Mat.nu));
         Mat.mu      = Mat.E/(2*(1+Mat.nu));
