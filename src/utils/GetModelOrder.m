@@ -4,6 +4,6 @@ function [p,q] = GetModelOrder(Mat)
     elseif strcmpi(Mat.rheo, 'maxwell')
         p=2; q=2;
     elseif strcmpi(Mat.rheo, 'fmaxwell')
-        p=2; q=2;
+        p=-1; q=-1;
     end
 end
