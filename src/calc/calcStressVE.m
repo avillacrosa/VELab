@@ -1,4 +1,4 @@
-function stress_t = calcStressVE(u_t, stress_t, Geo, Mat, Set)
+function stress_t = calcStressVE(strain_k, k, stress_t, Geo, Mat, Set)
     D = [   1     Mat.nu  Mat.nu       0          0         0
              Mat.nu      1    Mat.nu       0          0         0
              Mat.nu   Mat.nu     1         0          0         0
@@ -6,16 +6,22 @@ function stress_t = calcStressVE(u_t, stress_t, Geo, Mat, Set)
                 0        0       0         0    (1-Mat.nu)/2    0
                 0        0       0         0          0    (1-Mat.nu)/2]*Mat.E/(1-Mat.nu^2);
     
-    lin_str_t = zeros(Geo.n_nodes, Geo.vect_dim, size(u_t,2));
-    for t = 1:size(u_t,2)
-        lin_str_t(:,:,t)  = fullLinStr1(u_t(:,t), Geo);
-    end
     if strcmpi(Mat.rheo, 'kelvin')
-        stress_t = D*lin_str'+Mat.visco*(lin_str_t(:,:,2)'-lin_str_t(:,:,1)')/Set.dt;
+        stress_t = D*lin_str'+Mat.visco*(strain_k(:,:,2)'-strain_k(:,:,1)')/Set.dt;
         stress_t = stress_t';
     elseif strcmpi(Mat.rheo, 'maxwell')
-        stress_t = D*(lin_str_t(:,:,2)'-lin_str_t(:,:,1)') + (eye(size(D))-D*Set.dt/Mat.visco)*stress_t(:,:,1)';
+        stress_t = D*(strain_k(:,:,2)'-strain_k(:,:,1)') + (eye(size(D))-D*Set.dt/Mat.visco)*stress_t(:,:,1)';
         stress_t = stress_t';
+	elseif strcmpi(Mat.rheo, 'fmaxwell')
+		a = Mat.alpha;
+		b = Mat.beta;
+		ca = Mat.c_alpha;
+		cb = Mat.c_beta;
+		dt = Set.dt;
+		gl_eps = glderivTensor(strain_k, k, dt, a, 1, inf);
+		gl_sigma = glderivTensor(stress_t, k, dt, a-b, 2, inf);
+		J = ca/(dt^(a-b)*cb+ca);
+		stress_t = J*(cb*dt^(a-b)*gl_eps/1-dt^(a-b)*gl_sigma);
     end
 %         D = [   1     Mat.nu  Mat.nu       0          0         0
 %              Mat.nu      1    Mat.nu       0          0         0

@@ -3,11 +3,13 @@
 % using either forward or backward euler's method
 %--------------------------------------------------------------------------
 function [u_kp1, stress_kp1, F_k] = eulerFMX(u, k, F_k, K, BB, Geo, Set, Mat)
-    dt   = Set.dt;
-    eta  = Mat.visco;
+
     gl_eps = glderiv(u,k,Set.dt,Mat.alpha,2,1e6);
     gl_eps = gl_eps*Set.dt^(Mat.alpha);
-    
+
+	% TODO FIXME, this is not ukp1 but uk
+	u_kp1 = u(:,k);
+
     dof = Geo.dof; fix = Geo.fix;
 
     u_kp1(dof) = BB(dof,dof)\(F_k(dof)*Set.dt^(Mat.alpha)/Mat.c_alpha)-gl_eps(dof);
