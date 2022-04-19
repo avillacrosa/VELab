@@ -15,14 +15,19 @@ function [Geo, Mat, Set] = kv_creep(Geo, Mat, Set)
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
-    Mat.type  = 'hookean';
-    Mat.rheo  = 'kelvin';
+    Mat.type  = 'hookean'; % Merge these two?
+    Mat.rheo  = 'kelvin'; % Merge these two?
     Mat.E     = 100;
     Mat.nu    = 0; % No off diagonal terms in D matrix
     Mat.visco = 1;
 
     %% Numerical settings
     Set.n_steps = 1;
-    Set.time_incr = 100;
-    Set.save_freq = Set.time_incr/10;
+    Set.time_incr = 2000;
+    Set.save_freq = 50;
+	Set.calc_stress = true;
+	Set.calc_strain = true;
+
+	Set.plot_stress = false;
+	Set.plot_strain = true;
 end

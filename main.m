@@ -6,9 +6,13 @@ addpath(genpath('src'))
 % Result = runVE('input_data');
 
 % Result = runVE('kv_creep');
-% Result = runVE('mx_relax');
-% Result = runVE('fract_maxwell');
-% Result = runVE('upy_relax');
+% Result = runVE('kv_creep_2d');
 
+% Result = runVE('mx_flow');
+% Result = runVE('mx_flow_2d');
+
+Result = runVE('mx_relax');
+
+% Result = runVE('fract_maxwell');
 
 % profile viewer

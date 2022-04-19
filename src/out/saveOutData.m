@@ -1,8 +1,14 @@
-function Result = saveOutData(t, c, k, u, stress, F, M, Geo, Mat, Set, Result)
-        Result.times(c+1)      = t;
-        Result.u(:,:,c+1)      = ref_nvec(u(:,k), Geo.n_nodes, Geo.dim);        
-        Result.x(:,:,c+1)      = Geo.X + Result.u(:,:,c+1);
-        Result.stress(:,:,c+1) = stress(:,:,k);
-        Result.F(:,:,c+1)      = F;
-        Result.t(:,:,c+1)      = M \ Result.F(:,:,c+1);
+function Result = saveOutData(t, c, k, u, stress, strain, F, T, M, Geo, Mat, Set, Result)
+    	[~, top_idx] = ext_z(0, Geo);
+    	
+        Result.time(c)       = t;
+        Result.u(:,:,c)      = ref_nvec(u(:,k), Geo.n_nodes, Geo.dim);        
+        Result.x(:,:,c)      = Geo.X + Result.u(:,:,c);
+        Result.strain(:,:,c) = strain(:,:,k);
+        Result.stress(:,:,c) = stress(:,:,k);
+        Result.F(:,:,c)      = ref_nvec(F, Geo.n_nodes, Geo.dim); % This can be moved to Result definition.
+		Result.T(:,:,c)      = ref_nvec(T(:,k), Geo.n_nodes, Geo.dim);
+        Result.t(:,:,c)      = M \ Result.T(:,:,c);
+    	Result.t_top(:,:,c)  = Result.t(top_idx,:,c);
+		% add tbssnsq here? 
 end

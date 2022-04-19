@@ -14,7 +14,7 @@ function [vals, hits] = BCtoNodal(Geo, BC)
         hits(hit_idx, t_axis) = 1;
         vals(hit_idx, t_axis) = t_value;
     end
-    hits = repmat(hits, [1,1,length(Geo.times)]);
-    vals = repmat(vals, [1,1,length(Geo.times)]);
+    hits = repmat(hits, [1,1,length(Geo.time)]);
+    vals = repmat(vals, [1,1,length(Geo.time)]);
     hits = logical(hits);
 end

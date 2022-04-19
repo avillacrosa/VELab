@@ -1,17 +1,11 @@
-function [Geo, Mat, Set] = mx_flow(Geo, Mat, Set)
+function [Geo, Mat, Set] = kv_creep_2d(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
-    nn = 5;
-    dn = 1/(nn-1);
-    Geo.ns = [2*nn nn nn];
-    Geo.ds = [dn/2 dn/10 dn/10];
+    Geo.ns = [5 5 1];
+    Geo.ds = [1 1 1]/4;
 
-    Geo.uBC = [1 0 1 0; 1 0 2 0; 1 0 3 0; 
-               2 0 2 0; 2 0 3 0; 
-               3 0 2 0; 3 0 3 0; 
-               2 0.1 2 0; 2 0.1 3 0; 
-               3 0.1 2 0; 3 0.1 3 0; ];
-    Geo.tBC = [1 1.1250 1 20];
+    Geo.uBC = [1 0 1 0; 2 0 2 0;];
+    Geo.tBC = [1 1 1 10];
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant

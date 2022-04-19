@@ -19,7 +19,7 @@ function [Geo, Mat,  Set] = buildHelp(Geo, Mat, Set)
     [Set.gaussPointsC, Set.gaussWeightsC]      = buildQuadPointsC(Geo,Set);
     [Set.cn, Set.cEq, Set.gausscP, Set.gausscW]= buildAreaDep(Geo,Set);
 
-    Geo.times                 = buildTime(Geo);
+    Geo.time                 = buildTime(Geo);
     [Geo.u, Geo.dof, Geo.fix] = buildDirichlet(Geo, Set);
     Geo.X = Geo.X*Geo.x_units; Geo.u = Geo.u*Geo.x_units;
     Geo.ds = Geo.ds*Geo.x_units;
@@ -27,13 +27,14 @@ function [Geo, Mat,  Set] = buildHelp(Geo, Mat, Set)
     % It might be possible that the grid is already in the TFM input file
     % Try to read it from there if possible
     
-    if isfield(Mat, 'nu') && isfield(Mat, 'E')
+	if isfield(Mat, 'nu') && isfield(Mat, 'E')
         Mat.lambda  = Mat.E*Mat.nu/((1+Mat.nu)*(1-2*Mat.nu));
         Mat.mu      = Mat.E/(2*(1+Mat.nu));
     elseif isfield(Mat, 'lambda') && isfield(Mat, 'mu')
         Mat.E       = Mat.mu*(3*Mat.lambda+2*Mat.mu)/(Mat.lambda+Mat.mu);
         Mat.nu      = Mat.lambda/(2*(Mat.lambda+Mat.mu));
-    end
+	end
+    [Mat.p, Mat.q] = GetModelOrder(Mat);
 
     if maxSize(Geo) > 4 % TODO Think, try catch would be better here ?
         fprintf("> Large mesh. Sparse will be used \n");

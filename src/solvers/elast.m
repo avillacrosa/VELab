@@ -26,12 +26,6 @@ function Result = elast(Geo, Mat, Set, Result)
         [~, Result.stress] = stressK(Result.x, Geo, Mat, Set); 
     end
 
-    Result.u = Result.x - Geo.X;
-    T = internalF(Result.x, Geo, Mat, Set);
-    M = areaMassLI(Geo.X, Geo, Set);
-    % TODO Bad
-    Result.F = zeros(size(T));
-    Result.F(Geo.fix) = T(Geo.fix);
-    Result.F = ref_nvec(Result.F, Geo.n_nodes, Geo.dim);
-    Result.t = M \ Result.F;
+    Result = saveOutData(1, c+1, k, u_t, stress_t, F, T, M, Geo, Mat, Set, Result);
+    writeOut(1,Geo,Set,Result);
 end

@@ -1,6 +1,6 @@
 function [t, F] = buildNeumann(Geo, Set)
     % Translate load input format to load vector
-    t = zeros(Geo.n_nodes, Geo.dim, length(Geo.times));
+    t = zeros(Geo.n_nodes, Geo.dim, length(Geo.time));
     if isfield(Geo, 't')
         if strcmpi(Geo.t, 'random')
             t = randTFM(Geo, 15);
@@ -24,8 +24,8 @@ function [t, F] = buildNeumann(Geo, Set)
     % !!!!!!!!!!!!! TODO FIXIT !!!!!!!!!!!! traction is assumed constant!
     t = t(:,:,1);
 %     M = areaMassNL(Geo.X, Geo, Set);
-    M = areaMassLISP(Geo.X, Geo, Set);
-%     M = areaMassLI(Geo.X, Geo, Set);
+%     M = areaMassLISP(Geo.X, Geo, Set);
+    M = areaMassLI(Geo.X, Geo, Set);
     F = M * t;
     % !---- TODO THIS MIGHT BE TOO MUCH OF A STRETCH ----!
 end

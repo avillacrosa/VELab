@@ -5,7 +5,13 @@ function sigma = material(x, X, z, Mat)
         sigma = hookean(Fd, Mat, dim);
     elseif strcmpi(Mat.type, 'neohookean')
         sigma = neohookean(Fd, Mat, dim);
-    elseif strcmpi(Mat.type, 'venant')
+	elseif strcmpi(Mat.type, 'venant')
         sigma = venant(Fd, Mat, dim);
+	elseif strcmpi(Mat.type, 'kelvinvoigt')
+        sigma = kelvinvoigt(Fd, Mat, dim);
+	elseif strcmpi(Mat.type, 'maxwell')
+        sigma = maxwell(Fd, Mat, dim);
+	elseif strcmpi(Mat.type, 'fmaxwell')
+        sigma = fracmaxwell(Fd, Mat, dim);
     end
 end

@@ -1,7 +1,7 @@
 function [u, dof, fix] = buildDirichlet(Geo, Set)
     % Read as TFM: Generate u's, ns, and extra dBCs...
     fixdof = zeros(Geo.n_nodes*Geo.dim,1);
-    u = zeros(Geo.n_nodes, Geo.dim, length(Geo.times));
+    u = zeros(Geo.n_nodes, Geo.dim, length(Geo.time));
     
     % Geo.u might be 'random' or an actual file name 'fname'
     % Geo.uBC is always an array

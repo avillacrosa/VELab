@@ -6,10 +6,10 @@ function Result = solveVE(Geo, Set, Mat, Result)
     elseif Mat.visco ~= 0
         fprintf('> Solving linear viscoelasticity with %s rheology \n',...
                 Mat.rheo);
-        [Mat.p, Mat.q] = GetModelOrder(Mat);
         Result = visco(Geo, Mat, Set, Result);
     else
         fprintf("> Solving nonlinear elasticity \n");
-        Result = elast(Geo, Mat, Set, Result);
+%         Result = elast(Geo, Mat, Set, Result);
+        Result = elast_t(Geo, Mat, Set, Result);
     end
 end
