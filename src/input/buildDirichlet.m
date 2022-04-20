@@ -25,11 +25,12 @@ function [u, dof, fix] = buildDirichlet(Geo, Set)
             uy = vec_to_grid(udata(:,4), Geo);
             uy = uy';
 		end
-		for ti = 1:ts
+		for ti = 2:ts 
             uxt = grid_to_vec(ux(:,:,ti));
             uyt = grid_to_vec(uy(:,:,ti));
-			tidx = getTimeIdx(Geo,ti*Set.dt_obs);
-            u((end-Geo.ns(1)*Geo.ns(2)+1):end,[1,2], tidx) = [uxt, uyt];
+			tidx   = getTimeIdx(Geo,ti*Set.dt_obs);
+			tidxm1 = getTimeIdx(Geo,(ti-1)*Set.dt_obs);
+            u((end-Geo.ns(1)*Geo.ns(2)+1):end,[1,2], tidxm1:tidx) = [uxt, uyt];
 		end
 		[dof, fix, fix_vals] = BCtoNodal(Geo, uBC);
 		u(fix,:) = fix_vals(fix,:);

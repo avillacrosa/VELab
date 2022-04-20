@@ -16,14 +16,14 @@ function Result = visco(Geo, Mat, Set, Result)
 	strain_t(:,:,1)    = fullLinStr1(u_t(:,1), 1, Geo); 
 	stress_t    = calcStress(strain_t, 0, stress_t, Geo, Mat, Set);
     t = 0;
-	% k = 1 corresponds to t = 0
 	for k = 1:(Set.time_incr-1)
+		% TODO FIXME Maybe move everything to backward euler?
 		if strcmpi(Mat.rheo, 'kelvin')
-            [u_t, T] = eulerKV(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
+            [u_t(:,k+1), T(:,k+1)] = eulerKV(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
         elseif strcmpi(Mat.rheo, 'maxwell')
-            [u_t, T] = eulerMX(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
+            [u_t(:,k+1), T(:,k+1)] = eulerMX(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
         elseif strcmpi(Mat.rheo, 'fmaxwell')
-            [u_t, T] = eulerFMX(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
+            [u_t(:,k), T(:,k)] = eulerFMX(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
 		end
 		% Calculate stress here
 		if Set.calc_stress || Set.calc_strain
