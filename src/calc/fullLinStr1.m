@@ -1,4 +1,4 @@
-function linstrTot = fullLinStr1(u, Geo)
+function linstrTot = fullLinStr1(u, k, Geo)
    cornerPoints = [
    -1.000000000000000  -1.000000000000000  -1.000000000000000
    -1.000000000000000  -1.000000000000000   1.000000000000000
@@ -9,7 +9,7 @@ function linstrTot = fullLinStr1(u, Geo)
     1.000000000000000   1.000000000000000  -1.000000000000000
     1.000000000000000   1.000000000000000   1.000000000000000];
     linstrTot = zeros(Geo.n_nodes, Geo.vect_dim);
-    x = Geo.X + ref_nvec(u, Geo.n_nodes, Geo.dim);
+    x = Geo.X + ref_nvec(u(:,k), Geo.n_nodes, Geo.dim);
     for e = 1:Geo.n_elem
         ne = Geo.n(e,:);
         xe = x(ne,:);

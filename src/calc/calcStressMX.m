@@ -11,8 +11,12 @@ function stress_t = calcStressMX(strain_k, k, stress_t, Geo, Mat, Set)
              Mat.nu      1      0
                 0        0    (1-Mat.nu)/2]*Mat.E/(1-Mat.nu^2);
 	end
-    
-    stress_t = D*(strain_k(:,:,k+1)'-strain_k(:,:,k)') + (eye(size(D))-D*Set.dt/Mat.visco)*stress_t(:,:,k)';
-    stress_t = stress_t';
+	if k == 0
+		s = D*(strain_k(:,:,1)');
+		stress_t(:,:,1) = s';
+	else
+		s = D*(strain_k(:,:,k+1)'-strain_k(:,:,k)') + (eye(size(D))-D*Set.dt/Mat.visco)*stress_t(:,:,k)';
+		stress_t(:,:,k+1) = s';
+	end
 
 end

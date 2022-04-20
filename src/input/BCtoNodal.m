@@ -15,6 +15,6 @@ function [dof, fix, fix_vals] = BCtoNodal(Geo, BC)
         fix_vals(hit_idx, t_axis) = t_value;
 	end
     hits = logical(hits);
-    dof = find(hits==0);
-    fix = find(hits==1);
+	fix = hits;
+	dof = not(hits);
 end

@@ -10,7 +10,7 @@ function [Geo, Mat, Set] = mx_relax(Geo, Mat, Set)
                2 0 2 0; 2 0 3 0; 
                3 0 2 0; 3 0 3 0; 
                2 0.1 2 0; 2 0.1 3 0; 
-               3 0.1 2 0; 3 0.1 3 0; 1 1.125 1 0.1];
+               3 0.1 2 0; 3 0.1 3 0; 1 1.125 1 0.8];
 	
     
     %% Material parameters
@@ -23,8 +23,8 @@ function [Geo, Mat, Set] = mx_relax(Geo, Mat, Set)
 
     %% Numerical settings
     Set.n_steps = 1;
-    Set.time_incr = 100;
-    Set.save_freq = 1;
+    Set.time_incr = 2000;
+    Set.save_freq = 50;
 	Set.calc_stress = true;
 	Set.calc_strain = true;
 
