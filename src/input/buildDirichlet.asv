@@ -33,13 +33,6 @@ function [u, dof, fix] = buildDirichlet(Geo, Set)
 		end
 		[dof, fix, fix_vals] = BCtoNodal(Geo, uBC);
 		u(fix,:) = fix_vals(fix,:);
-		% TODO FIXME Either MATLAB sucks at handling 3D arrays or I suck
-		% and I dont know of a way to do this
-		for tk = 1:Set.time_incr
-			ut = u(:,:,tk);
-			ut(fix) = fix_vals(fix);
-			u(:,:,tk) = ut;
-		end
 	elseif isfield(Geo, 'u')
 		if strcmpi(Geo.u, 'random')
 			% Geo.u equals to random
@@ -50,13 +43,7 @@ function [u, dof, fix] = buildDirichlet(Geo, Set)
 		end
 	else
 		[dof, fix, fix_vals] = BCtoNodal(Geo, Geo.uBC);
-		% TODO FIXME Either MATLAB sucks at handling 3D arrays or I suck
-		% and I dont know of a way to do this
-		for tk = 1:Set.time_incr
-			ut = u(:,:,tk);
-			ut(fix) = fix_vals(fix);
-			u(:,:,tk) = ut;
-		end
+		u(fix) = fix_vals(fix,:);
 	end
 end
 

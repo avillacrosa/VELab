@@ -1,47 +1,50 @@
-%--------------------------------------------------------------------------
-% Collect the data obtained by the user's input file, fill fields left
-% empty and define some internal variables to facilitate code 
-%--------------------------------------------------------------------------
-function  [Geo, Mat, Set] = completeData(Geo, Mat, Set)
-    %% Default geometry values
-    
-    if ~isfield(Geo, 'X') || ~isfield(Geo, 'n') 
-        fprintf("Initial coordinates not found. Quitting \n")
-        return
-    end
+function [Geo, Mat,  Set] = completeData(Geo, Mat, Set)
+    % Additional help variables
+    Geo.n_nodes           = size(Geo.X,1);
+    Geo.dim               = size(Geo.X,2);
+    Geo.n_elem            = size(Geo.n,1);
+    Geo.n_nodes_elem      = size(Geo.n,2);
+    Geo.n_nodes_elem_c    = 2*(Geo.dim-1); % Square approximation...
+    Geo.vect_dim          = (Geo.dim+1)*Geo.dim/2;
+    [Geo.Kg1, Geo.Kg2]    = assembleK(Geo);
 
-    DefGeo = struct();
-    DefGeo.uBC      = [];
-    DefGeo.tBC      = [];
-    DefGeo.traction = true;
-    DefGeo.randMag  = 10;
-    DefGeo.x_units  = 1;
+    ns_ref = Geo.ns;
+    ns_ref(1:Geo.dim) = 2;
+    ds_ref = Geo.ds;
+    ds_ref(1:Geo.dim) = 1;
+    [~, Geo.n_ref, Geo.na_ref] = meshgen(ns_ref, ds_ref);
+
+    [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);
+    [Set.gaussPoints, Set.gaussWeights]        = buildQuadPoints(Geo, Set);
+    [Set.gaussPointsC, Set.gaussWeightsC]      = buildQuadPointsC(Geo,Set);
+    [Set.cn, Set.cEq, Set.gausscP, Set.gausscW]= buildAreaDep(Geo,Set);
+
+    Geo.time = (1:Set.time_incr)*Set.dt;
+    [Geo.u, Geo.dof, Geo.fix] = buildDirichlet(Geo, Set);
+    Geo.X = Geo.X*Geo.x_units; 
+	Geo.u = Geo.u*Geo.x_units;
+    Geo.ds = Geo.ds*Geo.x_units;
+    [Geo.t, Geo.t_dof, Geo.t_fix] = buildNeumann(Geo, Set);
+	M = areaMassLI(Geo.X, Geo, Set);
+	Geo.F = zeros(size(Geo.t));
+	for k = 1:Set.time_incr
+		Geo.F(:,:,k) = M * Geo.t(:,:,k);
+	end
+    % It might be possible that the grid is already in the TFM input file
+    % Try to read it from there if possible
     
-    DefMat = struct();
-    DefMat.type   = 'hookean';
-    DefMat.P      = [1 0];
-    DefMat.visco  = 0;
-    DefMat.rheo   = '';
-    
-    DefSet = struct();
-    DefSet.type          = 'linear'; %TODO bad
-    DefSet.n_steps       = 10;
-    DefSet.newton_tol    = 1e-10;
-    DefSet.time_incr     = 1;
-    DefSet.save_freq     = 1;
-    DefSet.dt            = 0.00001;
-    DefSet.n_quad        = 2;
-    DefSet.euler_type    = 'forward';
-    DefSet.sparse        = false;
-    DefSet.TFM           = false;
-    DefSet.output        = 'normal'; %TODO bad
-    DefSet.output_folder = fullfile('output',Set.input_file);
-	DefSet.calc_stress   = false;
-	DefSet.calc_strain   = false;
-	DefSet.plot_strain   = false;
-	DefSet.plot_stress   = false;
-    
-    Geo  = addDefault(Geo, DefGeo);
-    Mat  = addDefault(Mat, DefMat);
-    Set  = addDefault(Set, DefSet);
+	if isfield(Mat, 'nu') && isfield(Mat, 'E')
+        Mat.lambda  = Mat.E*Mat.nu/((1+Mat.nu)*(1-2*Mat.nu));
+        Mat.mu      = Mat.E/(2*(1+Mat.nu));
+    elseif isfield(Mat, 'lambda') && isfield(Mat, 'mu')
+        Mat.E       = Mat.mu*(3*Mat.lambda+2*Mat.mu)/(Mat.lambda+Mat.mu);
+        Mat.nu      = Mat.lambda/(2*(Mat.lambda+Mat.mu));
+	end
+    [Mat.p, Mat.q] = GetModelOrder(Mat);
+
+    if maxSize(Geo) > 4 % TODO Think, try catch would be better here ?
+        fprintf("> Large mesh. Sparse will be used \n");
+        % I think sparse is actually a bit faster than full matrices!
+        Set.sparse = true;
+    end
 end

@@ -2,12 +2,8 @@
 % Solve a maxwell linear viscoelastic system (hookean elasticity)
 % using either forward or backward euler's method
 %--------------------------------------------------------------------------
-function [u, T] = eulerMX(u, k, F, T, K, BB, Geo, Set, Mat)
-    dt   = Set.dt;
+function [u, T] = eulerMX(u, dof, fix, dt, k, F, T, K, BB, Mat)
     eta  = Mat.visco;
-
-    % Get integrals at equilibrium
-    dof = Geo.dof; fix = Geo.fix;
     % K, Btot and Bvec are global
     % TODO FIXIT This is bad but since is 0 we get away with it
     fdot = zeros(size(Geo.F));

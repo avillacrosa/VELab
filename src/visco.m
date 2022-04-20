@@ -3,29 +3,28 @@ function Result = visco(Geo, Mat, Set, Result)
     K  = constK(Geo.X, Geo, Mat, Set);
 	BB = intBB(Geo, Set);
 	M  = areaMassLI(Geo.X, Geo, Set);
+	dof = Geo.dof; fix = Geo.fix; dt = Set.dt;
 
-	u_t          = zeros(Geo.n_nodes*Geo.dim, Set.time_incr);
+	% Vectorized form of variables
+% 	u_t = zeros(Geo.n_nodes*Geo.dim, Set.time_incr);
+% 	for k = 1:Set.time_incr
+% 		u_t(:,k)=vec_nvec(Geo.u(:,:,k));
+% 	end
+	u_t          = vec_nvec(Geo.u);
 	strain_t     = zeros(Geo.n_nodes, Geo.vect_dim, Set.time_incr); 
 	stress_t     = zeros(Geo.n_nodes, Geo.vect_dim, Set.time_incr);
 	T			 = zeros(Geo.n_nodes*Geo.dim, Set.time_incr);
     F = vec_nvec(Geo.F); % THIS WAS WRONG MAN SHEEEESH
-
+	
     t = 0;
 	% k = 1 corresponds to t = 0
 	for k = 1:(Set.time_incr-1)
-		if any(Geo.time==t)
-			idx = find(Geo.time== t);
-			u_presc = vec_nvec(Geo.u(:,:,idx));
-			u_t(Geo.fix,k) = u_presc(Geo.fix);
-
-		end
-
 		if strcmpi(Mat.rheo, 'kelvin')
-            [u_t, T] = eulerKV(u_t, k, F, T, K, BB, Geo, Set, Mat);
+            [u_t, T] = eulerKV(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
         elseif strcmpi(Mat.rheo, 'maxwell')
-            [u_t, T] = eulerMX(u_t, k, F, T, K, BB, Geo, Set, Mat);
+            [u_t, T] = eulerMX(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
         elseif strcmpi(Mat.rheo, 'fmaxwell')
-            [u_t, T] = eulerFMX(u_t, k, F, T, K, BB, Geo, Set, Mat);
+            [u_t, T] = eulerFMX(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
 		end
 		% Calculate stress here
 		if Set.calc_stress || Set.calc_strain

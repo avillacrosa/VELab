@@ -19,6 +19,11 @@ function Result = runVE(data_f)
     
 	%% Initialize other data necessary for sim
 	% This includes mesh, default input, boundary conditions...
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% As a rule of thumb, Geo and Result should include only vectorial
+	% forms (Geo.n_nodes, Geo.dim) and we only turn to a 1D vector
+	% (Geo.n_nodes*Geo.dim,1) when doing computations.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	[Geo, Mat, Set, Result] = initializeData(Geo, Mat, Set);
 
 	%% Solve the system

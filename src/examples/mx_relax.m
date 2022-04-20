@@ -10,7 +10,8 @@ function [Geo, Mat, Set] = mx_relax(Geo, Mat, Set)
                2 0 2 0; 2 0 3 0; 
                3 0 2 0; 3 0 3 0; 
                2 0.1 2 0; 2 0.1 3 0; 
-               3 0.1 2 0; 3 0.1 3 0; 1 1.125 1 0.5];
+               3 0.1 2 0; 3 0.1 3 0; 1 1.125 1 0.1];
+	
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant

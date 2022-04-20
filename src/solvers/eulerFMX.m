@@ -2,14 +2,12 @@
 % Solve a maxwell linear viscoelastic system (hookean elasticity)
 % using either forward or backward euler's method
 %--------------------------------------------------------------------------
-function [u, T] = eulerFMX(u, k, F, T, K, BB, Geo, Set, Mat)
+function [u, T] = eulerFMX(u, dof, fix, dt, k, F, T, K, BB, Mat)
 
-    gl_eps = glderiv(u,k-1,Set.dt,Mat.alpha,2,1e6);
-    gl_eps = gl_eps*Set.dt^(Mat.alpha);
+    gl_eps = glderiv(u,k-1,dt,Mat.alpha,2,1e6);
+    gl_eps = gl_eps*dt^(Mat.alpha);
 
-    dof = Geo.dof; fix = Geo.fix;
-
-    u(dof,k) = BB(dof,dof)\(F(dof)*Set.dt^(Mat.alpha)/Mat.c_alpha)-gl_eps(dof);
+    u(dof,k) = BB(dof,dof)\(F(dof)*dt^(Mat.alpha)/Mat.c_alpha)-gl_eps(dof);
     
 %     F_k(fix)   = (BB(fix,fix)*(u_kp1(fix)-u_k(fix)) + ...
 %                   BB(fix,dof)*(u_kp1(dof)-u_k(dof)))*eta/dt;
