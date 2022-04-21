@@ -3,20 +3,9 @@
 % appropiate solver for the problem (hookean = linear; neohookean/venant =
 % nonlinear)
 %--------------------------------------------------------------------------
-function Result = runVE(data_f)
-	%% Initialize base structures
-    Geo = struct(); Mat = struct(); Set = struct();
-	% Reformat input file data if user added .m extension
-    t_start = tic();
-    if endsWith(data_f, '.m')
-        Set.input_file = data_f(1:end-2);
-    else
-        Set.input_file = data_f;
-    end
-
-	%% Add user based input
-    [Geo, Mat, Set] = feval(Set.input_file, Geo, Mat, Set);
-	if size(Geo.ns,2) == 1 && Geo.dim == 3
+function Result = runVE(Geo, Mat, Set)
+    %% Check if the input file is TFM or not
+	if size(Geo.ns,2) == 1
         fprintf("> Assuming a TFM-type input \n");
         Geo     = buildTFM(Geo);
         Set.TFM = true;

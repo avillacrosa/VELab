@@ -1,5 +1,5 @@
 function Geo = buildTFM(Geo)
-    ustruct = load(Geo.u);
+    ustruct = load(Geo.u(1));
 	if isfield(ustruct, 'ux')
         nx = size(ustruct.ux,1);
         ny = size(ustruct.ux,2);

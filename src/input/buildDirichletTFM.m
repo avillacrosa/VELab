@@ -12,9 +12,9 @@ function [u, dof, fix] = buildDirichletTFM(Geo, Set)
 	uBC        = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 z 3 0];
 
     u = zeros(Geo.n_nodes, Geo.dim, Set.time_incr);
-	if isfolder(Geo.u)
+	if size(Geo.u,2) ~= 1
 		for t = 1:Set.time_incr
-			udata_t = load(fullfile(Geo.u, Geo.uTFM{t}));
+			udata_t = load(fullfile(Geo.u, Geo.uTFM(t)));
 			ux_t = vec_to_grid(udata_t(:,3), Geo); ux_t = ux_t';
 			uy_t = vec_to_grid(udata_t(:,4), Geo); uy_t = uy_t';
 			top_idx = ext_z(0, Geo);
