@@ -20,16 +20,6 @@ function [Geo, Mat,  Set] = completeData(Geo, Mat, Set)
     [Set.cn, Set.cEq, Set.gausscP, Set.gausscW]= buildAreaDep(Geo,Set);
 
     Geo.time = (1:Set.time_incr)*Set.dt;
-    [Geo.u, Geo.dof, Geo.fix] = buildDirichlet(Geo, Set);
-    Geo.X = Geo.X*Geo.x_units; 
-	Geo.u = Geo.u*Geo.x_units;
-    Geo.ds = Geo.ds*Geo.x_units;
-    [Geo.t, Geo.t_dof, Geo.t_fix] = buildNeumann(Geo, Set);
-	M = areaMassLI(Geo.X, Geo, Set);
-	Geo.F = zeros(size(Geo.t));
-	for k = 1:Set.time_incr
-		Geo.F(:,:,k) = M * Geo.t(:,:,k);
-	end
     % It might be possible that the grid is already in the TFM input file
     % Try to read it from there if possible
     

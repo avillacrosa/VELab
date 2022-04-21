@@ -6,9 +6,8 @@ function [u, T] = eulerMX(u_t, dof, fix, dt, k, F_t, T_t, K, BB, Mat)
     eta  = Mat.visco;
 
 	u = u_t(:,k+1); T = T_t(:,k+1);
-    % K, Btot and Bvec are global
-    % TODO FIXIT This is bad but since is 0 we get away with it
-    fdot = zeros(size(F_t));
+	
+    fdot = (F_t(:,k+1)-F_t(:,k))/dt;
     u_e   = K(dof,dof)\fdot(dof); 
     
     u(dof) = BB(dof,dof)\(BB(dof,dof)*u_e/eta+...

@@ -1,4 +1,4 @@
-function [t, dof, fix] = buildNeumann(Geo, Set)
+function [t, F] = buildNeumann(Geo, Set)
 	% Flow of displacement boundary conditions works as follow:
 	% - If Geo.t is empty, try to read from Geo.tBC
 	% - If Set.TFM is not empty, read tractions from files 
@@ -24,12 +24,17 @@ function [t, dof, fix] = buildNeumann(Geo, Set)
             t = tstr.tr;
 		end
 	else
-		[dof, fix, fix_vals] = BCtoNodal(Geo, Geo.tBC);
+		[~, fix, fix_vals] = BCtoNodal(Geo, Geo.tBC);
 		for tk = 1:Set.time_incr
 			tt = t(:,:,tk);
 			tt(fix) = fix_vals(fix);
 			t(:,:,tk) = tt;
 		end
+	end
+	M = areaMassLI(Geo.X, Geo, Set);
+	F = zeros(size(Geo.t));
+	for k = 1:Set.time_incr
+		F(:,:,k) = M * tt(:,:,k);
 	end
 end
 
