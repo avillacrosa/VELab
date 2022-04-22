@@ -1,5 +1,5 @@
 function Set = initializeOutFolder(Set)
-	Set.DirOutput=fullfile(pwd, Set.output_folder);
+	Set.DirOutput=fullfile(pwd, 'output', Set.name);
     Set.VTKDirOutput=fullfile(Set.DirOutput, 'VTKOut');
     Set.TFMDirDisp=fullfile(Set.DirOutput, 'TFM','Displacements');
     Set.TFMDirTrac=fullfile(Set.DirOutput, 'TFM','Tractions');

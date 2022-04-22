@@ -16,6 +16,7 @@ function  [Geo, Mat, Set] = completeDefault(Geo, Mat, Set)
     DefGeo.traction = true;
     DefGeo.randMag  = 10;
     DefGeo.x_units  = 1;
+	DefGeo.w        = 1;
     
     DefMat = struct();
     DefMat.type   = 'hookean';
@@ -35,7 +36,6 @@ function  [Geo, Mat, Set] = completeDefault(Geo, Mat, Set)
     DefSet.sparse        = false;
     DefSet.TFM           = false;
     DefSet.output        = 'normal'; %TODO bad
-    DefSet.output_folder = fullfile('output',Set.input_file);
 	DefSet.calc_stress   = false;
 	DefSet.calc_strain   = false;
 	DefSet.plot_strain   = false;
@@ -46,5 +46,6 @@ function  [Geo, Mat, Set] = completeDefault(Geo, Mat, Set)
     Set  = addDefault(Set, DefSet);
 
 	DefSet.dt_obs        = Set.dt;
+	DefSet.name = sprintf('%s_%s',Mat.type, Mat.rheo);
     Set  = addDefault(Set, DefSet);
 end

@@ -7,16 +7,7 @@ function [t, F] = buildNeumann(Geo, Set)
 	% In any case, Geo.uBC is assumed to be valid for all times.
 	% What's left to be considered is time!
     t = zeros(Geo.n_nodes, Geo.dim, Set.time_incr);
-	if Set.TFM
-		tdata = load(Geo.t);
-        % TFM input
-        ts = size(tdata.tr_x,3);
-        for ti = 1:ts
-            tr_xt = vec_nvec(tdata.tr_x(:,:,ti));
-            tr_yt = vec_nvec(tdata.tr_y(:,:,ti));
-            t((end-Geo.ns(1)*Geo.ns(2)+1):end,[1,2], ti) = [tr_xt, tr_yt];
-        end
-	elseif isfield(Geo, 't')
+	if isfield(Geo, 't')
 		if strcmpi(Geo.t, 'random')
             t = randTFM(Geo, 15);
 		else
@@ -24,7 +15,7 @@ function [t, F] = buildNeumann(Geo, Set)
             t = tstr.tr;
 		end
 	else
-		[~, fix, fix_vals] = BCtoNodal(Geo, Geo.tBC);
+		[fix, fix_vals] = BCtoNodal(Geo, Geo.tBC);
 		for tk = 1:Set.time_incr
 			tt = t(:,:,tk);
 			tt(fix) = fix_vals(fix);
@@ -32,9 +23,9 @@ function [t, F] = buildNeumann(Geo, Set)
 		end
 	end
 	M = areaMassLI(Geo.X, Geo, Set);
-	F = zeros(size(Geo.t));
+	F = zeros(size(t));
 	for k = 1:Set.time_incr
-		F(:,:,k) = M * tt(:,:,k);
+		F(:,:,k) = M * t(:,:,k);
 	end
 end
 

@@ -1,10 +1,14 @@
-function Ke = constKe(xe, Xe, Geo, Mat, Set)
+function Ke = constKe(xe, Xe, Geo, Mat, Set, calcB)
     Ke  = zeros(Geo.n_nodes_elem*Geo.dim, Geo.n_nodes_elem*Geo.dim);
     for gp = 1:size(Set.gaussPoints,1)
         z = Set.gaussPoints(gp,:);
-
-        c = material_c(xe, Xe, z, Mat);
-        D = constD(c);
+		
+		if ~calcB
+        	c = material_c(xe, Xe, z, Mat);
+        	D = constD(c);
+		else
+			D = eye(Geo.vect_dim);
+		end
         
         [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);
         B = getB(dNdx);

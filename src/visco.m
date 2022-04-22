@@ -1,8 +1,11 @@
 function Result = visco(Geo, Mat, Set, Result)
-	% TODO FIXME, why does this not go inside the loop?
     K  = constK(Geo.X, Geo, Mat, Set);
-	BB = intBB(Geo, Set);
-	M  = areaMassLI(Geo.X, Geo, Set);
+	BB = constK(Geo.X, Geo, Mat, Set, true);
+
+% 	BB = intBB(Geo, Set);
+% 	M  = areaMassLI(Geo.X, Geo, Set); % TODO FIXME TIME AND MEMORY SINK HERE
+	M  = areaMassLISP(Geo.X, Geo, Set); % TODO FIXME TIME AND MEMORY SINK HERE
+
 	dof = vec_nvec(Geo.dof); fix = vec_nvec(Geo.fix); dt = Set.dt;
 
 	% Vectorized form of variables
@@ -11,10 +14,14 @@ function Result = visco(Geo, Mat, Set, Result)
 	strain_t     = zeros(Geo.n_nodes, Geo.vect_dim, Set.time_incr); 
 	stress_t     = zeros(Geo.n_nodes, Geo.vect_dim, Set.time_incr);
 	T			 = zeros(Geo.n_nodes*Geo.dim, Set.time_incr);
-    F = vec_nvec(Geo.F); % THIS WAS WRONG MAN SHEEEESH
+    F = vec_nvec(Geo.F); % THIS WAS WRONG MAN
 
-	strain_t(:,:,1)    = fullLinStr1(u_t(:,1), 1, Geo); 
-	stress_t    = calcStress(strain_t, 0, stress_t, Geo, Mat, Set);
+	if Set.calc_stress || Set.calc_strain
+		strain_t(:,:,1)    = fullLinStr1(u_t(:,1), 1, Geo); 
+		if Set.calc_stress
+			stress_t    = calcStress(strain_t, 0, stress_t, Geo, Mat, Set);
+		end
+	end
     t = 0;
 	for k = 1:(Set.time_incr-1)
 		% TODO FIXME Maybe move everything to backward euler?
@@ -48,7 +55,12 @@ function Result = visco(Geo, Mat, Set, Result)
             Result = saveOutData(t, c+1, k, u_t, stress_t, strain_t, F, T, M, Geo, Mat, Set, Result);
             
             writeOut(c+1,Geo,Set,Result);
-            fprintf("it = %4i, |u| = %f, |stress| = %e \n", k, norm(u_t(:,k)), max(abs(stress_t(:,1,k))));
+			if Set.calc_stress
+        		fprintf("it = %4i, t = %.2e, <u> = (% .2e,% .2e,% .2e), <stress> = (% .2e, % .2e, % .2e, % .2e, % .2e, % .2e) \n", ...
+					k, t, mean(Result.u(:,:,c+1), 1), mean(Result.stress(:,:,c+1),1));
+			else
+        		fprintf("it = %4i, t = %.2e, <u> = (% .2e,% .2e,% .2e)", k, t, mean(Result.u(:,:,c+1), 1));
+			end
         end
         t = t + Set.dt;
 	end

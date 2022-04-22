@@ -1,16 +1,18 @@
-function [Geo, Mat, Set] = kv_creep_2d(Geo, Mat, Set)
+function [Geo, Mat, Set] = mx_harm(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
-    Geo.ns = [5 5 1];
-    Geo.ds = [1 1 1]/4;
+    nn = 5;
+    dn = 1/(nn-1);
+    Geo.ns = [nn nn nn];
+    Geo.ds = [dn dn dn/5];
 
-    Geo.uBC = [1 0 1 0; 2 0 2 0;];
-    Geo.tBC = [1 1 1 10];
+    Geo.u = 'harmonic';
+	Geo.w = 500;
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
     Mat.type  = 'hookean'; % Merge these two?
-    Mat.rheo  = 'kelvin'; % Merge these two?
+    Mat.rheo  = 'maxwell'; % Merge these two?
     Mat.E     = 100;
     Mat.nu    = 0; % No off diagonal terms in D matrix
     Mat.visco = 1;
@@ -24,6 +26,5 @@ function [Geo, Mat, Set] = kv_creep_2d(Geo, Mat, Set)
 
 	Set.plot_stress = false;
 	Set.plot_strain = true;
-
-	Set.name = 'kv_creep_2d';
+	Set.name = 'mx_harm';
 end

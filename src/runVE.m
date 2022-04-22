@@ -5,6 +5,7 @@
 %--------------------------------------------------------------------------
 function Result = runVE(Geo, Mat, Set)
     %% Check if the input file is TFM or not
+	t_start = tic;
 	if size(Geo.ns,2) == 1
         fprintf("> Assuming a TFM-type input \n");
         Geo     = buildTFM(Geo);
@@ -18,12 +19,6 @@ function Result = runVE(Geo, Mat, Set)
 	% (Geo.n_nodes*Geo.dim,1) when doing computations.
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	[Geo, Mat, Set, Result] = initializeData(Geo, Mat, Set);
-	if Set.TFM
-		[Geo.u, Geo.dof, Geo.fix] = buildDirichletTFM(Geo, Set);
-	else
-		[Geo.u, Geo.dof, Geo.fix] = buildDirichlet(Geo, Set);
-	end
-    [Geo.t, Geo.F] = buildNeumann(Geo, Set);
 
 	%% Solve the system
     writeOut(1,Geo,Set,Result);

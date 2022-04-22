@@ -1,4 +1,8 @@
-function K = constK(x, Geo, Mat, Set)
+function K = constK(x, Geo, Mat, Set, calcB)
+	if (~exist('calcB', 'var'))
+		calcB = false;
+	end
+	% TODO FIXME, I CAN CALCULATE BB FROM THIS FUNCTION!
     Kg1 = Geo.Kg1; Kg2 = Geo.Kg2;
     if Set.sparse
         ll = Geo.n_nodes_elem*Geo.dim;
@@ -15,7 +19,7 @@ function K = constK(x, Geo, Mat, Set)
         xe = x(ne,:);
         Xe = Geo.X(ne,:);
         if ~strcmpi(Mat.type, 'hookean') || e == 1
-            Ke = constKe(xe, Xe, Geo, Mat, Set);
+            Ke = constKe(xe, Xe, Geo, Mat, Set, calcB);
         end
         if Set.sparse
             for aa = 1:size(Ke,1)

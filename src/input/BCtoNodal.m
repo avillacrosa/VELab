@@ -1,7 +1,7 @@
 %--------------------------------------------------------------------------
 % Compute nodal displacement Neumann conditions given user input format
 %--------------------------------------------------------------------------
-function [dof, fix, fix_vals] = BCtoNodal(Geo, BC)
+function [fix, fix_vals] = BCtoNodal(Geo, BC)
     X      = Geo.X;
     hits   = zeros(Geo.n_nodes, Geo.dim);
     fix_vals   = zeros(Geo.n_nodes, Geo.dim);
@@ -16,5 +16,4 @@ function [dof, fix, fix_vals] = BCtoNodal(Geo, BC)
 	end
     hits = logical(hits);
 	fix = hits;
-	dof = not(hits);
 end
