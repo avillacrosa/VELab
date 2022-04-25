@@ -1,11 +1,10 @@
-function [Geo, Mat, Set] = mx_flow_2d(Geo, Mat, Set)
+function [Geo, Mat, Set] = mx_relax_2d(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
     Geo.ns = [5 5 1];
     Geo.ds = [1 1 1]/4;
 
-    Geo.uBC = [1 0 1 0; 2 0 2 0;];
-    Geo.tBC = [1 1 1 10];
+    Geo.uBC = [1 0 1 0; 2 0 2 0; 1 1 1 0.5];
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
@@ -22,8 +21,8 @@ function [Geo, Mat, Set] = mx_flow_2d(Geo, Mat, Set)
 	Set.calc_stress = true;
 	Set.calc_strain = true;
 
-	Set.plot_stress = false;
-	Set.plot_strain = true;
+	Set.plot_stress = true;
+	Set.plot_strain = false;
 
-	Set.name = 'mx_flow_2d';
+	Set.name = 'mx_relax_2d';
 end

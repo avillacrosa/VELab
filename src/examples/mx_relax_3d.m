@@ -1,17 +1,10 @@
-function [Geo, Mat, Set] = mx_relax(Geo, Mat, Set)
+function [Geo, Mat, Set] = mx_relax_3d(Geo, Mat, Set)
     %% Geometry parameters
     % Number of nodes in each direction
-    nn = 5;
-    dn = 1/(nn-1);
-    Geo.ns = [2*nn nn nn];
-    Geo.ds = [dn/2 dn/10 dn/10];
+    Geo.ns = [5 5 5];
+    Geo.ds = [1 1 1]/4;
 
-    Geo.uBC = [1 0 1 0; 1 0 2 0; 1 0 3 0; 
-               2 0 2 0; 2 0 3 0; 
-               3 0 2 0; 3 0 3 0; 
-               2 0.1 2 0; 2 0.1 3 0; 
-               3 0.1 2 0; 3 0.1 3 0; 1 1.125 1 0.8];
-	
+    Geo.uBC = [1 0 1 0; 1 0 3 0; 2 0 2 0; 2 0 3 0;  2 1 2 0; 2 1 3 0; 1 1 1 0.5];
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
@@ -30,4 +23,6 @@ function [Geo, Mat, Set] = mx_relax(Geo, Mat, Set)
 
 	Set.plot_stress = true;
 	Set.plot_strain = false;
+
+	Set.name = 'mx_relax_3d';
 end

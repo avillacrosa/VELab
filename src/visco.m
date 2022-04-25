@@ -1,15 +1,12 @@
 function Result = visco(Geo, Mat, Set, Result)
     K  = constK(Geo.X, Geo, Mat, Set);
 	BB = constK(Geo.X, Geo, Mat, Set, true);
-
-% 	BB = intBB(Geo, Set);
 % 	M  = areaMassLI(Geo.X, Geo, Set); % TODO FIXME TIME AND MEMORY SINK HERE
 	M  = areaMassLISP(Geo.X, Geo, Set); % TODO FIXME TIME AND MEMORY SINK HERE
 
 	dof = vec_nvec(Geo.dof); fix = vec_nvec(Geo.fix); dt = Set.dt;
 
 	% Vectorized form of variables
-
 	u_t          = vec_nvec(Geo.u);
 	strain_t     = zeros(Geo.n_nodes, Geo.vect_dim, Set.time_incr); 
 	stress_t     = zeros(Geo.n_nodes, Geo.vect_dim, Set.time_incr);
@@ -47,7 +44,7 @@ function Result = visco(Geo, Mat, Set, Result)
 				% TODO FIXME This is bad but convenient. Ideally we would
 				% set all variables (stress is the hardest) to the 
 				% initial time values before entering the loop, but that
-				% takes effort.
+				% takes effort for some models.
 				c = 0;
 			else
 				c = k/Set.save_freq;
@@ -56,10 +53,15 @@ function Result = visco(Geo, Mat, Set, Result)
             
             writeOut(c+1,Geo,Set,Result);
 			if Set.calc_stress
-        		fprintf("it = %4i, t = %.2e, <u> = (% .2e,% .2e,% .2e), <stress> = (% .2e, % .2e, % .2e, % .2e, % .2e, % .2e) \n", ...
+				if Geo.dim == 3
+	        		fprintf("it = %4i, t = %.2e, <u> = (% .2e,% .2e,% .2e ), <stress> = (% .2e, % .2e, % .2e, % .2e, % .2e, % .2e ) \n", ...
 					k, t, mean(Result.u(:,:,c+1), 1), mean(Result.stress(:,:,c+1),1));
+				else
+	        		fprintf("it = %4i, t = %.2e, <u> = (% .2e,% .2e ), <stress> = (% .2e, % .2e, % .2e ) \n", ...
+					k, t, mean(Result.u(:,:,c+1), 1), mean(Result.stress(:,:,c+1),1));
+				end
 			else
-        		fprintf("it = %4i, t = %.2e, <u> = (% .2e,% .2e,% .2e)", k, t, mean(Result.u(:,:,c+1), 1));
+        		fprintf("it = %4i, t = %.2e, <u> = (% .2e,% .2e,% .2e ) \n", k, t, mean(Result.u(:,:,c+1), 1));
 			end
         end
         t = t + Set.dt;

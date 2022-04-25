@@ -3,11 +3,11 @@ function Ke = constKe(xe, Xe, Geo, Mat, Set, calcB)
     for gp = 1:size(Set.gaussPoints,1)
         z = Set.gaussPoints(gp,:);
 		
-		if ~calcB
+		if calcB
+			D = eye(Geo.vect_dim);
+		else
         	c = material_c(xe, Xe, z, Mat);
         	D = constD(c);
-		else
-			D = eye(Geo.vect_dim);
 		end
         
         [dNdx, J] = getdNdx(xe, z, Geo.n_nodes_elem);

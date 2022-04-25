@@ -12,15 +12,14 @@ function [x, n, na] = meshgen(ns, ds)
     dy = ds(2);
     dz = ds(3);
     if nz <= 1 
-        fprintf("> Size of z <= 1, assuming a 2D problem \n");
         dim = 2;
         nz = 1;
         dz = 1;
-        % TODO smart way to do this
+        % TODO smart way to do this?
         nelem = (ns(1)-1)*(ns(2)-1);
     else
         dim = 3;
-        % TODO smart way to do this
+        % TODO smart way to do this?
         nelem = (ns(1)-1)*(ns(2)-1)*(ns(3)-1);
     end
     

@@ -7,6 +7,7 @@ function [Geo, Mat,  Set] = completeData(Geo, Mat, Set)
     Geo.n_nodes_elem_c    = 2*(Geo.dim-1); % Square approximation...
     Geo.vect_dim          = (Geo.dim+1)*Geo.dim/2;
     [Geo.Kg1, Geo.Kg2]    = assembleK(Geo);
+	Geo.u                 = zeros(Geo.n_nodes, Geo.dim, Set.time_incr);
 
     ns_ref = Geo.ns;
     ns_ref(1:Geo.dim) = 2;

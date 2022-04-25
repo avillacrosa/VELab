@@ -7,6 +7,7 @@ function [u, dof, fix] = buildDirichlet(Geo, Set)
 	%   node.
 	% In any case, Geo.uBC is assumed to be valid for all times.
 	% What's left to be considered is time!
+	u = Geo.u;
 	fix = zeros(Geo.n_nodes, Geo.dim);
 	z = (Geo.ns(3)-1)*Geo.ds(3);
 	uBC        = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 z 3 0];
