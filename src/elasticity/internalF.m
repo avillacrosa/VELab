@@ -2,7 +2,7 @@
 % Computation of the internal in both 2D and 3D
 %--------------------------------------------------------------------------
 function T = internalF(x, Geo, Mat, Set)
-          
+    x = ref_nvec(x, Geo.n_nodes, Geo.dim);
     T = zeros(Geo.n_nodes*Geo.dim, 1);
     for e = 1:Geo.n_elem
         xe = x(Geo.n(e,:),:);

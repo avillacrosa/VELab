@@ -1,4 +1,4 @@
-function sigma = hookean(strain, Mat, dim)
+function sigma = hookean(Fd, Mat, dim)
     lin_str = (Fd'+Fd)/2-eye(size(Fd));
     % Ideally I would prefer computing c, then D, then sigma but that is
     % much more expensive because of looping...

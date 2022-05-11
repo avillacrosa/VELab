@@ -1,4 +1,5 @@
 function [K, sigmas] = stressK(x, Geo, Mat, Set)
+    x = ref_nvec(x, Geo.n_nodes, Geo.dim);
     Kg1 = Geo.Kg1; Kg2 = Geo.Kg2;
     sigmas = zeros(Geo.dim, Geo.dim, Geo.n_nodes_elem, Geo.n_elem);
     if Set.sparse

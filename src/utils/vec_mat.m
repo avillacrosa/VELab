@@ -5,11 +5,15 @@
 function vecA = vec_mat(A, fact)
     d = size(A,1);
     
-    vecA = zeros(d*(d+1)/2, 1);
-    if d == 2
-        vecA = [A(1,1), A(2,2), fact*A(1,2)]';
-    elseif d == 3
-        vecA = [A(1,1), A(2,2), A(3,3), ...
-                fact*A(1,2), fact*A(1,3), fact*A(2,3)]';
+    vecA = zeros(d*(d+1)/2, size(A,3));
+    for i = 1:size(A,3)
+        a = A(:,:,i);
+        if d == 2
+            veca = [a(1,1), a(2,2), fact*a(1,2)]';
+        elseif d == 3
+            veca = [a(1,1), a(2,2), a(3,3), ...
+                    fact*a(1,2), fact*a(1,3), fact*a(2,3)]';
+        end
+        vecA(:,i) = veca;
     end
 end

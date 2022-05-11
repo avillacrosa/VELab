@@ -13,7 +13,7 @@ function Result = runVE(Geo, Mat, Set)
     Result = solveVE(Geo, Set, Mat, Result);
 
 	%% Save the simulation info and exit
-    if ~strcmpi(Set.output, 'none')
+    if Set.output
 	    plotResults(Geo, Mat, Set, Result);
         save(fullfile(Set.DirOutput,sprintf('result.mat')), 'Result');
     end

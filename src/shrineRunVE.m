@@ -20,7 +20,8 @@ function [tx_t, ty_t] = shrineRunVE(dt, E, nu, d, h, ux, uy, tmax, settings_ve)
 
 	Set.dt     = dt; Set.dt_obs = Set.dt;
 	Set.time_incr = tmax; Set.save_freq = 1;
-	Set.output = 'none';
+	Set.output = false;
+    Set.name = 'tfm_fem';
     %% Run
 	Result = runVE(Geo, Mat, Set);
 

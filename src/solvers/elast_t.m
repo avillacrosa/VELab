@@ -1,44 +1,55 @@
 %--------------------------------------------------------------------------
 % Newton-Raphson solver for nonlinear elasticity
 %--------------------------------------------------------------------------
-function Result = elast_t(Geo, Mat, Set, Result)
-    t = 0;
-	for k = 1:(Set.time_incr-1)
+function Result = elast(Geo, Mat, Set, Result)
+    M  = areaMassLISP(Geo.X, Geo, Set);
+    dof = vec_nvec(Geo.dof); fix = vec_nvec(Geo.fix); 
 
-		if any(Geo.time==t)
-			idx = find(Geo.time== t);
-			u_presc = vec_nvec(Geo.u(:,:,idx));
-			u_t(Geo.fix,k) = u_presc(Geo.fix);
-		end
-		
-    	% As a superficial load. This should be the time F
-    	df = vec_nvec(Geo.F) / Set.n_steps;
-    	du = Geo.u / Set.n_steps;
-	
-    	for i = 1:Set.n_steps        
-        	Result.x = Result.x + du;
-        	F  = F + df; 
-        	R  = internalF(Result.x, Geo, Mat, Set) - F;
-        	Result = newton(Geo, Mat, Set, Result, i, R, F);
-        	Result.xn(i,:,:) = Result.x;
-        	Result.un(i,:,:) = Result.x - Geo.X;
+	u_t          = vec_nvec(Geo.u);
+	strain_t     = nan(Geo.n_nodes, Geo.vect_dim, Set.time_incr); 
+	stress_t     = nan(Geo.n_nodes, Geo.vect_dim, Set.time_incr);
+	T			 = zeros(Geo.n_nodes*Geo.dim, Set.time_incr);
+    F            = vec_nvec(Geo.F);
+
+    t = 0;
+    for k = 1:Set.time_incr
+    	df = F(:,k) / Set.n_steps; Fi = zeros(size(F(:,k)));
+    	du = u_t(:,k) / Set.n_steps; ui = zeros(size(u_t(:,k)));
+    	for i = 1:Set.n_steps
+            Fi = Fi + df;
+            ui = ui + du;
+            T = internalF(vec_nvec(Geo.X) + ui, Geo, Mat, Set);
+        	R  = T - F;
+        	[u_t(:,k), stress_gp] = newton(ui, dof, fix, i, R, Fi, Geo, Mat, Set);
     	end
 	
-		if Set.calc_stress
-			eps_t(:,:,k)    = fullLinStr1(u_t(:,k), Geo);
-			stress_t(:,:,k) = calcStress(eps_t, k, stress_t, Geo, Mat, Set);
+		if Set.calc_stress || Set.calc_strain
+            for e = 1:Geo.n_elem
+                stress_gp_e   = vec_mat(stress_gp(:,:,:,e),1);
+                stress_gp_nod = recoverNodals(stress_gp_e', Geo, Set);
+                stress_t(Geo.n(e,:),:,k) = stress_gp_nod;
+            end
 		end
 
-		if mod(k, Set.save_freq) == 0
-            c = k/Set.save_freq;
-            Result = saveOutData(t, c, k, u_t, stress_t, F, T, M, Geo, Mat, Set, Result);
-            
-            writeOut(c,Geo,Set,Result);
-            fprintf("it = %4i, |u| = %f, |stress| = %e \n", k, norm(u_t(:,k)), max(stress_t(:,1,k)));
+        if mod(k, Set.save_freq) == 0 || k == 1
+			if k == 1
+				% TODO FIXME This is bad but convenient. Ideally we would
+				% set all variables (stress is the hardest) to the 
+				% initial time values before entering the loop, but that
+				% takes effort for some models.
+				c = 0;
+			else
+				c = k/Set.save_freq;
+			end
+            Result = saveOutData(t, c+1, k, u_t, stress_t, strain_t, F, T, M, Geo, Mat, Set, Result);
+            writeOut(c+1,Geo,Set,Result);
+
+            fprintf("it = %4i, t = %.2f, |u| = ( ", k, t);
+            fprintf("%.2f ", vecnorm(Result.u(:,:,c+1), 2, 1));
+            fprintf("), |stress| = ( ")
+            fprintf("%.2f ", vecnorm(Result.stress(:,:,c+1), 2, 1));
+    		fprintf(") \n")
         end
         t = t + Set.dt;
-	end
-
-	Result = saveOutData(t, c+1, k, u_t, stress_t, F, T, M, Geo, Mat, Set, Result);
-    writeOut(c+1,Geo,Set,Result);
+    end
 end

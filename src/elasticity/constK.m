@@ -1,8 +1,8 @@
 function K = constK(x, Geo, Mat, Set, calcB)
+    x = ref_nvec(x, Geo.n_nodes, Geo.dim);
 	if (~exist('calcB', 'var'))
 		calcB = false;
-	end
-	% TODO FIXME, I CAN CALCULATE BB FROM THIS FUNCTION!
+    end
     Kg1 = Geo.Kg1; Kg2 = Geo.Kg2;
     if Set.sparse
         ll = Geo.n_nodes_elem*Geo.dim;

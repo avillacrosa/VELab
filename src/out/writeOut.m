@@ -1,5 +1,5 @@
 function writeOut(c, Geo, Set, Result)
-	if strcmpi(Set.output, 'none')
+	if ~Set.output
 		return
 	end
     if Geo.dim == 3

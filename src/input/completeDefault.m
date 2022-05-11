@@ -16,7 +16,7 @@ function  [Geo, Mat, Set] = completeDefault(Geo, Mat, Set)
     DefGeo.randMag  = 10;
     DefGeo.x_units  = 1;
 	DefGeo.w        = 1;
-	DefGeo.uPR      = '';
+	DefGeo.uPR      = [];
     
     DefMat = struct();
     DefMat.type   = 'hookean';
@@ -31,7 +31,7 @@ function  [Geo, Mat, Set] = completeDefault(Geo, Mat, Set)
     DefSet.dt            = 0.00001;
     DefSet.n_quad        = 2;
     DefSet.euler_type    = 'forward';
-	DefSet.output        = '';
+	DefSet.output        = true;
     DefSet.sparse        = false;
     DefSet.TFM           = false;
 	DefSet.calc_stress   = false;

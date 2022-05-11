@@ -29,7 +29,7 @@ function [Geo, Mat, Set, Result] = initializeData(Geo, Mat, Set)
 	Geo.ds = Geo.ds*Geo.x_units;
 
     [Geo.t, Geo.F] = buildNeumann(Geo, Set);	
-	if ~strcmpi(Set.output, 'none')
+	if Set.output
 		Set    = initializeOutFolder(Set);
 	end
     Result = initializeOutData(Geo, Mat, Set);
