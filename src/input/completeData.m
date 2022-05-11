@@ -32,10 +32,4 @@ function [Geo, Mat,  Set] = completeData(Geo, Mat, Set)
         Mat.nu      = Mat.lambda/(2*(Mat.lambda+Mat.mu));
 	end
     [Mat.p, Mat.q] = GetModelOrder(Mat);
-
-    if maxSize(Geo) > 4 % TODO Think, try catch would be better here ?
-        fprintf("> Large mesh. Sparse will be used \n");
-        % I think sparse is actually a bit faster than full matrices!
-        Set.sparse = true;
-    end
 end

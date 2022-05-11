@@ -10,8 +10,8 @@ function [emax, n, p, settings, tmax]=calcTractionFVE(emax, n, p, settings, tmax
                 dfieldy=NaN([Msz,Nsz,tmax(e)]);%3D matrix of time-lapse of displacement-field grid on phase contrast (y-component)
                 xlocs=NaN([Msz,Nsz,tmax(e)]);%3D matrix of time-lapse of locations-field grid on phase contrast (x-component)
                 ylocs=NaN([Msz,Nsz,tmax(e)]);%3D matrix of time-lapse of locations-field grid on phase contrast (y-component)
-				ux_t = zeros(Nsz*Msz, tmax(e));
-				uy_t = zeros(Nsz*Msz, tmax(e));
+				ux_t = zeros(Msz, Nsz, tmax(e));
+				uy_t = zeros(Msz, Nsz, tmax(e));
             end
                        
             disptrac_t=load(fullfile(p.files.pivdisptrac{e},n.files.pivdisp{e,it}),'pivmatrix','-ascii');
@@ -53,16 +53,17 @@ function [emax, n, p, settings, tmax]=calcTractionFVE(emax, n, p, settings, tmax
                 end
             end
             
-            cd(p.TFMlab);
+%             cd(p.TFMlab);
             ux_in_metres=ux*settings.pixelsize_in_metres;%displacements in metres to have tractions in Pascal
             uy_in_metres=uy*settings.pixelsize_in_metres;%displacements in metres to have tractions in Pascal
-			ux_t(:,it) = ux_in_metres;
-			uy_t(:,it) = uy_in_metres;
-		end
-		[tx_t, ty_t] =  shrineRunVE(E, nu, d, h, ux_t, uy_t, settings_ve);
-		for it=1:tmax(e)
-			tx = tx_t(:,it);
-			ty = ty_t(:,it);
+			ux_t(:,:,it) = ux_in_metres;
+			uy_t(:,:,it) = uy_in_metres;
+        end
+        save('synthShrine')
+        [tx_t, ty_t] = shrineRunVE(settings.tInt, settings.E(n.conditions.c2e(e),n.dates.d2e(e)),settings.nu,settings.d(e),settings.H,ux_t,uy_t, tmax(e), settings);
+        for it=1:tmax(e)
+			tx = tx_t(:,:,it);
+			ty = ty_t(:,:,it);
 			if settings.equiltracs~=0
     			switch settings.equiltracs
         			case{1}%clear resultant of traction field

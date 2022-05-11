@@ -4,14 +4,8 @@
 % nonlinear)
 %--------------------------------------------------------------------------
 function Result = runVE(Geo, Mat, Set)
-    %% Check if the input file is TFM or not
-	t_start = tic;
-	if size(Geo.ns,2) == 1
-        fprintf("> Assuming a TFM-type input \n");
-        Geo     = buildTFM(Geo);
-        Set.TFM = true;
-	end
 	%% Initialize other data necessary for sim
+    t_start = tic;
 	[Geo, Mat, Set, Result] = initializeData(Geo, Mat, Set);
 
 	%% Solve the system
@@ -19,8 +13,10 @@ function Result = runVE(Geo, Mat, Set)
     Result = solveVE(Geo, Set, Mat, Result);
 
 	%% Save the simulation info and exit
-	plotResults(Geo, Mat, Set, Result);
-    save(fullfile(Set.DirOutput,sprintf('result.mat')), 'Result');
+    if ~strcmpi(Set.output, 'none')
+	    plotResults(Geo, Mat, Set, Result);
+        save(fullfile(Set.DirOutput,sprintf('result.mat')), 'Result');
+    end
     t_end = duration(seconds(toc(t_start)));
     t_end.Format = 'hh:mm:ss';
     fprintf("> Total real run time %s \n",t_end);

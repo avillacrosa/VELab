@@ -16,7 +16,7 @@ function  [Geo, Mat, Set] = completeDefault(Geo, Mat, Set)
     DefGeo.randMag  = 10;
     DefGeo.x_units  = 1;
 	DefGeo.w        = 1;
-	DefGeo.u_file   = '';
+	DefGeo.uPR      = '';
     
     DefMat = struct();
     DefMat.type   = 'hookean';

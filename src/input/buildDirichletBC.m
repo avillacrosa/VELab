@@ -1,15 +1,6 @@
 function [u, fix] = buildDirichletBC(Geo, Mat, Set)
 	u = Geo.u; fix = Geo.fix;
-	uBC = [];
-	if Set.TFM
-		uBC        = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 z 3 0];
-	elseif strcmpi(Geo.u_file, 'random')
-		uBC        = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 z 3 0];
-	elseif strcmpi(Geo.u_file, 'harmonic')
-		uBC        = [ 3 0 1 0; 3 0 2 0; 3 0 3 0; 3 z 3 0];
-	end
-	uBC = [uBC Geo.uBC];
-	[fixBC, fix_vals] = BCtoNodal(Geo, uBC);
+	[fixBC, fix_vals] = BCtoNodal(Geo, Geo.uBC);
 	% TODO FIXME, this is not ideal but I could not find a work around...
 	for tk = 1:Set.time_incr
 		ut = u(:,:,tk);

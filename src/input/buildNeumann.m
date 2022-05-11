@@ -21,9 +21,13 @@ function [t, F] = buildNeumann(Geo, Set)
 			tt(fix) = fix_vals(fix);
 			t(:,:,tk) = tt;
 		end
-	end
-	M = areaMassLI(Geo.X, Geo, Set);
-	F = zeros(size(t));
+    end
+    if Set.sparse
+        M = areaMassLISP(Geo.X, Geo, Set);
+    else
+        M = areaMassLI(Geo.X, Geo, Set);
+    end
+    F = zeros(size(t));
 	for k = 1:Set.time_incr
 		F(:,:,k) = M * t(:,:,k);
 	end
