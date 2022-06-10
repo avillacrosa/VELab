@@ -7,7 +7,7 @@ function [u, stress] = newton(u, dof, fix, incr, R, F, Geo, Mat, Set)
     X = vec_nvec(Geo.X);
     while(tol > Set.newton_tol)
         if strcmpi(Mat.type, 'hookean'), x = X; else, x = X + u; end
-        K_c                  = constK(x, Geo, Mat, Set);        
+        K_c           = constK(x, Geo, Mat, Set);        
         [K_s, stress] = stressK(x, Geo, Mat, Set); 
 
         K   = K_c + K_s;
@@ -23,6 +23,3 @@ function [u, stress] = newton(u, dof, fix, incr, R, F, Geo, Mat, Set)
     end
     fprintf("> INCR %i CONVERGED IN %i ITERATIONS \n", incr, it-1);
 end
-
-
-

@@ -1,6 +1,7 @@
 function Result = visco(Geo, Mat, Set, Result)
-    K  = constK(Geo.X, Geo, Mat, Set);
-	BB = constK(Geo.X, Geo, Mat, Set, true);
+    X  = vec_nvec(Geo.X);
+    K  = constK(X, Geo, Mat, Set);
+	BB = constK(X, Geo, Mat, Set, true);
 % 	M  = areaMassLI(Geo.X, Geo, Set); % TODO FIXME TIME AND MEMORY SINK HERE
 	M  = areaMassLISP(Geo.X, Geo, Set); % TODO FIXME TIME AND MEMORY SINK HERE
 
@@ -8,10 +9,12 @@ function Result = visco(Geo, Mat, Set, Result)
 
 	% Vectorized form of variables
 	u_t          = vec_nvec(Geo.u);
+	u_v_t        = vec_nvec(Geo.u);
+
 	strain_t     = nan(Geo.n_nodes, Geo.vect_dim, Set.time_incr); 
 	stress_t     = nan(Geo.n_nodes, Geo.vect_dim, Set.time_incr);
 	T			 = zeros(Geo.n_nodes*Geo.dim, Set.time_incr);
-    F = vec_nvec(Geo.F);
+    F			 = vec_nvec(Geo.F);
 
 
 	if Set.calc_stress || Set.calc_strain
@@ -21,19 +24,18 @@ function Result = visco(Geo, Mat, Set, Result)
 		end
 	end
     t = 0;
-    for k = 1:(Set.time_incr-1)
-		% TODO FIXME Maybe move everything to backward euler?
+    for k = 2:Set.time_incr
 		if strcmpi(Mat.rheo, 'kelvin')
-            [u_t(:,k+1), T(:,k+1)] = eulerKV(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
+            [u_t, T] = eulerKV(u_t, dof, fix, dt, k-1, F, T, K, BB, Mat);
         elseif strcmpi(Mat.rheo, 'maxwell')
-            [u_t(:,k+1), T(:,k+1)] = eulerMX(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
+%             [u_t, T] = eulerMX(u_t, dof, fix, dt, k-1, F, T, K, BB, Mat);
+            [u_t, u_v_t, T] = eulerMX_INT(u_t, u_v_t, dof, fix, dt, k-1, F, T, K, BB, Geo, Mat, Set);
         elseif strcmpi(Mat.rheo, 'fmaxwell')
-            [u_t(:,k), T(:,k)]     = eulerFMX(u_t, dof, fix, dt, k, F, T, K, BB, Mat);
+            [u_t, T] = eulerFMX(u_t, dof, fix, dt, k-1, F, T, K, BB, Mat, Set);
 		end
 		% Calculate stress here
 		if Set.calc_stress || Set.calc_strain
 			strain_t(:,:,k) = fullLinStr1(u_t, k, Geo); 
-			strain_t(:,:,k+1) = fullLinStr1(u_t, k+1, Geo);
 			if Set.calc_stress
 				stress_t = calcStress(strain_t, k, stress_t, Geo, Mat, Set);
 			end
@@ -41,15 +43,7 @@ function Result = visco(Geo, Mat, Set, Result)
 
         % Save values
         if mod(k, Set.save_freq) == 0 || k == 1
-			if k == 1
-				% TODO FIXME This is bad but convenient. Ideally we would
-				% set all variables (stress is the hardest) to the 
-				% initial time values before entering the loop, but that
-				% takes effort for some models.
-				c = 0;
-			else
-				c = k/Set.save_freq;
-			end
+			c = k/Set.save_freq;
             Result = saveOutData(t, c+1, k, u_t, stress_t, strain_t, F, T, M, Geo, Mat, Set, Result);
             writeOut(c+1,Geo,Set,Result);
 		

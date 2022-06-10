@@ -18,6 +18,7 @@ function [Geo, Mat,  Set] = completeData(Geo, Mat, Set)
     [Set.quadx, Set.quadw]                     = gaussQuad(Set.n_quad);
     [Set.gaussPoints, Set.gaussWeights]        = buildQuadPoints(Geo, Set);
     [Set.gaussPointsC, Set.gaussWeightsC]      = buildQuadPointsC(Geo,Set);
+%     [Set.gaussPointsNodes, Set.gaussWeightsNodes]      = buildQuadPointsNodes(Geo,Set);
     [Set.cn, Set.cEq, Set.gausscP, Set.gausscW]= buildAreaDep(Geo,Set);
 
     Geo.time = (1:Set.time_incr)*Set.dt;

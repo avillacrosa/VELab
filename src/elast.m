@@ -19,7 +19,8 @@ function Result = elast(Geo, Mat, Set, Result)
             Fi = Fi + df;
             ui = ui + du;
             T = internalF(vec_nvec(Geo.X) + ui, Geo, Mat, Set);
-        	R  = T - F;
+        	R  = T - Fi;
+			% TODO FIXME, define dof and fix inside of newton function
         	[u_t(:,k), stress_gp] = newton(ui, dof, fix, i, R, Fi, Geo, Mat, Set);
     	end
 	
@@ -31,16 +32,8 @@ function Result = elast(Geo, Mat, Set, Result)
             end
 		end
 
-        if mod(k, Set.save_freq) == 0 || k == 1
-			if k == 1
-				% TODO FIXME This is bad but convenient. Ideally we would
-				% set all variables (stress is the hardest) to the 
-				% initial time values before entering the loop, but that
-				% takes effort for some models.
-				c = 0;
-			else
-				c = k/Set.save_freq;
-			end
+        if mod(k, Set.save_freq) == 0
+			c = k/Set.save_freq;
             Result = saveOutData(t, c+1, k, u_t, stress_t, strain_t, F, T, M, Geo, Mat, Set, Result);
             writeOut(c+1,Geo,Set,Result);
 

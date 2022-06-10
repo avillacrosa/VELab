@@ -14,5 +14,6 @@ function c = neohookean_c(Fd, Mat, dim)
                 end
             end
         end
-    end
+	end
+	
 end
