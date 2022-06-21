@@ -9,7 +9,7 @@ function [Geo, Mat, Set] = hk_patch(Geo, Mat, Set)
     
     %% Material parameters
     % Possible types = hookean, neohookean, venant
-    Mat.type  = 'neohookean'; % Merge these two?
+    Mat.type  = 'hookean'; % Merge these two?
     Mat.E     = 100;
     Mat.nu    = 0; % No off diagonal terms in D matrix
 
@@ -17,11 +17,11 @@ function [Geo, Mat, Set] = hk_patch(Geo, Mat, Set)
     Set.n_steps = 1;
     Set.time_incr = 1;
     Set.save_freq = 1;
-	Set.calc_stress = true;
-	Set.calc_strain = true;
+% 	Set.calc_stress = true;
+% 	Set.calc_strain = true;
 
-	Set.plot_stress = false;
-	Set.plot_strain = true;
+% 	Set.plot_stress = false;
+% 	Set.plot_strain = true;
     fname = dbstack;
 	Set.name = fname.name;
 end

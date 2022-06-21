@@ -40,7 +40,7 @@ function Result = elast(Geo, Mat, Set, Result)
             fprintf("it = %4i, t = %.2f, |u| = ( ", k, t);
             fprintf("%.2f ", vecnorm(Result.u(:,:,c+1), 2, 1));
             fprintf("), |stress| = ( ")
-            fprintf("%.2f ", vecnorm(Result.stress(:,:,c+1), 2, 1));
+%             fprintf("%.2f ", vecnorm(Result.stress(:,:,c+1), 2, 1));
     		fprintf(") \n")
         end
         t = t + Set.dt;

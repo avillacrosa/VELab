@@ -12,8 +12,8 @@ function [Geo, Mat, Set] = gmxve_flow_2d(Geo, Mat, Set)
     Mat.type  = 'neovenant'; % Merge these two?
     Mat.rheo  = 'maxwell'; % Merge these two?
     Mat.E     = 100;
-    Mat.nu    = 0; % No off diagonal terms in D matrix
-    Mat.visco = 0.001;
+    Mat.nu    = 0.3; % No off diagonal terms in D matrix
+    Mat.visco = 0.01;
 
     %% Numerical settings
     Set.n_steps = 1;

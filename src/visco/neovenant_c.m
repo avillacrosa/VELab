@@ -12,6 +12,6 @@ function c = neovenant_c(Fd, Fd_n, q, Mat, Set, dim)
 	end
 	tau = Mat.visco/Mat.E;
 	xi = -Set.dt/(2*tau);
-	C = C*(exp(xi));
-	c = eulerTensor(C, Fd, dim);
+% 	C = C;
+	c = eulerTensor(C, Fd, dim)*(exp(xi));
 end
